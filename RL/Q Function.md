@@ -1,1 +1,1 @@
-Requirements: [[Markov Decision Processes]]
+Requirements: [[MDP]]

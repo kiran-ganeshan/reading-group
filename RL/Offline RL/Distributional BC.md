@@ -1,1 +1,1 @@
-Requirements: [[Markov Decision Processes]], [[VAE]]
+Requirements: [[MDP]], [[VAE]]
