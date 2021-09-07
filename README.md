@@ -7,11 +7,29 @@ Please follow the following steps to install the ML@B Research Vault. Then, read
 4. Navigate to the folder you cloned the `reading-group` repository into ![Navigation Instructions | 400](Images/README/navigate.png)
 5. You should see the following Directed Acyclic Graph (DAG) in the Obsidian Graph Viewer ![DAG | 300](Images/README/dag.png)
 6. Try filtering for parts of the DAG you're interested in
+	1. Open the "Filters" drop down list to the top left of the graph viewer and click on the search bar 
+	2. Try filtering for the files in the base folder "Linear Algebra" using the "path:" option ![[Images/README/filterfile.png | 400]]
+	3. Try adding a tag (as \#\<tag name\>, e.g. #read) to a few articles and filter down to these articles using the "tag:" option 
+	![[Images/README/readtags.png | 400]] ![[Images/README/filtertag.png | 400]]
+	6. Try filtering for articles either in "Linear Algebra" OR tagged with #read by concatenating the relevant "file:" and "tag:" searches with the "OR" boolean operator. Equivalently, use the "AND" boolean operator to filter articles tagged #read within "Linear Algebra". ![[Images/README/filteror.png | 400]]
 7. Try grouping the DAG
-	1. Open the "Groups" drop down list to the top left of the graph viewer, press “new group,” and explore the possible criteria ![Groups | 200](Images/README/groups.png)
-	2. Try creating a group for each base folder in the `reading-group` repo ![Base Groups | 400](Images/README/basegroups.png)
-	3. Try adding a #read tag to a few articles and visualizing this group of articles ![readtag1 | 200](Images/README/readtag1.png) ![readtag2 | 200](Images/README/readtag2.png) ![readtag3 | 200](Images/README/readtag3.png) ![readtag4 | 200](Images/README/readtag4.png) ![Tag Groups | 400](Images/README/taggroups.png)
-8. Try adding a numbered: (1. blah \n 2. blah) or bulleted (- blah \n - blah) list, some in-text latex ($a = 1$), and some latex on its own line: $$a = 1$$ Click the preview button in the top right corner with the Cmd (mac) or Ctrl (windows) button held (or whatever the obsidian popup says) to open a preview in a separate pane. Try typing more and watch the preview update live. ![Preview | 200](Images/README/preview.png)
+	1. Open the "Groups" drop down list to the top left of the graph viewer, press “new group,” and explore the possible criteria ![[Images/README/groups.png | 200]]
+	2. Try creating a group for each base folder in the `reading-group` repo using the "path:" option ![[Images/README/groupfile.png | 400]]
+	3. Try adding a tag (as \#\<tag name\>, e.g. #read) to a few articles and visualizing this group of articles with the "tag:" option 
+	![[Images/README/readtags.png | 400]] ![[Images/README/grouptag.png | 400]]
+	5. Try creating a group of articles either in "Linear Algebra" OR tagged with #read by concatenating the relevant "file:" and "tag:" searches with the "OR" boolean operator. Equivalently, use the "AND" boolean operator to group articles tagged #read within "Linear Algebra" ![[Images/README/groupor.png | 400]]
+8. Click the preview button in the top right corner with the Cmd (mac) or Ctrl (windows) button held (or whatever the obsidian popup says) to open a preview in a separate pane. Try adding the following the following and watch the preview update.
+	1. A numbered list: "1. blah \n 2. blah" ->
+		1. blah
+		2. blah
+	2. A bulleted list: "- blah \n - blah" ->
+		- blah
+		- blah
+	3. In-text latex: "\$a = 1\$" -> $a = 1$
+	4. Latex on its own line: "\$\$a = 1\$\$" -> $$a = 1$$
+	5. An image, like the following one to help you find the preview pane: "!\[{Name} | {width}\]({path})" -> 
+	"!\[Preview | 200\](Images/README/preview.png)" -> 
+	![Preview | 200](Images/README/preview.png)
 9. If you create something you'd like to be added to the master repository, create a pull request [on Github!](https://www.github.com/mlberkeley/reading-group/pulls)
 
 ## If you're reading this in Obsidian:

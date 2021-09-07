@@ -8,7 +8,7 @@
   "collapse-color-groups": false,
   "colorGroups": [
     {
-      "query": "tag:#read",
+      "query": "tag:#read OR path:\"Linear Algebra\"",
       "color": {
         "a": 1,
         "rgb": 14701138
@@ -20,11 +20,11 @@
   "textFadeMultiplier": 0,
   "nodeSizeMultiplier": 1.22618856837607,
   "lineSizeMultiplier": 4.21866987179487,
-  "collapse-forces": true,
+  "collapse-forces": false,
   "centerStrength": 0,
   "repelStrength": 0,
   "linkStrength": 1,
   "linkDistance": 30,
-  "scale": 1.2013122973551642,
+  "scale": 0.9614258111527468,
   "close": false
 }

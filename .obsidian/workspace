@@ -4,28 +4,12 @@
     "type": "split",
     "children": [
       {
-        "id": "dde70ca0c1e85e58",
+        "id": "d6c423d33df76392",
         "type": "leaf",
         "state": {
-          "type": "markdown",
-          "state": {
-            "file": "README.md",
-            "mode": "source"
-          }
-        },
-        "group": "93f459d11c22918b"
-      },
-      {
-        "id": "807c4ff2cedb4232",
-        "type": "leaf",
-        "state": {
-          "type": "markdown",
-          "state": {
-            "file": "README.md",
-            "mode": "preview"
-          }
-        },
-        "group": "93f459d11c22918b"
+          "type": "graph",
+          "state": {}
+        }
       }
     ],
     "direction": "vertical"
@@ -52,7 +36,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "tag:#read",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -61,7 +45,8 @@
               }
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "horizontal",
@@ -81,7 +66,6 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "README.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -99,17 +83,17 @@
     "width": 300,
     "collapsed": true
   },
-  "active": "dde70ca0c1e85e58",
+  "active": "d6c423d33df76392",
   "lastOpenFiles": [
     "README.md",
+    "Images/README/readtags.png",
+    "Images/README/taggroups 1.png",
+    "Images/README/filterlinalg.png.md",
     "Images/README/basegroups.png",
     "Images/README/taggroups.png",
     "NLP/LSTM.md",
     "RL/Online RL/Actor-Critic Methods/DDPG.md",
     "RL/Online RL/Actor-Critic Methods/D3PG.md",
-    "NLP/Transformer.md",
-    "NLP/RNN.md",
-    "NLP/GRU.md",
-    "NLP/BiLSTM.md"
+    "NLP/Transformer.md"
   ]
 }
