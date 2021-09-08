@@ -1,1 +1,1 @@
-Requirements: [[MDP]]
+Requirements: [[PG]]

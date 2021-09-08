@@ -1,1 +1,1 @@
-Requirements: [[Q Function]], [[V Function]]
+Requirements: [[Value Functions]]

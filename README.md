@@ -41,3 +41,6 @@ You're in the right place. Welcome to the ML@B Research vault! This is a folder 
 3. A tool for transforming unstructured exploration into structured, absorbable knowledge
 
 As more is decided regarding the structure of our notes, we will add to this note explaining the organization of the vault, and giving instructions to new members about how to get involved.
+
+## Notation
+- $\mathcal{D}(v)$ refers to a distribution over the variable $v$

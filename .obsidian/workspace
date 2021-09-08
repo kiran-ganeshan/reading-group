@@ -4,12 +4,28 @@
     "type": "split",
     "children": [
       {
-        "id": "eedc7d8bd8a4b25a",
+        "id": "a60c8a360ad0056a",
         "type": "leaf",
         "state": {
-          "type": "empty",
-          "state": {}
-        }
+          "type": "markdown",
+          "state": {
+            "file": "RL/Value Functions.md",
+            "mode": "source"
+          }
+        },
+        "group": "2d5945aaa7eba824"
+      },
+      {
+        "id": "9ad5eb7a71121d7f",
+        "type": "leaf",
+        "state": {
+          "type": "markdown",
+          "state": {
+            "file": "RL/Value Functions.md",
+            "mode": "preview"
+          }
+        },
+        "group": "2d5945aaa7eba824"
       }
     ],
     "direction": "vertical"
@@ -65,6 +81,7 @@
             "state": {
               "type": "backlink",
               "state": {
+                "file": "RL/Value Functions.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -82,17 +99,17 @@
     "width": 300,
     "collapsed": true
   },
-  "active": "eedc7d8bd8a4b25a",
+  "active": "a60c8a360ad0056a",
   "lastOpenFiles": [
-    "README.md",
-    "Images/README/filteror.png",
-    "Images/README/readtags.png",
-    "Images/README/taggroups 1.png",
-    "Images/README/filterlinalg.png.md",
-    "Images/README/basegroups.png",
-    "Images/README/taggroups.png",
-    "NLP/LSTM.md",
-    "RL/Online RL/Actor-Critic Methods/DDPG.md",
-    "RL/Online RL/Actor-Critic Methods/D3PG.md"
+    "RL/Value Functions.md",
+    "RL/MDP.md",
+    "Linear Algebra/Linear Mapping.md",
+    "RL/Online RL/Value Iteration Methods/TQL.md",
+    "RL/Bellman Recurrence.md",
+    "RL/Q Function.md",
+    "RL/V Function.md",
+    "RL/Online RL/Actor-Critic Methods/TRPO.md",
+    "RL/Online RL/Actor-Critic Methods/SAC.md",
+    "RL/Importance Weighting.md"
   ]
 }

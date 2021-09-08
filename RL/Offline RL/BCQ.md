@@ -1,1 +1,1 @@
-Requirements: [[Distributional BC]], [[Q Function]], [[Bellman Recurrence]]
+Requirements: [[Distributional BC]], [[DQN]]

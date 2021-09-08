@@ -1,1 +1,1 @@
-Requirements: [[PG]], [[Importance Weighting]]
+Requirements: [[Importance Weighting]]

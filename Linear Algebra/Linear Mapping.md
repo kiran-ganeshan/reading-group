@@ -1,1 +1,1 @@
-Requirements: [[Dot Product]], [[Vector Space]]
+Requirements: [[Vector Space]]
