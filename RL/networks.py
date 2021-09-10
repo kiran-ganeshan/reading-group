@@ -18,8 +18,8 @@ from jax.interpreters.xla import DeviceArray
 class Learner(object):
     
     def __init__(modules : Dict[nn.Module],
-                 optimizers : Dict[Optimizer],
-                 )
+                 optimizers : Dict[Optimizer]):
+        pass
 
 
 
@@ -34,6 +34,7 @@ class MLP(nn.Module):
         self.layers = []
         for s1, s2 in zip(sizes[:-1], sizes[1:]):
             self.layers.append(nn.Linear(s1, s2))
+        self.activation = activation
     
     def forward(self, x):
         for layer in self.layers:
