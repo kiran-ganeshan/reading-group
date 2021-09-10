@@ -1,7 +1,7 @@
 # Tabular Q-Learning
 Requirements: [[Value Functions]]
 
-If you've read the requirements, you understand how [MDP]s can represent a very general class of tasks; namely, any task in which we have full control over an agent interacting with some environment. You also understand how the [[Value Functions | Q Function]] $Q(s, a)$ encodes the expected return when taking an action $a$ in a state $s$. We are now ready to formulate our first solution to MDPs with discrete state and action spaces!
+If you've read the requirements, you understand how [MDP]s can represent a very general class of tasks; namely, any task where an agent interacts with an environment. You also understand how the [[Value Functions | Q Function]] $Q(s, a)$ encodes the expected return when taking an action $a$ in a state $s$. We are now ready to formulate our first solution to MDPs with discrete state and action spaces!
 
 ## Strategy
 
