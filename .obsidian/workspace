@@ -4,19 +4,16 @@
     "type": "split",
     "children": [
       {
-        "id": "a60c8a360ad0056a",
+        "id": "76adecdde0c27245",
         "type": "leaf",
         "state": {
-          "type": "markdown",
-          "state": {
-            "file": "RL/Value Functions.md",
-            "mode": "source"
-          }
+          "type": "graph",
+          "state": {}
         },
-        "group": "2d5945aaa7eba824"
+        "group": "07c7e091cea88dd2"
       },
       {
-        "id": "9ad5eb7a71121d7f",
+        "id": "2d5994f3b3acc79f",
         "type": "leaf",
         "state": {
           "type": "markdown",
@@ -25,7 +22,7 @@
             "mode": "preview"
           }
         },
-        "group": "2d5945aaa7eba824"
+        "group": "07c7e091cea88dd2"
       }
     ],
     "direction": "vertical"
@@ -81,7 +78,6 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "RL/Value Functions.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -99,17 +95,17 @@
     "width": 300,
     "collapsed": true
   },
-  "active": "a60c8a360ad0056a",
+  "active": "76adecdde0c27245",
   "lastOpenFiles": [
     "RL/Value Functions.md",
-    "RL/MDP.md",
-    "Linear Algebra/Linear Mapping.md",
+    "RL/Online RL/PG.md",
     "RL/Online RL/Value Iteration Methods/TQL.md",
     "RL/Bellman Recurrence.md",
+    "RL/MDP.md",
+    "Linear Algebra/Linear Mapping.md",
     "RL/Q Function.md",
     "RL/V Function.md",
     "RL/Online RL/Actor-Critic Methods/TRPO.md",
-    "RL/Online RL/Actor-Critic Methods/SAC.md",
-    "RL/Importance Weighting.md"
+    "RL/Online RL/Actor-Critic Methods/SAC.md"
   ]
 }
