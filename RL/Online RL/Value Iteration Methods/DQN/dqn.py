@@ -12,7 +12,8 @@ class DQN(object):
         state_dim,
         action_dim,
         discount=0.99,
-        tau=0.005
+        tau=0.005,
+        eps=1e-9
     ):
 
         self.critic = MLP(input_size=state_dim, 
@@ -24,25 +25,24 @@ class DQN(object):
 
         self.discount = discount
         self.tau = tau
+        self.eps = eps
         self.action_dim = action_dim
         self.one_hot = lambda *x: F.one_hot(*x, num_classes=action_dim)
 
         self.total_it = 0
 
-
     def select_action(self, state):
-        state = torch.FloatTensor(state.reshape(1, -1))
-        return self.actor(state).cpu().data.numpy().flatten()
-
+        if np.random.uniform(0, 1) < self.eps:
+            return np.random.randint(0, self.action_dim)
+        else:
+            return torch.argmax(self.critic(state), -1)
 
     def train(self, *data):
         self.total_it += 1
         state, action, next_state, reward, not_done = data
 
-        with torch.no_grad():
-            
-
-            # Compute the target Q value
+        # Compute the target Q value
+        with torch.no_grad(): 
             target_Q = self.critic_target(next_state)
             target_Q = torch.max(target_Q, -1)
             data = {'next_q': target_Q}
@@ -61,30 +61,11 @@ class DQN(object):
         critic_loss.backward()
         self.critic_optimizer.step()
 
-        # Delayed policy updates
-        if self.total_it % self.policy_freq == 0:
+        # Update the frozen target models
+        for param, target_param in zip(self.critic.parameters(), self.critic_target.parameters()):
+            target_param.data.copy_(self.tau * param.data + (1 - self.tau) * target_param.data)
 
-            # Compute actor loss
-            pi = self.actor(state)
-            Q = self.critic(state, pi)
-            lmbda = self.alpha/Q.abs().mean().detach()
-
-            actor_loss = -lmbda * Q.mean() + F.mse_loss(pi, action) 
-            losses = {'actor_loss': actor_loss, **losses}
-            
-            # Optimize the actor 
-            self.actor_optimizer.zero_grad()
-            actor_loss.backward()
-            self.actor_optimizer.step()
-
-            # Update the frozen target models
-            for param, target_param in zip(self.critic.parameters(), self.critic_target.parameters()):
-                target_param.data.copy_(self.tau * param.data + (1 - self.tau) * target_param.data)
-
-            for param, target_param in zip(self.actor.parameters(), self.actor_target.parameters()):
-                target_param.data.copy_(self.tau * param.data + (1 - self.tau) * target_param.data)
-                
-        losses, data
+        losses
 
 
     def save(self, filename):

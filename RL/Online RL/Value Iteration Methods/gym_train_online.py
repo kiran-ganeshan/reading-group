@@ -9,6 +9,7 @@ from DQN.dqn import DQN
 
 
 class ReplayBuffer(object):
+    
 	def __init__(self, state_dim, action_dim, max_size=int(1e6)):
 		self.max_size = max_size
 		self.ptr = 0
@@ -42,7 +43,8 @@ class ReplayBuffer(object):
 			torch.FloatTensor(self.reward[ind]).to(self.device),
 			torch.FloatTensor(self.not_done[ind]).to(self.device)
 		)
-
+ 
+ 
 # Runs policy for X episodes and returns average reward
 # A fixed seed is used for the eval environment
 def eval_policy(policy, env_name, seed, eval_episodes=10):
