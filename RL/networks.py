@@ -18,7 +18,8 @@ from jax.interpreters.xla import DeviceArray
 class Learner(object):
     
     def __init__(modules : Dict[nn.Module],
-                 optimizers : )
+                 optimizers : Dict[Optimizer],
+                 )
 
 
 
