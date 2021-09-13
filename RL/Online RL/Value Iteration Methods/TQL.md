@@ -39,3 +39,8 @@ $$\begin{align*}\hat{Q}(s, a) &= \hat{Q}_n(s, a)\\&=\frac{1}{n}\left((n - 1)\hat
 But recall we have $A(s'_k) = A$, and since TQL has converged on all state-action pairs reachable from $(s, a)$, we have $\hat{Q}_{k-1}(s'_k, a') = \hat{Q}(s'_k, a')$. Putting these together, we have shown
 $$\hat{Q}(s, a) = r(s, a) + \frac{1}{n}\sum_{k=1}^n\max_{a'\in A}\hat{Q}(s'_k, a')$$
 which is clearly an unbiased Monte-Carlo estimate of the Bellman expression when $s'_1, ..., s'_n \sim \mathcal{T}(s'\mid s, a)$.
+
+## Resources
+
+* Start with Sutton and Barto Chapter 2 Multi-armed Bandits. In particular, try to understand equation 2.4 as it comes up often, and see if you can make sense of "A simple bandit algorithm" as it is a good toy problem to understand Q-learning.
+* Sutton and Barto 5.2 "Monte Carlo Estimation of Action Values" and 5.3 more directly discuss the problems described above.
