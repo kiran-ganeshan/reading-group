@@ -1,6 +1,6 @@
 # Markov Decision Processes
 Requirements: None
-Resources: 
+## Resources
 - [Sutton & Barto 3.1 - 3.4](http://incompleteideas.net/book/RLbook2020.pdf)
 - [ML@B Blog](https://ml.berkeley.edu/blog/posts/mdps/)
 - [Towards Data Science](https://towardsdatascience.com/introduction-to-reinforcement-learning-markov-decision-process-44c533ebf8da)

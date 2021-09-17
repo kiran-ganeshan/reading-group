@@ -1,6 +1,6 @@
 # Value Functions
 Requirements: [[MDP]]
-Resources:
+## Resources
 - [Sutton & Barto 3.5 - 3.8](http://incompleteideas.net/book/RLbook2020.pdf)
 - [ML@B Blog on MDPs](https://ml.berkeley.edu/blog/posts/mdps/)
 - [Towards Data Science Series on MDPs](https://towardsdatascience.com/introduction-to-reinforcement-learning-markov-decision-process-44c533ebf8da)

@@ -9,7 +9,7 @@
         "state": {
           "type": "markdown",
           "state": {
-            "file": "RL/Value Functions.md",
+            "file": "RL/MDP.md",
             "mode": "source"
           }
         },
@@ -21,7 +21,7 @@
         "state": {
           "type": "markdown",
           "state": {
-            "file": "RL/Value Functions.md",
+            "file": "RL/MDP.md",
             "mode": "preview"
           }
         },
@@ -81,7 +81,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "RL/Value Functions.md",
+                "file": "RL/MDP.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -101,12 +101,12 @@
   },
   "active": "fb1ce8c0b953069e",
   "lastOpenFiles": [
-    "RL/Value Functions.md",
     "RL/MDP.md",
+    "RL/Importance Weighting.md",
+    "RL/Value Functions.md",
+    "RL/Online RL/Value Iteration Methods/TQL.md",
     "RL/Online RL/Value Iteration Methods/DQN/DQN.md",
     "RL/Online RL/Value Iteration Methods/Deuling DQN.md",
-    "RL/Online RL/Value Iteration Methods/TQL.md",
-    "RL/Importance Weighting.md",
     "RL/Online RL/PG.md",
     "RL/Bellman Recurrence.md",
     "Linear Algebra/Linear Mapping.md",

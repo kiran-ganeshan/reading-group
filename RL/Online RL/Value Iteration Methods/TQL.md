@@ -1,5 +1,12 @@
 # Tabular Q-Learning
 Requirements: [[Value Functions]]
+## Resources
+- [Sutton & Barto](http://incompleteideas.net/book/RLbook2020.pdf) 
+	- Chapter 2 on Multi-Armed Bandits (equation 2.4 is important)
+	- Chapters 5.2 - 5.3 on Monte Carlo $Q$ estimation
+- [Medium Series on TQL for Tic Tac Toe](https://medium.com/@carsten.friedrich/part-3-tabular-q-learning-a-tic-tac-toe-player-that-gets-better-and-better-fa4da4b0892a)
+
+## Introduction
 
 If you've read the requirements, you understand how [MDP]s can represent a very general class of tasks; namely, any task where an agent interacts with an environment. You also understand how the [[Value Functions | Q Function]] $Q(s, a)$ encodes the expected return when taking an action $a$ in a state $s$. We are now ready to formulate our first solution to MDPs with discrete state and action spaces!
 
@@ -39,8 +46,3 @@ $$\begin{align*}\hat{Q}(s, a) &= \hat{Q}_n(s, a)\\&=\frac{1}{n}\left((n - 1)\hat
 But recall we have $A(s'_k) = A$, and since TQL has converged on all state-action pairs reachable from $(s, a)$, we have $\hat{Q}_{k-1}(s'_k, a') = \hat{Q}(s'_k, a')$. Putting these together, we have shown
 $$\hat{Q}(s, a) = r(s, a) + \frac{1}{n}\sum_{k=1}^n\max_{a'\in A}\hat{Q}(s'_k, a')$$
 which is clearly an unbiased Monte-Carlo estimate of the Bellman expression when $s'_1, ..., s'_n \sim \mathcal{T}(s'\mid s, a)$.
-
-## Resources
-
-* Start with Sutton and Barto Chapter 2 Multi-armed Bandits. In particular, try to understand equation 2.4 as it comes up often, and see if you can make sense of "A simple bandit algorithm" as it is a good toy problem to understand Q-learning.
-* Sutton and Barto 5.2 "Monte Carlo Estimation of Action Values" and 5.3 more directly discuss the problems described above.
