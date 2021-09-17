@@ -3,7 +3,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from networks import MLP
+from utils import MLP
     
 
 class DQN(object):
@@ -17,7 +17,7 @@ class DQN(object):
     ):
 
         self.critic = MLP(input_size=state_dim, 
-                          ouptut_size=action_dim, 
+                          output_size=action_dim, 
                           hidden_sizes=(256, 256), 
                           activation=nn.ReLU)
         self.critic_target = copy.deepcopy(self.critic)
@@ -27,7 +27,6 @@ class DQN(object):
         self.tau = tau
         self.eps = eps
         self.action_dim = action_dim
-        self.one_hot = lambda *x: F.one_hot(*x, num_classes=action_dim)
 
         self.total_it = 0
 
@@ -53,7 +52,8 @@ class DQN(object):
         policy = self.critic(state)
 
         # Compute critic loss
-        critic_loss = F.mse_loss(policy, self.one_hot(action))
+        one_hot = F.one_hot(action, num_classes=self.action_dim)
+        critic_loss = F.mse_loss(policy, one_hot)
         losses = {'critic_loss': critic_loss}
 
         # Optimize the critic

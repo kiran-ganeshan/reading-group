@@ -1,37 +1,78 @@
 # Value Functions
 Requirements: [[MDP]]
+Resources:
+- [Sutton & Barto 3.5 - 3.8](http://incompleteideas.net/book/RLbook2020.pdf)
+- [ML@B Blog on MDPs](https://ml.berkeley.edu/blog/posts/mdps/)
+- [Towards Data Science Series on MDPs](https://towardsdatascience.com/introduction-to-reinforcement-learning-markov-decision-process-44c533ebf8da)
 
 ## Introduction
 Note that in the definition of the MDP, we would like to maximize expected reward *across entire trajectories*. Suppose we run two agents for a million time steps on a single MDP. One receives reward 0.5 on every state transition, and the other receives no reward until the last transition, on which it recieves 600,000 reward. Even though it takes the second agent $>10^5$ steps to get any reward, while the first gets reward immediately, the second agent has higher expected reward, so it is the preferred solution.
 
 Clearly, we cannot solve MDPs by teaching agents to maximize immediate reward, so it helps to have an abstract way of discussing the expected reward-to-go. For this purpose, we define the following functions:
-1. We define $Q^{\pi}(s, a)$ to be the expected total reward when taking action $a$ in state $s$ under policy $\pi$.
-2. We define $Q^*(s, a)$ to be the expected total reward when taking action $a$ in state $s$ under the optimal policy $\pi^*$. 
-3. We define $V^{\pi}(s)$ to be the expected total reward when in state $s$ acting under policy $\pi$.when taking an action $a$ in state $s$. We define  to be this expected reward-to-go when acting under a policy $\pi$, and we define $Q^*(s, a) = \max_{\pi}Q^{\pi}(s, a)$ to be the expected reward-to-go under the optimal policy.
+1. We define $Q^{\pi}(s, a)$ to be the expected reward-to-go when taking action $a$ in state $s$ under policy $\pi$.
+2. We define $Q^*(s, a)=\max_{\pi}Q^{\pi}(s, a)$ to be the expected reward-to-go under the optimal policy.
+3. We define $V^{\pi}(s)$ to be the expected reward-to-go when in state $s$ acting under policy $\pi$. 
+4. We define $V^*(s) = \max_{\pi}V^{\pi}(s)$ to be the expected reward-to-go under the optimal policy.
 
 ## Definition
-For an MDP where trajectories are at most $T$ time steps in length ($T$ is called out *horizon*):
-$$Q^*(s, a) = \mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^*(\tau\mid s, a)}\left[\sum_{t=0}^{T}r(s_t, a_t)\right]$$
-$$Q^{\pi}(s, a) = \mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^{\pi}(\tau \mid s, a)}\left[\sum_{t=0}^{T}r(s_t, a_t)\right]$$
-$$V^*(s) = \mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^*(\tau \mid s)}\left[\sum_{t=0}^{T}r(s_t, a_t)\right] $$
-$$V^{\pi}(s) = \mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^{\pi}(\tau \mid s)}\left[\sum_{t=0}^{T}r(s_t, a_t)\right]$$
-where clearly $\tau = ((s_1, a_1), \dots, (s_T, a_T))$. (Recall [[MDP#Trajectories]].) These expressions simply represent the expected total reward under the optimal policy and under policy $\pi$, respectively. Since our objective is simply the expected total reward, the optimal policy is given by
+For an MDP with finite horizon $T\in\mathbb{N}$:
+$$\begin{align*}Q^*(s, a) &= \mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^*(\tau\mid s, a)}\left[\sum_{t=0}^{T}r(s_t, a_t)\right]\\Q^{\pi}(s, a) &= \mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^{\pi}(\tau \mid s, a)}\left[\sum_{t=0}^{T}r(s_t, a_t)\right]\\V^*(s) &= \mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^*(\tau \mid s)}\left[\sum_{t=0}^{T}r(s_t, a_t)\right] \\V^{\pi}(s) &= \mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^{\pi}(\tau \mid s)}\left[\sum_{t=0}^{T}r(s_t, a_t)\right]\end{align*}$$
+(Recall the distributions over [[MDP#Describing Solutions | trajectories]] $\mathcal{T}^{\pi}$ and $\mathcal{T}^*$.) These expressions represent the expected total reward under the optimal policy and under policy $\pi$, respectively. To see why these may be useful, note that since our objective is simply the expected total reward, the optimal policy is given by
 $$\pi^*(s) = \mathop{\text{argmax}}_{a\in A}\; Q^*(s, a)$$
 And thus learning the $Q$-values under the optimal policy can be helpful in determining the optimal policy.
 
 ## Infinite-Horizon Case
-The value functions we have defined thus far are unproblematic in finite-horizon MDPs, where total reward is necessarily bounded. But what if we care about reward infinitely far into the future? Then it is not clear the value function expressions above converge. In this case, we add a *discount factor* $\gamma \in (0, 1)$ to future rewards:
-$$Q^*(s, a) = \left(\frac{1}{1-\gamma}\right)\mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^*(s, a)}\left[\sum_{t=0}^{\infty}\gamma^tr(s_t, a_t)\right]$$
-$$Q^{\pi}(s, a) = \left(\frac{1}{1-\gamma}\right) \mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^{\pi}(s, a)}\left[\sum_{t=0}^{\infty}\gamma^tr(s_t, a_t)\right]$$
-$$V^*(s) = \left(\frac{1}{1-\gamma}\right)\mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^*(s)}\left[\sum_{t=0}^{\infty}\gamma^tr(s_t, a_t)\right]$$
-$$V^{\pi}(s) = \left(\frac{1}{1-\gamma}\right) \mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^{\pi}(s)}\left[\sum_{t=0}^{\infty}\gamma^tr(s_t, a_t)\right]$$
-Then, if we have $r(s, a) \leq R$ for some finite $R$ and all $(s, a)\in S\times A$, we have $Q^*(s, a)\leq R$ and $Q^{\pi}(s, a)\leq R$, so both expressions are bounded.
+When we are in an [[MDP#Infinite Horizon MDPs| Infinite Horizon MDP]], we add a discount factor:
+$$\begin{align*}Q^*(s, a) &= \mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^*(s, a)}\left[\sum_{t=0}^{\infty}\gamma^tr(s_t, a_t)\right]\\
+Q^{\pi}(s, a) &= \mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^{\pi}(s, a)}\left[\sum_{t=0}^{\infty}\gamma^tr(s_t, a_t)\right]\\
+V^*(s) &= \mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^*(s)}\left[\sum_{t=0}^{\infty}\gamma^tr(s_t, a_t)\right]\\
+V^{\pi}(s) &=  \mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^{\pi}(s)}\left[\sum_{t=0}^{\infty}\gamma^tr(s_t, a_t)\right]\end{align*}$$
+Since the optimal policy in an Infinite Horizon MDP is the one which maximizes expected discounted total reward, we again have
+$$\pi^*(s) = \mathop{\text{argmax}}_{a\in A}\; Q^*(s, a)$$
+Despite that fact that $\pi^*$ and $Q^*$ are defined slightly differently than in the finite horizon case.
 
-This discount factor turns out to be quite important for the stability of methods relying on value iteration (i.e., learning $Q$ or $V$ values). However, the discount factor also poses a problem for situations with sparse rewards. Even for values of $\gamma$ very close to 1, when $t$ grows large enough, $\gamma^t$ diminishes, meaning rewards that are far in the future are heavily discounted. The difficulty that naive value iteration experiences in the sparse-reward setting has prompted much research and development in exploration techniques for RL algorithms.
+
+## Expectation Recurrence
+Now recall the [[MDP#Decomposing Expectations | Expectation Decompositions]] for expectations over trajectory distributions:
+$$\begin{align*}\mathop{\mathbb{E}}_{\tau \sim \mathcal{T}^{\pi}(\tau \mid s)} &= \mathop{\mathbb{E}}_{a_0\sim \pi(s)}\;\boxed{\mathop{\mathbb{E}}_{s_1\sim \mathcal{T}(s_1\mid s, a_0)}\;\mathop{\mathbb{E}}_{a_1\sim \pi(s_1)}\;\mathop{\mathbb{E}}_{s_2\sim \mathcal{T}(s_2\mid s_1, a_1)} \dots}\\
+\mathop{\mathbb{E}}_{\tau \sim \mathcal{T}^{\pi}(\tau \mid s, a)} &=\boxed{ \mathop{\mathbb{E}}_{s_1\sim \mathcal{T}(s_1\mid s, a)}\;\mathop{\mathbb{E}}_{a_1\sim \pi(s_1)}\;\mathop{\mathbb{E}}_{s_2\sim \mathcal{T}(s_2\mid s_1, a_1)}\;\mathop{\mathbb{E}}_{a_2\sim \pi(s_2)} \dots }\\\mathop{\mathbb{E}}_{\tau \sim \mathcal{T}^*(\tau \mid s)} &= \mathop{\mathbb{E}}_{a_0\sim \pi^*(s)}\;\boxed{\mathop{\mathbb{E}}_{s_1\sim \mathcal{T}(s_1\mid s, a_0)}\;\mathop{\mathbb{E}}_{a_1\sim \pi^*(s_1)}\;\mathop{\mathbb{E}}_{s_2\sim \mathcal{T}(s_2\mid s_1, a_1)} \dots}\\
+\mathop{\mathbb{E}}_{\tau \sim \mathcal{T}^*(\tau \mid s, a)} &=\boxed{ \mathop{\mathbb{E}}_{s_1\sim \mathcal{T}(s_1\mid s, a)}\;\mathop{\mathbb{E}}_{a_1\sim \pi^*(s_1)}\;\mathop{\mathbb{E}}_{s_2\sim \mathcal{T}(s_2\mid s_1, a_1)}\;\mathop{\mathbb{E}}_{a_2\sim \pi^*(s_2)} \dots}\end{align*}$$
+Notice the similarity between the parts of the expressions we boxed. They allow us to write the following:
+$$\begin{align*}\mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^{\pi}(\tau\mid s)} &= \mathop{\mathbb{E}}_{a\sim\pi(s)}\; \mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^{\pi}(\tau\mid s, a)}\\\mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^*(\tau\mid s)} &= \mathop{\mathbb{E}}_{a\sim\pi^*(s)}\; \mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^*(\tau\mid s, a)}\end{align*}$$
+(Note: In a Finite Horizon MDP, the boxed expressions start with the same expectations, but the expressions corresponding to $\mathcal{T}^{\pi}(\tau\mid s, a)$ and $\mathcal{T}^*(\tau\mid s, a)$ may not have the same number of expectations as those corresponding to $\mathcal{T}^{\pi}(\tau\mid s)$ and $\mathcal{T}^*(\tau\mid s)$. For convenience, we will assume we are dealing with an Infinite Horizon MDP. We will see that it is trivial to extend our results to Finite Horizon MDPs.) We can also see a similarity between the following boxed expressions:
+$$\begin{align*}\mathop{\mathbb{E}}_{\tau \sim \mathcal{T}^{\pi}(\tau \mid s)} &=\boxed{ \mathop{\mathbb{E}}_{a_0\sim \pi(s)}\;\mathop{\mathbb{E}}_{s_1\sim \mathcal{T}(s_1\mid s, a_0)}\;\mathop{\mathbb{E}}_{a_1\sim \pi(s_1)}\;\mathop{\mathbb{E}}_{s_2\sim \mathcal{T}(s_2\mid s_1, a_1)} \dots}\\
+\mathop{\mathbb{E}}_{\tau \sim \mathcal{T}^{\pi}(\tau \mid s, a)} &= \mathop{\mathbb{E}}_{s_1\sim \mathcal{T}(s_1\mid s, a)}\;\boxed{\mathop{\mathbb{E}}_{a_1\sim \pi(s_1)}\;\mathop{\mathbb{E}}_{s_2\sim \mathcal{T}(s_2\mid s_1, a_1)}\;\mathop{\mathbb{E}}_{a_2\sim \pi(s_2)} \dots }\\\mathop{\mathbb{E}}_{\tau \sim \mathcal{T}^*(\tau \mid s)} &= \boxed{\mathop{\mathbb{E}}_{a_0\sim \pi^*(s)}\;\mathop{\mathbb{E}}_{s_1\sim \mathcal{T}(s_1\mid s, a_0)}\;\mathop{\mathbb{E}}_{a_1\sim \pi^*(s_1)}\;\mathop{\mathbb{E}}_{s_2\sim \mathcal{T}(s_2\mid s_1, a_1)} \dots}\\
+\mathop{\mathbb{E}}_{\tau \sim \mathcal{T}^*(\tau \mid s, a)} &= \mathop{\mathbb{E}}_{s_1\sim \mathcal{T}(s_1\mid s, a)}\;\boxed{\mathop{\mathbb{E}}_{a_1\sim \pi^*(s_1)}\;\mathop{\mathbb{E}}_{s_2\sim \mathcal{T}(s_2\mid s_1, a_1)}\;\mathop{\mathbb{E}}_{a_2\sim \pi^*(s_2)} \dots}\end{align*}$$
+which give rise to the following relations:
+$$\begin{align*}\mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^{\pi}(\tau\mid s, a)} &= \mathop{\mathbb{E}}_{s'\sim\mathcal{T}^{\pi}(s, a)}\; \mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^{\pi}(\tau\mid s')}\\\mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^*(\tau\mid s, a)} &= \mathop{\mathbb{E}}_{s'\sim\mathcal{T}^*(s, a)}\; \mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^*(\tau\mid s')}\end{align*}$$
+These expectation recurrence relations will help us derive recurrence relations for $Q^{\pi}$, $Q^*$, $V^{\pi}$, and $V^*$, since they are defined using expectations over trajectories. But the expectations in question are expetations over total (discounted) reward, which allows us to substitute $\max$ for $\mathbb{E}$ in our decomposition, altering one of our recurrences:
+$$\begin{align*}\mathop{\mathbb{E}}_{\tau \sim \mathcal{T}^*(\tau \mid s)} &= \max_{a_0\in A}\;\boxed{\mathop{\mathbb{E}}_{s_1\sim \mathcal{T}(s_1\mid s, a_0)}\;\max_{a_1\in A}\;\mathop{\mathbb{E}}_{s_2\sim \mathcal{T}(s_2\mid s_1, a_1)} \dots}\\
+\mathop{\mathbb{E}}_{\tau \sim \mathcal{T}^*(\tau \mid s, a)} &= \boxed{\mathop{\mathbb{E}}_{s_1\sim \mathcal{T}(s_1\mid s, a)}\;\max_{a_1\in A}\;\mathop{\mathbb{E}}_{s_2\sim \mathcal{T}(s_2\mid s_1, a_1)}\;\max_{a_2\in A} \dots}\end{align*}$$
+$$\Longrightarrow \mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^*(\tau\mid s)}=\max_{a\in A}\mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^*(s, a)}$$
+In conclusion, we can write
+$$\begin{align*}\mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^{\pi}(\tau\mid s, a)} &= \mathop{\mathbb{E}}_{s'\sim\mathcal{T}^{\pi}(s, a)}\; \mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^{\pi}(\tau\mid s')}\\\mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^*(\tau\mid s, a)} &= \mathop{\mathbb{E}}_{s'\sim\mathcal{T}^*(s, a)}\; \mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^*(\tau\mid s')}\\\mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^{\pi}(\tau\mid s)} &= \mathop{\mathbb{E}}_{a\sim\pi(s)}\; \mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^{\pi}(\tau\mid s, a)}\\\mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^*(\tau\mid s)}&=\max_{a\in A}\mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^*(s, a)}\end{align*}$$
+We will use these to derive recurrence relations which relate $V$ to $Q$ and $Q$ to $V$. Putting these partial recurrence relations together, we can derive full recurrence relations which relate $V$ to $V$ and $Q$ to $Q$.
 
 ## Bellman Recurrence
-The discount factor $\gamma$ introduced above has one remaining unmentioned advantage. Because it allows us to expand the horizon $T$ to infinite length, it also allows for some convenient relations between the value functions by peeling the first state and action off of the trajectory we are taking an expectation over:
+Using the expectation recurrence relations we derived above (the last of which is only valid when we are applying it to the RL objective, as we are in $Q$ and $V$), we can derive the following partial recurrence relations:
 
-$$\begin{align*}V^*(s) &= \left(\frac{1}{1-\gamma}\right)\mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^*(\tau \mid s)}\left[\sum_{t=0}^{T}r(s_t, a_t)\right] &V^{\pi}(s) &= \left(\frac{1}{1-\gamma}\right)\mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^{\pi}(\tau \mid s)}\left[\sum_{t=0}^{T}r(s_t, a_t)\right] \\&=\left(\frac{1}{1-\gamma}\right) \max_{a\in A}\mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^*(\tau \mid s, a)}\left[\sum_{t=0}^{T}r(s_t, a_t)\right]&&=\left(\frac{1}{1-\gamma}\right) \mathop{\mathbb{E}}_{a\sim \pi(a\mid s)}\;\mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^{\pi}(\tau \mid s, a)}\left[\sum_{t=0}^{T}r(s_t, a_t)\right] \\&= \max_{a\in A}\left(\frac{1}{1-\gamma}\right)\mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^*(\tau \mid s, a)}\left[\sum_{t=0}^{T}r(s_t, a_t)\right]&&=\mathop{\mathbb{E}}_{a\sim \pi(a\mid s)}\left(\frac{1}{1-\gamma}\right) \mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^{\pi}(\tau \mid s, a)}\left[\sum_{t=0}^{T}r(s_t, a_t)\right]\\&= \max_{a\in A} Q^*(s, a)&&=\mathop{\mathbb{E}}_{a\sim \pi(a\mid s)}\;Q^{\pi}(s, a)\end{align*}$$
-$$\begin{align*}Q^*(s, a) &= \left(\frac{1}{1-\gamma}\right)\mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^*(\tau \mid s, a)}\left[\sum_{t=0}^{\infty}r(s_t, a_t)\right] &Q^{\pi}(s, a) &= \left(\frac{1}{1-\gamma}\right)\mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^{\pi}(\tau \mid s)}\left[\sum_{t=0}^{\infty}r(s_t, a_t)\right] \\&=\left(\frac{1}{1-\gamma}\right) \max_{a\in A}\mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^*(\tau \mid s, a)}\left[\sum_{t=0}^{T}r(s_t, a_t)\right]&&=\left(\frac{1}{1-\gamma}\right) \mathop{\mathbb{E}}_{a\sim \pi(a\mid s)}\;\mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^{\pi}(\tau \mid s, a)}\left[\sum_{t=0}^{T}r(s_t, a_t)\right] \\&= \max_{a\in A}\left(\frac{1}{1-\gamma}\right)\mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^*(\tau \mid s, a)}\left[\sum_{t=0}^{T}r(s_t, a_t)\right]&&=\mathop{\mathbb{E}}_{a\sim \pi(a\mid s)}\left(\frac{1}{1-\gamma}\right) \mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^{\pi}(\tau \mid s, a)}\left[\sum_{t=0}^{T}r(s_t, a_t)\right]\\&= \max_{a\in A} Q^*(s, a)&&=\mathop{\mathbb{E}}_{a\sim \pi(a\mid s)}\;Q^{\pi}(s, a)\end{align*}$$
+|  | Partial Recurrence Relation |
+| --- | --- | 
+|$Q^*$| $$\begin{align*}Q^*(s, a) &= \mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^*(\tau \mid s, a)}\left[\sum_{t=0}^{\infty}\gamma^tr(s_t, a_t)\right] &\\&= \mathop{\mathbb{E}}_{s'\sim \mathcal{T(s' \mid s,a)}}\;\mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^*(\tau \mid s')}\left[\gamma^0r(s, a) + \sum_{t=0}^{\infty}\gamma^{t+1}r(s_t, a_t)\right]& \\&= \mathop{\mathbb{E}}_{s'\sim \mathcal{T(s' \mid s,a)}}\left\{r(s, a) + \gamma\mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^*(\tau \mid s')}\left[\sum_{t=0}^{\infty}\gamma^tr(s_t, a_t)\right]\right\}&\\&= r(s, a) + \gamma\mathop{\mathbb{E}}_{s'\sim \mathcal{T(s' \mid s,a)}} V^*(s')&\end{align*}$$ |
+| $Q^{\pi}$ | $$\begin{align*}Q^{\pi}(s, a) &= \mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^{\pi}(\tau \mid s)}\left[\sum_{t=0}^{\infty}r(s_t, a_t)\right]\\&=\mathop{\mathbb{E}}_{s'\sim \mathcal{T}(s' \mid s,a)}\; \mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^{\pi}(\tau \mid s')}\left[\gamma^0r(s, a) + \sum_{t=0}^{T}\gamma^{t+1}r(s_t, a_t)\right]\\&= \mathop{\mathbb{E}}_{s'\sim \mathcal{T}(s' \mid s,a)}\left\{r(s, a) + \gamma\mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^{\pi}(\tau \mid s, a)}\left[\sum_{t=0}^{\infty}\gamma^tr(s_t, a_t)\right]\right\}\\&=r(s, a) + \gamma\mathop{\mathbb{E}}_{s'\sim \mathcal{T}(s' \mid s,a)}\;V^{\pi}(s')\end{align*} $$ |
+| $V^*$ | $$\begin{align*}V^*(s) &= \left(\frac{1}{1-\gamma}\right)\mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^*(\tau \mid s)}\left[\sum_{t=0}^{T}r(s_t, a_t)\right] & \\&=\left(\frac{1}{1-\gamma}\right) \max_{a\in A}\mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^*(\tau \mid s, a)}\left[\sum_{t=0}^{T}r(s_t, a_t)\right] &\\&= \max_{a\in A}\left(\frac{1}{1-\gamma}\right)\mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^*(\tau \mid s, a)}\left[\sum_{t=0}^{T}r(s_t, a_t)\right]&\\&= \max_{a\in A} Q^*(s, a)\end{align*}$$ |
+| $V^{\pi}$ | $$\begin{align*}V^{\pi}(s) &= \left(\frac{1}{1-\gamma}\right)\mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^{\pi}(\tau \mid s)}\left[\sum_{t=0}^{T}r(s_t, a_t)\right]\\&=\left(\frac{1}{1-\gamma}\right) \mathop{\mathbb{E}}_{a\sim \pi(a\mid s)}\;\mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^{\pi}(\tau \mid s, a)}\left[\sum_{t=0}^{T}r(s_t, a_t)\right] \\&=\mathop{\mathbb{E}}_{a\sim \pi(a\mid s)}\left(\frac{1}{1-\gamma}\right) \mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^{\pi}(\tau \mid s, a)}\left[\sum_{t=0}^{T}r(s_t, a_t)\right]\\&=\mathop{\mathbb{E}}_{a\sim \pi(a\mid s)}\;Q^{\pi}(s, a)\end{align*}$$ |
+
+We can plug these partial recurrence relations into one another to obtain the following full recurrence relations:
+
+|  | Full Recurrence Relation |
+| --- | --- | 
+|$Q^*$| $$\begin{align*}Q^*(s, a) &= r(s, a) + \gamma\mathop{\mathbb{E}}_{s'\sim \mathcal{T(s' \mid s,a)}} V^*(s')\\&=r(s, a) + \gamma\mathop{\mathbb{E}}_{s'\sim \mathcal{T(s' \mid s,a)}}\max_{a\in A}Q^*(s, a)\end{align*}$$ |
+| $Q^{\pi}$ | $$\begin{align*}Q^{\pi}(s, a) &=r(s, a) + \gamma\mathop{\mathbb{E}}_{s'\sim \mathcal{T}(s' \mid s,a)}\;V^{\pi}(s')\\&=r(s, a) + \gamma\mathop{\mathbb{E}}_{s'\sim \mathcal{T}(s' \mid s,a)}\;\mathop{\mathbb{E}}_{a\sim \pi(a\mid s)}\;Q^{\pi}(s, a)\end{align*} $$ |
+| $V^*$ | $$\begin{align*}V^*(s) &=\max_{a\in A}Q^*(s, a)\\&= \max_{a\in A} \left\{r(s, a) + \gamma\mathop{\mathbb{E}}_{s'\sim \mathcal{T(s' \mid s,a)}} V^*(s')\right\}\end{align*}$$ |
+| $V^{\pi}$ | $$\begin{align*}V^{\pi}(s) &=\mathop{\mathbb{E}}_{a\sim \pi(a\mid s)}\;Q^{\pi}(s, a)\\&=\mathop{\mathbb{E}}_{a\sim \pi(a\mid s)}\left\{r(s, a) + \gamma\mathop{\mathbb{E}}_{s'\sim \mathcal{T}(s' \mid s,a)}\;V^{\pi}(s')\right\}\end{align*}$$ |
+
+
+
+
 

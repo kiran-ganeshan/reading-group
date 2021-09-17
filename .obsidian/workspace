@@ -4,16 +4,19 @@
     "type": "split",
     "children": [
       {
-        "id": "76adecdde0c27245",
+        "id": "fb1ce8c0b953069e",
         "type": "leaf",
         "state": {
-          "type": "graph",
-          "state": {}
+          "type": "markdown",
+          "state": {
+            "file": "RL/Value Functions.md",
+            "mode": "source"
+          }
         },
-        "group": "07c7e091cea88dd2"
+        "group": "d46a2644e32b132d"
       },
       {
-        "id": "2d5994f3b3acc79f",
+        "id": "98be98744860bff0",
         "type": "leaf",
         "state": {
           "type": "markdown",
@@ -22,7 +25,7 @@
             "mode": "preview"
           }
         },
-        "group": "07c7e091cea88dd2"
+        "group": "d46a2644e32b132d"
       }
     ],
     "direction": "vertical"
@@ -78,6 +81,7 @@
             "state": {
               "type": "backlink",
               "state": {
+                "file": "RL/Value Functions.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -95,17 +99,17 @@
     "width": 300,
     "collapsed": true
   },
-  "active": "76adecdde0c27245",
+  "active": "fb1ce8c0b953069e",
   "lastOpenFiles": [
     "RL/Value Functions.md",
-    "RL/Online RL/PG.md",
-    "RL/Online RL/Value Iteration Methods/TQL.md",
-    "RL/Bellman Recurrence.md",
     "RL/MDP.md",
+    "RL/Online RL/Value Iteration Methods/DQN/DQN.md",
+    "RL/Online RL/Value Iteration Methods/Deuling DQN.md",
+    "RL/Online RL/Value Iteration Methods/TQL.md",
+    "RL/Importance Weighting.md",
+    "RL/Online RL/PG.md",
+    "RL/Bellman Recurrence.md",
     "Linear Algebra/Linear Mapping.md",
-    "RL/Q Function.md",
-    "RL/V Function.md",
-    "RL/Online RL/Actor-Critic Methods/TRPO.md",
-    "RL/Online RL/Actor-Critic Methods/SAC.md"
+    "RL/Q Function.md"
   ]
 }

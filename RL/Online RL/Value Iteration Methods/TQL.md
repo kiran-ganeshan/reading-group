@@ -26,9 +26,9 @@ Notice that our updates are designed to average over the second term in the [[Va
 
 ## Analysis
 
-Our algorithm converges if the MDP is finite and acyclic.
+**Theorem: Our algorithm converges if the MDP is finite and acyclic.**
 
-First note that if we run TQL long enough, $A(s')$ will become the entire action space $A$, meaning we have visited $(s', a')$ for each $(s', a') \in S\times A$. This will come in handy later. 
+Proof: First note that if we run TQL long enough, $A(s')$ will become the entire action space $A$, meaning we have visited $(s', a')$ for each $(s', a') \in S\times A$. This will come in handy later. 
 
 We prove that TQL converges by induction on state-action pairs. We know TQL automatically converges on terminal states because we always visit these states (see the paragraph above), and convergence on these states takes only 1 visit. Suppose we also know that whenever TQL converges on all state-action pairs reachable from $(s, a)$, it also eventually converges on $(s, a)$. Then, because the MDP is finite and acylic, we can inductively establish that TQL converges on the entire MDP.
 
