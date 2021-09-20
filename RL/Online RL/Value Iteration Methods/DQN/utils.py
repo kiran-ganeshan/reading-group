@@ -62,8 +62,10 @@ class MLP(nn.Module):
         
         sizes = [input_size] + [x for x in hidden_sizes] + [output_size]
         self.layers = []
-        for s1, s2 in zip(sizes[:-1], sizes[1:]):
-            self.layers.append(nn.Linear(s1, s2))
+        for i, (s1, s2) in enumerate(zip(sizes[:-1], sizes[1:])):
+            layer = nn.Linear(s1, s2)
+            self.layers.append(layer)
+            self.add_module(f'layer{i}', layer)
         self.activation = activation
     
     def forward(self, x):

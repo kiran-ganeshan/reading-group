@@ -22,14 +22,14 @@ $$\pi^*(s) = \mathop{\text{argmax}}_{a\in A}\; Q^*(s, a)$$
 And thus learning the $Q$-values under the optimal policy can be helpful in determining the optimal policy.
 
 ## Infinite-Horizon Case
-When we are in an [[MDP#Infinite Horizon MDPs| Infinite Horizon MDP]], we add a discount factor:
+When we are in an [[MDP#Infinite Horizon MDPs| Infinite Horizon MDP]], we've seen that we add a discount factor:
 $$\begin{align*}Q^*(s, a) &= \mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^*(s, a)}\left[\sum_{t=0}^{\infty}\gamma^tr(s_t, a_t)\right]\\
 Q^{\pi}(s, a) &= \mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^{\pi}(s, a)}\left[\sum_{t=0}^{\infty}\gamma^tr(s_t, a_t)\right]\\
 V^*(s) &= \mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^*(s)}\left[\sum_{t=0}^{\infty}\gamma^tr(s_t, a_t)\right]\\
 V^{\pi}(s) &=  \mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^{\pi}(s)}\left[\sum_{t=0}^{\infty}\gamma^tr(s_t, a_t)\right]\end{align*}$$
 Since the optimal policy in an Infinite Horizon MDP is the one which maximizes expected discounted total reward, we again have
 $$\pi^*(s) = \mathop{\text{argmax}}_{a\in A}\; Q^*(s, a)$$
-Despite that fact that $\pi^*$ and $Q^*$ are defined slightly differently than in the finite horizon case.
+despite that fact that $\pi^*$ and $Q^*$ are defined slightly differently than in the finite horizon case. This is similar to the reason we can still turn expectations over the optimal policy into maximums when working with discounted reward: recall [[MDP#^0c1458 | this paragraph]].
 
 
 ## Expectation Recurrence
@@ -45,11 +45,11 @@ $$\begin{align*}\mathop{\mathbb{E}}_{\tau \sim \mathcal{T}^{\pi}(\tau \mid s)} &
 \mathop{\mathbb{E}}_{\tau \sim \mathcal{T}^*(\tau \mid s, a)} &= \mathop{\mathbb{E}}_{s_1\sim \mathcal{T}(s_1\mid s, a)}\;\boxed{\mathop{\mathbb{E}}_{a_1\sim \pi^*(s_1)}\;\mathop{\mathbb{E}}_{s_2\sim \mathcal{T}(s_2\mid s_1, a_1)}\;\mathop{\mathbb{E}}_{a_2\sim \pi^*(s_2)} \dots}\end{align*}$$
 which give rise to the following relations:
 $$\begin{align*}\mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^{\pi}(\tau\mid s, a)} &= \mathop{\mathbb{E}}_{s'\sim\mathcal{T}^{\pi}(s, a)}\; \mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^{\pi}(\tau\mid s')}\\\mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^*(\tau\mid s, a)} &= \mathop{\mathbb{E}}_{s'\sim\mathcal{T}^*(s, a)}\; \mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^*(\tau\mid s')}\end{align*}$$
-These expectation recurrence relations will help us derive recurrence relations for $Q^{\pi}$, $Q^*$, $V^{\pi}$, and $V^*$, since they are defined using expectations over trajectories. But the expectations in question are expetations over total (discounted) reward, which allows us to substitute $\max$ for $\mathbb{E}$ in our decomposition, altering one of our recurrences:
+These expectation recurrence relations will help us derive recurrence relations for $Q^{\pi}$, $Q^*$, $V^{\pi}$, and $V^*$, since they are defined using expectations over trajectories. But we are taking the expectation of total (discounted) reward, which is the objective that our optimal policy $\pi^*$ maximizes. This allows us to substitute $\underset{a_i\in A}{\max}$ for $\underset{a_i\sim \pi^*(s_i)}{\mathbb{E}}$ in our decomposition, altering one of our recurrences:
 $$\begin{align*}\mathop{\mathbb{E}}_{\tau \sim \mathcal{T}^*(\tau \mid s)} &= \max_{a_0\in A}\;\boxed{\mathop{\mathbb{E}}_{s_1\sim \mathcal{T}(s_1\mid s, a_0)}\;\max_{a_1\in A}\;\mathop{\mathbb{E}}_{s_2\sim \mathcal{T}(s_2\mid s_1, a_1)} \dots}\\
 \mathop{\mathbb{E}}_{\tau \sim \mathcal{T}^*(\tau \mid s, a)} &= \boxed{\mathop{\mathbb{E}}_{s_1\sim \mathcal{T}(s_1\mid s, a)}\;\max_{a_1\in A}\;\mathop{\mathbb{E}}_{s_2\sim \mathcal{T}(s_2\mid s_1, a_1)}\;\max_{a_2\in A} \dots}\end{align*}$$
 $$\Longrightarrow \mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^*(\tau\mid s)}=\max_{a\in A}\mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^*(s, a)}$$
-In conclusion, we can write
+In conclusion, in Infinite-Horizon MDPs we can write
 $$\begin{align*}\mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^{\pi}(\tau\mid s, a)} &= \mathop{\mathbb{E}}_{s'\sim\mathcal{T}^{\pi}(s, a)}\; \mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^{\pi}(\tau\mid s')}\\\mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^*(\tau\mid s, a)} &= \mathop{\mathbb{E}}_{s'\sim\mathcal{T}^*(s, a)}\; \mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^*(\tau\mid s')}\\\mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^{\pi}(\tau\mid s)} &= \mathop{\mathbb{E}}_{a\sim\pi(s)}\; \mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^{\pi}(\tau\mid s, a)}\\\mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^*(\tau\mid s)}&=\max_{a\in A}\mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^*(s, a)}\end{align*}$$
 We will use these to derive recurrence relations which relate $V$ to $Q$ and $Q$ to $V$. Putting these partial recurrence relations together, we can derive full recurrence relations which relate $V$ to $V$ and $Q$ to $Q$.
 
@@ -63,7 +63,7 @@ Using the expectation recurrence relations we derived above (the last of which i
 | $V^*$ | $$\begin{align*}V^*(s) &= \left(\frac{1}{1-\gamma}\right)\mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^*(\tau \mid s)}\left[\sum_{t=0}^{T}r(s_t, a_t)\right] & \\&=\left(\frac{1}{1-\gamma}\right) \max_{a\in A}\mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^*(\tau \mid s, a)}\left[\sum_{t=0}^{T}r(s_t, a_t)\right] &\\&= \max_{a\in A}\left(\frac{1}{1-\gamma}\right)\mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^*(\tau \mid s, a)}\left[\sum_{t=0}^{T}r(s_t, a_t)\right]&\\&= \max_{a\in A} Q^*(s, a)\end{align*}$$ |
 | $V^{\pi}$ | $$\begin{align*}V^{\pi}(s) &= \left(\frac{1}{1-\gamma}\right)\mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^{\pi}(\tau \mid s)}\left[\sum_{t=0}^{T}r(s_t, a_t)\right]\\&=\left(\frac{1}{1-\gamma}\right) \mathop{\mathbb{E}}_{a\sim \pi(a\mid s)}\;\mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^{\pi}(\tau \mid s, a)}\left[\sum_{t=0}^{T}r(s_t, a_t)\right] \\&=\mathop{\mathbb{E}}_{a\sim \pi(a\mid s)}\left(\frac{1}{1-\gamma}\right) \mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^{\pi}(\tau \mid s, a)}\left[\sum_{t=0}^{T}r(s_t, a_t)\right]\\&=\mathop{\mathbb{E}}_{a\sim \pi(a\mid s)}\;Q^{\pi}(s, a)\end{align*}$$ |
 
-We can plug these partial recurrence relations into one another to obtain the following full recurrence relations:
+We can plug these partial recurrence relations into one another to obtain the following full recurrence relations for Infinite Horizon MDPs:
 
 |  | Full Recurrence Relation |
 | --- | --- | 
@@ -71,8 +71,6 @@ We can plug these partial recurrence relations into one another to obtain the fo
 | $Q^{\pi}$ | $$\begin{align*}Q^{\pi}(s, a) &=r(s, a) + \gamma\mathop{\mathbb{E}}_{s'\sim \mathcal{T}(s' \mid s,a)}\;V^{\pi}(s')\\&=r(s, a) + \gamma\mathop{\mathbb{E}}_{s'\sim \mathcal{T}(s' \mid s,a)}\;\mathop{\mathbb{E}}_{a\sim \pi(a\mid s)}\;Q^{\pi}(s, a)\end{align*} $$ |
 | $V^*$ | $$\begin{align*}V^*(s) &=\max_{a\in A}Q^*(s, a)\\&= \max_{a\in A} \left\{r(s, a) + \gamma\mathop{\mathbb{E}}_{s'\sim \mathcal{T(s' \mid s,a)}} V^*(s')\right\}\end{align*}$$ |
 | $V^{\pi}$ | $$\begin{align*}V^{\pi}(s) &=\mathop{\mathbb{E}}_{a\sim \pi(a\mid s)}\;Q^{\pi}(s, a)\\&=\mathop{\mathbb{E}}_{a\sim \pi(a\mid s)}\left\{r(s, a) + \gamma\mathop{\mathbb{E}}_{s'\sim \mathcal{T}(s' \mid s,a)}\;V^{\pi}(s')\right\}\end{align*}$$ |
-
-
 
 
 

@@ -19,7 +19,7 @@ class DQN(object):
         self.critic = MLP(input_size=state_dim, 
                           output_size=action_dim, 
                           hidden_sizes=(256, 256), 
-                          activation=nn.ReLU)
+                          activation=nn.ReLU())
         self.critic_target = copy.deepcopy(self.critic)
         self.critic_optimizer = torch.optim.Adam(self.critic.parameters(), lr=3e-4)
 
@@ -43,17 +43,16 @@ class DQN(object):
         # Compute the target Q value
         with torch.no_grad(): 
             target_Q = self.critic_target(next_state)
-            target_Q = torch.max(target_Q, -1)
+            target_Q = torch.max(target_Q, -1)[0]
             data = {'next_q': target_Q}
-            target_Q = reward + not_done * self.discount * target_Q
+            target_Q = reward + self.discount * not_done * target_Q
             data = {'target_q': target_Q, **data}
 
         # Get current Q estimates
         policy = self.critic(state)
-
+ 
         # Compute critic loss
-        one_hot = F.one_hot(action, num_classes=self.action_dim)
-        critic_loss = F.mse_loss(policy, one_hot)
+        critic_loss = F.mse_loss(policy, target_Q)
         losses = {'critic_loss': critic_loss}
 
         # Optimize the critic

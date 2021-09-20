@@ -4,7 +4,7 @@ import gym
 import argparse
 import os
 from utils import ReplayBuffer
-from DQN.dqn import DQN
+from dqn import DQN
  
  
 # Runs policy for X episodes and returns average reward
@@ -17,7 +17,7 @@ def eval_policy(policy, env_name, seed, eval_episodes=10):
 	for _ in range(eval_episodes):
 		state, done = eval_env.reset(), False
 		while not done:
-			action = policy.select_action(np.array(state))
+			action = policy.select_action(torch.FloatTensor(state))
 			state, reward, done, _ = eval_env.step(action)
 			avg_reward += reward
 
@@ -33,7 +33,7 @@ if __name__ == "__main__":
 	
 	parser = argparse.ArgumentParser()
 	parser.add_argument("--policy", default="DQN")                  # Policy name (TD3, DDPG or OurDDPG)
-	parser.add_argument("--env", default="HalfCheetah-v2")          # OpenAI gym environment name
+	parser.add_argument("--env", default="CartPole-v1")          # OpenAI gym environment name
 	parser.add_argument("--seed", default=0, type=int)              # Sets Gym, PyTorch and Numpy seeds
 	parser.add_argument("--start_timesteps", default=25e3, type=int)# Time steps initial random policy is used
 	parser.add_argument("--eval_freq", default=5e3, type=int)       # How often (time steps) we evaluate
@@ -65,7 +65,7 @@ if __name__ == "__main__":
 	env.action_space.seed(args.seed)
 	torch.manual_seed(args.seed)
 	np.random.seed(args.seed)
-	
+	print(env.action_space.shape)
 	state_dim = env.observation_space.shape[0]
 	action_dim = env.action_space.shape[0] 
 	max_action = float(env.action_space.high[0])
@@ -102,7 +102,7 @@ if __name__ == "__main__":
 		if t < args.start_timesteps:
 			action = env.action_space.sample()
 		else:
-			action = policy.select_action(np.array(state))
+			action = policy.select_action(torch.FloatTensor(state))
 
 		# Perform action
 		next_state, reward, done, _ = env.step(action) 
