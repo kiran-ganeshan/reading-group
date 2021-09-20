@@ -51,14 +51,14 @@ $$\mathcal{T}^*(\tau \mid s_0, a_0) = \prod_{k=0}^{\infty} \mathcal{T}(s_{k+1}\m
 ## Decomposing Expectations
 Notice that our maximization objective involves an expectation over the distribution of trajectories $\mathcal{T}^{\pi}(\tau\mid s)$. Recall a trajectory $\tau$ is a list of states and actions:
 $$\tau = ((s, a_0), (s_1, a_1), \dots (s_T, a_T))$$
-where $s$ is given, so we take the expectation over $a_0, s_1, a_1, \dots$ and so on:
+where $s$ is given. Hence, taking an expectation over a distribution over $\tau$ is identical to taking an expectation over $a_0, s_1, a_1, \dots$ and so on:
 $$\mathop{\mathbb{E}}_{\tau\sim\mathcal{T}(\tau\mid s)} =\underset{\substack{a_0 \sim \pi(a_0\mid s)\\s_1\sim \mathcal{T}(s_1\mid s, a_0)\\a_1 \sim \pi(a_1\mid s_1)\\\vdots}}{\mathbb{E}} = \mathop{\mathbb{E}}_{a_0 \sim \pi(a_0\mid s)}\;\mathop{\mathbb{E}}_{s_1\sim \mathcal{T}(s_1\mid s, a_0)}\;\mathop{\mathbb{E}}_{a_1\sim \pi(a_1\mid s_1)}\dots$$
 We are able to decompose the expectation over trajectories into this series of expectations over states and actions because 
 - the distribution of $a_0$ only depends on the value of $s$,
 - the distribution of $s_1$ depends only on $s$ and $a_0$, 
 - the distribution of $a_1$ depends only on $s_1$, and so on.
 
-Thus, we can decompose an expectation over $\mathcal{T}^{\pi}$ into expectations over $\pi$ and $\mathcal{T}$:
+More generally, we can decompose an expectation over $\mathcal{T}^{\pi}$ into expectations over $\pi$ and $\mathcal{T}$:
 $$\begin{align*}\mathop{\mathbb{E}}_{\tau \sim \mathcal{T}^{\pi}(\tau \mid s)} &= \mathop{\mathbb{E}}_{a_0\sim \pi(s)}\;\mathop{\mathbb{E}}_{s_1\sim \mathcal{T}(s_1\mid s, a_0)}\;\mathop{\mathbb{E}}_{a_1\sim \pi(s_1)}\;\mathop{\mathbb{E}}_{s_2\sim \mathcal{T}(s_2\mid s_1, a_1)} \dots\\
 \mathop{\mathbb{E}}_{\tau \sim \mathcal{T}^{\pi}(\tau \mid s, a)} &= \mathop{\mathbb{E}}_{s_1\sim \mathcal{T}(s_1\mid s, a)}\;\mathop{\mathbb{E}}_{a_1\sim \pi(s_1)}\;\mathop{\mathbb{E}}_{s_2\sim \mathcal{T}(s_2\mid s_1, a_1)}\;\mathop{\mathbb{E}}_{a_2\sim \pi(s_2)} \dots\end{align*}$$
 Similarly, we can break an expectation over $\mathcal{T}^*$ into **alternating** expectations over $\pi^*$ and $\mathcal{T}$:

@@ -1,9 +1,10 @@
 # Deep Q-Network
 Requirements: [[TQL]], [[Neural Network]]
 ## Resources
-- The original paper: [Playing Atari with Deep Reinforcement Learning](https://arxiv.org/abs/1312.5602).
-- Extensions of DQN: [SpinningUp Deep Q-Learning Reading List](https://spinningup.openai.com/en/latest/spinningup/keypapers.html#a-deep-q-learning) (in particular, Double Q-Learning for preventing optimistic Q-values)
-- Problems with DQN: [Rainbow](https://arxiv.org/abs/1710.02298)
+- The original paper, [Playing Atari with Deep Reinforcement Learning](https://arxiv.org/abs/1312.5602)
+- [Papers with code](https://paperswithcode.com/method/dqn#:~:text=A%20DQN%2C%20or%20Deep%20Q,framework%20with%20a%20neural%20network.&text=It%20is%20usually%20used%20in%20conjunction%20with%20Experience%20Replay%2C%20for,the%20replay%20memory%20at%20random.)
+- [SpinningUp Deep Q-Learning Reading List](https://spinningup.openai.com/en/latest/spinningup/keypapers.html#a-deep-q-learning) (in particular, Double Q-Learning for preventing optimistic Q-values)
+- Some problems with DQN described in [Rainbow](https://arxiv.org/abs/1710.02298)
 
 ## Use Cases
 DQN can be used to solve MDPs with 
@@ -29,11 +30,11 @@ In TQL, we computed the maximum over the action space directly (working only wit
 
 When approximating $Q$-values with a NN, the first approach that comes to mind is to simply concatenate state-action pairs and map them to $Q$-values:
 
-![[Images/Q(s, a).png]]
+![[Q(s, a).png]]
 
 However, due to the Bellman Recurrence we have to evaluate $\max_{a'\in A}Q(s', a')$ to obtain our target values, which takes one evaluation of the NN for each action in the action space. For large finite action spaces, this can become intractible. Therefore we make our NN take the state $s$ and output a vector of $Q$-values $Q(s, a_i)$ for each $a_i\in A$:
 
-![[Images/Q(s, cdot).png]]
+![[Q(s, cdot).png]]
 
 Then, to compute the maximum, we need only compute a single forward pass and then take the maximum over the output $Q$-values.
 
@@ -61,7 +62,7 @@ $$\mathcal{R} = \{(s_0, a_0, s_1, r(s_0, a_0)),(s_1, a_1, s_2, r(s_1, a_1)), \do
 $$\pi(a\mid s) = \begin{cases}1-\varepsilon + \frac{\varepsilon}{|A|} &\text{if }a = \underset{a\in A}{\arg\max}\;Q(s, a)\\\frac{\varepsilon}{|A|} &\text{otherwise}\end{cases}$$
 
 ## Algorithm
-![[Images/algo.png | \linewidth]]
+![[algo.png | \linewidth]]
 
 ## Results
 
