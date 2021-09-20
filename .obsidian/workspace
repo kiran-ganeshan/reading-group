@@ -4,28 +4,28 @@
     "type": "split",
     "children": [
       {
-        "id": "70196d0b3afcc38a",
+        "id": "599c29ab34f73289",
         "type": "leaf",
         "state": {
           "type": "markdown",
           "state": {
-            "file": "RL/MDP.md",
-            "mode": "source"
-          }
-        },
-        "group": "4de40655e7f8b6fe"
-      },
-      {
-        "id": "3df93ce4823c9dbe",
-        "type": "leaf",
-        "state": {
-          "type": "markdown",
-          "state": {
-            "file": "RL/MDP.md",
+            "file": "RL/Online RL/DQN/DQN.md",
             "mode": "preview"
           }
         },
-        "group": "4de40655e7f8b6fe"
+        "group": "38d7cb457e7ff073"
+      },
+      {
+        "id": "f42eb4d0fad886d5",
+        "type": "leaf",
+        "state": {
+          "type": "markdown",
+          "state": {
+            "file": "RL/Online RL/DQN/DQN.md",
+            "mode": "source"
+          }
+        },
+        "group": "38d7cb457e7ff073"
       }
     ],
     "direction": "vertical"
@@ -81,7 +81,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "RL/MDP.md",
+                "file": "RL/Online RL/DQN/DQN.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -99,17 +99,17 @@
     "width": 300,
     "collapsed": true
   },
-  "active": "70196d0b3afcc38a",
+  "active": "f42eb4d0fad886d5",
   "lastOpenFiles": [
-    "RL/MDP.md",
-    "RL/Online RL/Value Iteration Methods/TQL.md",
-    "RL/Online RL/Value Iteration Methods/DQN/DQN.md",
+    "RL/Online RL/DQN/DQN.md",
+    "RL/Online RL/Deuling DQN.md",
+    "RL/Online RL/DQN/Images/Q(s, a).png",
+    "README.md",
     "RL/Online RL/PG.md",
-    "RL/Importance Weighting.md",
+    "RL/Online RL/DQN/Images/DQN/Q(s, a).png",
+    "RL/Online RL/TQL.md",
     "RL/Value Functions.md",
-    "Theory/Approximation Theorem.md",
-    "Theory/NTK.md",
-    "RL/Online RL/Value Iteration Methods/Deuling DQN.md",
-    "RL/Bellman Recurrence.md"
+    "RL/MDP.md",
+    "RL/Online RL/Value Iteration Methods/TQL.md"
   ]
 }

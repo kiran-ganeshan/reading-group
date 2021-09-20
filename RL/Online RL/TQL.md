@@ -6,6 +6,11 @@ Requirements: [[Value Functions]]
 	- Chapters 5.2 - 5.3 on Monte Carlo $Q$ estimation
 - [Medium Series on TQL for Tic Tac Toe](https://medium.com/@carsten.friedrich/part-3-tabular-q-learning-a-tic-tac-toe-player-that-gets-better-and-better-fa4da4b0892a)
 
+## Use Cases
+TQL can be used to solve MDPs with 
+- Discrete and Finite State Spaces
+- Discrete and Finite Action Spaces
+
 ## Introduction
 
 If you've read the requirements, you understand how [MDP]s can represent a very general class of tasks; namely, any task where an agent interacts with an environment. You also understand how the [[Value Functions | Q Function]] $Q(s, a)$ encodes the expected return when taking an action $a$ in a state $s$. We are now ready to formulate our first solution to MDPs with discrete state and action spaces!
@@ -19,7 +24,7 @@ $$A(s) = \{a \mid \hat Q(s, a) \text{ is recorded}\}$$
 If $A(s)$ is empty, we take a random action. Otherwise, we take the action
 $$a^*(s) = \mathop{\text{argmax}}_{a \in A(s)}\; \hat{Q}(s, a)$$
 
-## Details
+## Algorithm
 
 Assuming we can reliably calculate $Q$-values, this is a sensible way for our agent to interact in the environment to maximize expected reward. We do have one problem, however: we do not directly see the value of $Q(s, a)$ when taking an action $a$ in state $s$, so we do not know what value to record on our table. The [[Value Functions#Bellman Recurrence | Bellman Recurrence]] saves us here when combined with state-counting:
 $$Q(s, a) = r(s, a) + \gamma\mathop{\mathbb{E}}_{s' \sim \mathcal{T}(s' \mid s, a)}\max_{a'\in A} Q(s', a')$$
@@ -29,7 +34,7 @@ $$n(s, a) = 1$$
 Otherwise, update $Q(s, a)$ and $n(s, a)$ as
 $$\hat{Q}(s, a) \leftarrow \frac{1}{n(s, a)}\left((n(s, a) - 1)\hat{Q}(s, a) + r(s, a) + \gamma\max_{a'\in A(s')}\hat{Q}(s', a')\right)$$
 $$n(s, a) \leftarrow n(s, a) + 1$$
-Notice that our updates are designed to average over the second term in the [[Value Functions#Bellman Recurrence | Bellman Recurrence]], so the more we take an action $a$ in a state $s$, the more samples $s'$ we are averaging over, and the lower the variance of our estimate of $Q(s, a)$. 
+These updates may be described as ***continual averaging***: they are designed such that $\hat{Q}(s, a)$ is the average (over $s'$) of the target value $r(s, a) + \gamma\max_{a'\in A(s')} \hat{Q}(s', a')$, but we don't have to keep track of every target $Q$ value for each $s'$ in order to calculate this average (we can do this by storing the average itself as well as the number of samples, hence why we introduce $n(s, a)$). The more we take an action $a$ in a state $s$, the more samples $s'$ we are averaging over, and the lower the variance of our estimate of $Q(s, a)$. 
 
 ## Analysis
 
