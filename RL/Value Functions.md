@@ -63,6 +63,8 @@ Using the expectation recurrence relations we derived above (the last of which i
 | $V^*$ | $$\begin{align*}V^*(s) &= \left(\frac{1}{1-\gamma}\right)\mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^*(\tau \mid s)}\left[\sum_{t=0}^{T}r(s_t, a_t)\right] & \\&=\left(\frac{1}{1-\gamma}\right) \max_{a\in A}\mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^*(\tau \mid s, a)}\left[\sum_{t=0}^{T}r(s_t, a_t)\right] &\\&= \max_{a\in A}\left(\frac{1}{1-\gamma}\right)\mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^*(\tau \mid s, a)}\left[\sum_{t=0}^{T}r(s_t, a_t)\right]&\\&= \max_{a\in A} Q^*(s, a)\end{align*}$$ |
 | $V^{\pi}$ | $$\begin{align*}V^{\pi}(s) &= \left(\frac{1}{1-\gamma}\right)\mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^{\pi}(\tau \mid s)}\left[\sum_{t=0}^{T}r(s_t, a_t)\right]\\&=\left(\frac{1}{1-\gamma}\right) \mathop{\mathbb{E}}_{a\sim \pi(a\mid s)}\;\mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^{\pi}(\tau \mid s, a)}\left[\sum_{t=0}^{T}r(s_t, a_t)\right] \\&=\mathop{\mathbb{E}}_{a\sim \pi(a\mid s)}\left(\frac{1}{1-\gamma}\right) \mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^{\pi}(\tau \mid s, a)}\left[\sum_{t=0}^{T}r(s_t, a_t)\right]\\&=\mathop{\mathbb{E}}_{a\sim \pi(a\mid s)}\;Q^{\pi}(s, a)\end{align*}$$ |
 
+^4e628e
+
 We can plug these partial recurrence relations into one another to obtain the following full recurrence relations for Infinite Horizon MDPs:
 
 |  | Full Recurrence Relation |

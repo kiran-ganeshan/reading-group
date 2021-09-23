@@ -28,13 +28,13 @@ $$a^*(s) = \mathop{\text{argmax}}_{a \in A(s)}\; \hat{Q}(s, a)$$
 
 Assuming we can reliably calculate $Q$-values, this is a sensible way for our agent to interact in the environment to maximize expected reward. We do have one problem, however: we do not directly see the value of $Q(s, a)$ when taking an action $a$ in state $s$, so we do not know what value to record on our table. The [[Value Functions#Bellman Recurrence | Bellman Recurrence]] saves us here when combined with state-counting:
 $$Q(s, a) = r(s, a) + \gamma\mathop{\mathbb{E}}_{s' \sim \mathcal{T}(s' \mid s, a)}\max_{a'\in A} Q(s', a')$$
-This cannot be applied naively because we do not know the state transition dynamics $\mathcal{T}(s'\mid s, a)$, but it turns out we can estimate these dynamics. Let's say we are in a state $s$, we take an action $a$, and we land in state $s'$. Let $n(s, a)$ be a counter representing the number of times we have taken action $a$ in state $s$.  If $\hat{Q}(s, a)$ has no entry, let
+This cannot be applied naively because we do not know the state transition dynamics $\mathcal{T}(s'\mid s, a)$, but it turns out we can estimate an expectation over transition dynamics by averaging the samples we observe. Let's say we are in a state $s$, we take an action $a$, and we land in state $s'$. Let $n(s, a)$ be a counter representing the number of times we have taken action $a$ in state $s$.  If $\hat{Q}(s, a)$ has no entry, let
 $$\hat{Q}(s, a) = r(s, a) + \gamma\max_{a'\in A(s')} \hat{Q}(s', a')$$
 $$n(s, a) = 1$$
 Otherwise, update $Q(s, a)$ and $n(s, a)$ as
 $$\hat{Q}(s, a) \leftarrow \frac{1}{n(s, a)}\left((n(s, a) - 1)\hat{Q}(s, a) + r(s, a) + \gamma\max_{a'\in A(s')}\hat{Q}(s', a')\right)$$
 $$n(s, a) \leftarrow n(s, a) + 1$$
-These updates may be described as ***continual averaging***: they are designed such that $\hat{Q}(s, a)$ is the average (over $s'$) of the target value $r(s, a) + \gamma\max_{a'\in A(s')} \hat{Q}(s', a')$, but we don't have to keep track of every target $Q$ value for each $s'$ in order to calculate this average (we can do this by storing the average itself as well as the number of samples, hence why we introduce $n(s, a)$). The more we take an action $a$ in a state $s$, the more samples $s'$ we are averaging over, and the lower the variance of our estimate of $Q(s, a)$. 
+These updates may be described as ***continual averaging***: they are designed such that $\hat{Q}(s, a)$ is the average (over $s'$) of the target value $r(s, a) + \gamma\max_{a'\in A(s')} \hat{Q}(s', a')$. Storing the count $n(s, a)$ allows us to simply store but we don't have to keep track of every target $Q$ value for each $s'$ in order to calculate this average (we can do this by storing the average itself as well as the number of samples, hence why we introduce $n(s, a)$). The more we take an action $a$ in a state $s$, the more samples $s'$ we are averaging over, and the lower the variance of our estimate of $Q(s, a)$. 
 
 ## Analysis
 

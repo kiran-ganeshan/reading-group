@@ -9,7 +9,7 @@
         "state": {
           "type": "markdown",
           "state": {
-            "file": "RL/MDP.md",
+            "file": "RL/Online/PG.md",
             "mode": "preview"
           }
         },
@@ -21,7 +21,7 @@
         "state": {
           "type": "markdown",
           "state": {
-            "file": "RL/MDP.md",
+            "file": "RL/Online/PG.md",
             "mode": "source"
           }
         },
@@ -81,7 +81,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "RL/MDP.md",
+                "file": "RL/Online/PG.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -101,15 +101,15 @@
   },
   "active": "f42eb4d0fad886d5",
   "lastOpenFiles": [
+    "RL/Online/PG.md",
+    "RL/Value Functions.md",
+    "RL/Online/TQL.md",
     "RL/MDP.md",
+    "RL/Online/DQN/DQN.md",
     "RL/Online RL/DQN/DQN.md",
     "RL/Online RL/Deuling DQN.md",
     "RL/Online RL/DQN/Images/Q(s, a).png",
     "README.md",
-    "RL/Online RL/PG.md",
-    "RL/Online RL/DQN/Images/DQN/Q(s, a).png",
-    "RL/Online RL/TQL.md",
-    "RL/Value Functions.md",
-    "RL/Online RL/Value Iteration Methods/TQL.md"
+    "RL/Online RL/PG.md"
   ]
 }
