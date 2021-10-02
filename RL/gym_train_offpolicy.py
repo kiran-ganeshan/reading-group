@@ -4,13 +4,13 @@ import gym
 import argparse
 import os
 import wandb
-from .utils import ReplayBuffer, tensor
-import DQN
+from utils import ReplayBuffer
+from DQN.dqn import DQN
  
  
 # Runs policy for X episodes and returns average reward
 # A fixed seed is used for the eval environment
-def eval_policy(policy, env_name, seed, eval_episodes=10):
+def eval(policy, env_name, seed, eval_episodes=10):
     eval_env = gym.make(env_name)
     eval_env.seed(seed)
 
@@ -29,9 +29,9 @@ def eval_policy(policy, env_name, seed, eval_episodes=10):
     print("---------------------------------------")
     return avg_reward
 
-def train_policy(policy, env, replay_buffer, seed, max_timesteps, start_timesteps):
+def train(policy, env, replay_buffer, seed, max_timesteps, start_timesteps):
     # Evaluate untrained policy
-    evaluations = [eval_policy(policy, env, seed)]
+    evaluations = [eval(policy, env, seed)]
     metrics = []
 
     state, done = env.reset(), False
@@ -74,7 +74,7 @@ def train_policy(policy, env, replay_buffer, seed, max_timesteps, start_timestep
 
         # Evaluate episode
         if (t + 1) % args.eval_freq == 0:
-            evaluations.append(eval_policy(policy, env, seed))
+            evaluations.append(eval(policy, env, seed))
             
     return metrics, evaluations
 
@@ -83,27 +83,34 @@ if __name__ == "__main__":
     
     parser = argparse.ArgumentParser()
     parser.add_argument("--algo", default="DQN")                        # Policy name (TD3, DDPG or OurDDPG)
-    parser.add_argument("--env", default="CartPole-v1")          	    # OpenAI gym environment name
+    parser.add_argument("--env", default="LunarLander-v2")          	# OpenAI gym environment name
     parser.add_argument("--on_policy", action="store_true")
     parser.add_argument("--seed", default=0, type=int)                  # Sets Gym, PyTorch and Numpy seeds
     parser.add_argument("--start_timesteps", default=25e3, type=int)    # Time steps initial random policy is used
     parser.add_argument("--eval_freq", default=5e3, type=int)           # How often (time steps) we evaluate
     parser.add_argument("--max_timesteps", default=1e6, type=int)       # Max time steps to run environment
     parser.add_argument("--batch_size", default=256, type=int)          # Batch size for both actor and critic
+    
+    # include ?
     parser.add_argument("--discount", default=0.99)                     # Discount factor
+    
     parser.add_argument("--save", action="store_true")                  # Save model and optimizer parameters
     parser.add_argument("--load", default="")                           # Model load file name, "" doesn't load, "default" uses file_name
+    
+    # model specific
+    parser.add_argument("--tau", default=0.95, type=float)
+    parser.add_argument("--eps", default=1e-8, type=float)
     args = parser.parse_args()
 
-    file_name = f"{args.policy}_{args.env}_{args.seed}"
+    file_name = f"{args.algo}_{args.env}_{args.seed}"
     print("---------------------------------------")
-    print(f"Policy: {args.policy}, Env: {args.env}, Seed: {args.seed}")
+    print(f"Policy: {args.algo}, Env: {args.env}, Seed: {args.seed}")
     print("---------------------------------------")
 
     if not os.path.exists("./results"):
         os.makedirs("./results")
 
-    if args.save_model and not os.path.exists("./models"):
+    if args.save and not os.path.exists("./models"):
         os.makedirs("./models")
 
     env = gym.make(args.env)
@@ -115,8 +122,10 @@ if __name__ == "__main__":
     np.random.seed(args.seed)
     print(env.action_space.shape)
     state_dim = env.observation_space.shape[0]
-    action_dim = env.action_space.shape[0] 
-    max_action = float(env.action_space.high[0])
+    #action_dim = env.action_space.shape[0] 
+    max_action = float(env.action_space.n)
+    action_dim = int(max_action)
+    print(action_dim, max_action)
 
     kwargs = {
         "state_dim": state_dim,
@@ -128,11 +137,22 @@ if __name__ == "__main__":
 
     policy = DQN(**kwargs)
 
-    if args.load_model != "":
-        policy_file = file_name if args.load_model == "default" else args.load_model
+    if args.load != "":
+        policy_file = file_name if args.load == "default" else args.load
         policy.load(f"./models/{policy_file}")
 
     replay_buffer = ReplayBuffer(state_dim, action_dim)
+    
+    train(
+        policy, 
+        env, 
+        replay_buffer, 
+        args.seed, 
+        args.max_timesteps, 
+        args.start_timesteps
+    )
+    
+    
     
     
     
