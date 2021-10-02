@@ -11,6 +11,7 @@ from DQN.dqn import DQN
 # Runs policy for X episodes and returns average reward
 # A fixed seed is used for the eval environment
 def eval(policy, env_name, seed, eval_episodes=10):
+    print(env_name)
     eval_env = gym.make(env_name)
     eval_env.seed(seed)
 
@@ -31,7 +32,8 @@ def eval(policy, env_name, seed, eval_episodes=10):
 
 def train(policy, env, replay_buffer, seed, max_timesteps, start_timesteps):
     # Evaluate untrained policy
-    evaluations = [eval(policy, env, seed)]
+    env_name = env.unwrapped.spec.id
+    evaluations = [eval(policy, env_name, seed)]
     metrics = []
 
     state, done = env.reset(), False
@@ -74,7 +76,7 @@ def train(policy, env, replay_buffer, seed, max_timesteps, start_timesteps):
 
         # Evaluate episode
         if (t + 1) % args.eval_freq == 0:
-            evaluations.append(eval(policy, env, seed))
+            evaluations.append(eval(policy, env_name, seed))
             
     return metrics, evaluations
 

@@ -34,7 +34,7 @@ class DQN(object):
         if np.random.uniform(0, 1) < self.eps:
             return np.random.randint(0, self.action_dim)
         else:
-            return torch.argmax(self.critic(state), -1)
+            return torch.argmax(self.critic(state), -1).cpu().numpy()
 
     def train(self, *data):
         self.total_it += 1
