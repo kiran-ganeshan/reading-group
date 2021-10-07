@@ -1,24 +1,26 @@
 import copy
+
 import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from utils import MLP
-    
+from util import ActionType, module, MLP
 
+
+@module
 class DQN(object):
     def __init__(
         self,
-        state_dim,
-        action_dim,
-        discount=0.99,
-        tau=0.005,
-        eps=1e-9
+        state_dim : int,
+        action_dim : int,
+        discount : float = 0.99,
+        tau : float = 0.005,
+        eps : float = 1e-9
     ):
 
         self.critic = MLP(input_size=state_dim, 
                           output_size=action_dim, 
-                          hidden_sizes=(256, 256), 
+                          hidden_sizes=(1, 1), 
                           activation=nn.ReLU())
         self.critic_target = copy.deepcopy(self.critic)
         self.critic_optimizer = torch.optim.Adam(self.critic.parameters(), lr=3e-4)
@@ -29,6 +31,8 @@ class DQN(object):
         self.action_dim = action_dim
 
         self.total_it = 0
+        
+        self.action_type = ActionType.DISCRETE
 
     def select_action(self, state):
         if np.random.uniform(0, 1) < self.eps:
@@ -39,7 +43,7 @@ class DQN(object):
     def train(self, *data):
         self.total_it += 1
         state, action, next_state, reward, not_done = data
-
+        
         # Compute the target Q value
         with torch.no_grad(): 
             target_Q = self.critic_target(next_state)
@@ -50,9 +54,11 @@ class DQN(object):
 
         # Get current Q estimates
         policy = self.critic(state)
+        Q = policy * F.one_hot(action)
+        target_Q = torch.unsqueeze(target_Q, -1)
  
         # Compute critic loss
-        critic_loss = F.mse_loss(policy, target_Q)
+        critic_loss = F.mse_loss(Q, target_Q)
         losses = {'critic_loss': critic_loss}
 
         # Optimize the critic
@@ -64,7 +70,7 @@ class DQN(object):
         for param, target_param in zip(self.critic.parameters(), self.critic_target.parameters()):
             target_param.data.copy_(self.tau * param.data + (1 - self.tau) * target_param.data)
 
-        losses
+        return losses
 
 
     def save(self, filename):

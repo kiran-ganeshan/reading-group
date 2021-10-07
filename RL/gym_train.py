@@ -1,17 +1,22 @@
 import numpy as np
 import torch
 import gym
+from gym.spaces import Box, Discrete
 import argparse
 import os
 import wandb
-from utils import ReplayBuffer
+from util import ReplayBuffer, ActionType, get_action_type
 from DQN.dqn import DQN
+from PG.pg import PG
+algos = {
+    "DQN": DQN,
+    "PG": PG
+}
  
  
 # Runs policy for X episodes and returns average reward
 # A fixed seed is used for the eval environment
 def eval(policy, env_name, seed, eval_episodes=10):
-    print(env_name)
     eval_env = gym.make(env_name)
     eval_env.seed(seed)
 
@@ -30,14 +35,28 @@ def eval(policy, env_name, seed, eval_episodes=10):
     print("---------------------------------------")
     return avg_reward
 
-def train(policy, env, replay_buffer, seed, max_timesteps, start_timesteps):
-    # Evaluate untrained policy
+def train(policy, 
+          env : gym.Env, 
+          replay_buffer : ReplayBuffer, 
+          on_policy : bool,
+          seed : int, 
+          batch_size : int,
+          max_timesteps : int, 
+          start_timesteps : int, 
+          ep_len : int,
+          train_freq : int,
+          eval_freq : int):
+    """
+    Trains 
+    """
+    # Evaluate untrained policy and prepare train metrics
     env_name = env.unwrapped.spec.id
     evaluations = [eval(policy, env_name, seed)]
     metrics = []
 
+    # Prepare environment, state, and counters
     state, done = env.reset(), False
-    state = torch.tensor(state, dtype=torch.FloatTensor)
+    state = torch.FloatTensor(state)
     episode_reward = 0
     episode_timesteps = 0
     episode_num = 0
@@ -54,28 +73,35 @@ def train(policy, env, replay_buffer, seed, max_timesteps, start_timesteps):
 
         # Perform action
         next_state, reward, done, _ = env.step(action) 
-        done_bool = float(done) if episode_timesteps < env._max_episode_steps else 0
+        done_bool = float(done) if episode_timesteps < ep_len else 0
 
         # Process data and store it in replay buffer
         replay_buffer.add(state, action, next_state, reward, done_bool)
-        state = torch.tensor(next_state, dtype=torch.FloatTensor)
+        state = torch.FloatTensor(next_state)
         episode_reward += reward
 
         # Train agent after collecting sufficient data
-        if t >= start_timesteps:
-            metrics.append(policy.train(*replay_buffer.sample(args.batch_size)))
+        # Only trains if 
+        # - we are training off-policy and this is a training iteration (according to train_freq),
+        # - we are training on-policy and we are finished with an episode
+        if t >= start_timesteps and ((not on_policy and (t + 1) % train_freq == 0) or done):
+            metrics = policy.train(*replay_buffer.sample(batch_size))
 
+        # Complete episode if done
         if done: 
-            # +1 to account for 0 indexing. +0 on ep_timesteps since it will increment +1 even if done=True
             print(f"Total T: {t+1} Episode Num: {episode_num+1} Episode T: {episode_timesteps} Reward: {episode_reward:.3f}")
             # Reset environment
             state, done = env.reset(), False
+            state = torch.FloatTensor(state)
             episode_reward = 0
             episode_timesteps = 0
             episode_num += 1 
-
+            # Reset the replay buffer if training on-policy
+            if on_policy:
+                replay_buffer.reset()
+            
         # Evaluate episode
-        if (t + 1) % args.eval_freq == 0:
+        if (t + 1) % eval_freq == 0:
             evaluations.append(eval(policy, env_name, seed))
             
     return metrics, evaluations
@@ -84,25 +110,26 @@ def train(policy, env, replay_buffer, seed, max_timesteps, start_timesteps):
 if __name__ == "__main__":
     
     parser = argparse.ArgumentParser()
+    
+    # Algorithm, Environment, Training Style
     parser.add_argument("--algo", default="DQN")                        # Policy name (TD3, DDPG or OurDDPG)
     parser.add_argument("--env", default="LunarLander-v2")          	# OpenAI gym environment name
-    parser.add_argument("--on_policy", action="store_true")
-    parser.add_argument("--seed", default=0, type=int)                  # Sets Gym, PyTorch and Numpy seeds
+    parser.add_argument("--on_policy", "-on", action="store_true")      # Whether to train with on-policy (single trajectory)
+                                                                        # or off-policy buffer
+    # Hyperparameters
+    parser.add_argument("--seed", "-s", default=0, type=int)            # Sets Gym, PyTorch and Numpy seeds
     parser.add_argument("--start_timesteps", default=25e3, type=int)    # Time steps initial random policy is used
     parser.add_argument("--eval_freq", default=5e3, type=int)           # How often (time steps) we evaluate
     parser.add_argument("--max_timesteps", default=1e6, type=int)       # Max time steps to run environment
+    parser.add_argument("--ep_len", "-T", default=1e3, type=int)        # Maximum episode length
     parser.add_argument("--batch_size", default=256, type=int)          # Batch size for both actor and critic
+    parser.add_argument("--buffer_size", default=1e5, type=int)         # Size of Replay Buffer
     
-    # include ?
-    parser.add_argument("--discount", default=0.99)                     # Discount factor
-    
+    # I/O
     parser.add_argument("--save", action="store_true")                  # Save model and optimizer parameters
-    parser.add_argument("--load", default="")                           # Model load file name, "" doesn't load, "default" uses file_name
+    parser.add_argument("--load", action="store_true")                  # Load model and optimizer parameters
     
-    # model specific
-    parser.add_argument("--tau", default=0.95, type=float)
-    parser.add_argument("--eps", default=1e-8, type=float)
-    args = parser.parse_args()
+    args, model_args = parser.parse_known_args()
 
     file_name = f"{args.algo}_{args.env}_{args.seed}"
     print("---------------------------------------")
@@ -122,36 +149,39 @@ if __name__ == "__main__":
     env.action_space.seed(args.seed)
     torch.manual_seed(args.seed)
     np.random.seed(args.seed)
-    print(env.action_space.shape)
+    
+    # Get environment dimensions
     state_dim = env.observation_space.shape[0]
-    #action_dim = env.action_space.shape[0] 
-    max_action = float(env.action_space.n)
-    action_dim = int(max_action)
-    print(action_dim, max_action)
+    action_type = get_action_type(env.action_space)
+    if action_type == ActionType.CONTINUOUS:
+        action_dim = env.action_space.shape[0]
+    else: 
+        assert action_type == ActionType.DISCRETE
+        action_dim = int(env.action_space.n)
+        
+    # Add environment dimensions and discount to model args
+    model_args += ["--state_dim", str(state_dim)]
+    model_args += ["--action_dim", str(action_dim)]
 
-    kwargs = {
-        "state_dim": state_dim,
-        "action_dim": action_dim,
-        "discount": args.discount,
-        "tau": args.tau,
-        "eps": args.eps
-    }
+    policy = algos[args.algo](model_args)
+    assert policy.action_type == action_type
 
-    policy = DQN(**kwargs)
+    if args.load:
+        policy.load(f"./models/{file_name}")
 
-    if args.load != "":
-        policy_file = file_name if args.load == "default" else args.load
-        policy.load(f"./models/{policy_file}")
-
-    replay_buffer = ReplayBuffer(state_dim, action_dim)
+    replay_size = args.ep_len if args.on_policy else args.buffer_size
+    replay_buffer = ReplayBuffer(state_dim, action_dim, max_size=replay_size)
     
     train(
         policy, 
         env, 
         replay_buffer, 
+        args.on_policy,
+        args.batch_size,
         args.seed, 
         args.max_timesteps, 
-        args.start_timesteps
+        args.start_timesteps,
+        args.ep_len
     )
     
     

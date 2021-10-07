@@ -5,7 +5,7 @@ import argparse
 import os
 from torch_discounted_cumsum import discounted_cumsum_right
 from torch import TensorType
-import PG
+from PG.pg import PG
  
  
 # Runs policy for X episodes and returns average reward
@@ -83,6 +83,11 @@ if __name__ == "__main__":
     if args.load_model != "":
         policy_file = file_name if args.load_model == "default" else args.load_model
         policy.load(f"./models/{policy_file}")
+
+    # Initialize training run
+    wandb.init(project='gpt-3', entity='mlab-rl-benchmarking')
+    config = wandb.config
+    config.learning_rate = 0.01
     
     # Evaluate untrained policy
     evaluations = [eval_policy(policy, args.env, args.seed)]
@@ -133,7 +138,7 @@ if __name__ == "__main__":
             # train the policy 
             metrics = policy.train(*data)
             print(f"Total T: {t+1} Episode Num: {episode_num+1} Episode T: {episode_timesteps} Reward: {episode_reward:.3f}")
-            
+
             # Reset environment
             state, done = env.reset(), False
             episode_reward = 0

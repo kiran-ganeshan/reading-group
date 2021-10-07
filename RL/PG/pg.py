@@ -1,22 +1,24 @@
 import copy
+import argparse
 import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from torch_discounted_cumsum import discounted_cumsum_right
 from torch.distributions.categorical import Categorical
-from utils import MLP
+from util import MLP, module
     
 
+@module
 class PG(object):
     def __init__(
         self,
-        state_dim,
-        action_dim,
-        discount=0.99,
-        tau=0.005,
-        eps=1e-9
+        state_dim : int,
+        action_dim : int,
+        discount : float = 0.97,
+        tau : float = 0.05,
+        eps : float = 1e-8
     ):
-
         self.actor = MLP(input_size=state_dim, 
                          output_size=action_dim, 
                          hidden_sizes=(256, 256), 
@@ -40,13 +42,16 @@ class PG(object):
 
     def train(self, *data):
         self.total_it += 1
-        state, action, next_state, reward, q_val, not_done = data
+        state, action, next_state, reward, not_done = data
+        
+        # Estimate Q-Values with MC samples
+        qval = discounted_cumsum_right(torch.unsqueeze(reward * not_done, axis=1), self.discount)
 
         # Get current policy
         policy = self.actor(state)
  
         # Compute surrogate objective
-        loss = -torch.sum(q_val * policy)
+        loss = -torch.sum(qval * policy)
         losses = {'loss': loss}
 
         # Optimize the actor
