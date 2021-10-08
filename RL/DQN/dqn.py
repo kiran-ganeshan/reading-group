@@ -4,26 +4,28 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from util import ActionType, module, MLP
+from util import ActionType, learner, MLP, one_hot
 
 
-@module
+@learner("critic")
 class DQN(object):
     def __init__(
         self,
         state_dim : int,
         action_dim : int,
+        lr : float = 3e-6,
         discount : float = 0.99,
         tau : float = 0.005,
-        eps : float = 1e-9
+        eps : float = 1e-2
     ):
 
         self.critic = MLP(input_size=state_dim, 
                           output_size=action_dim, 
-                          hidden_sizes=(1, 1), 
-                          activation=nn.ReLU())
+                          hidden_sizes=(30, 30), 
+                          activation=nn.ReLU(),
+                          final_activation=nn.Identity())
         self.critic_target = copy.deepcopy(self.critic)
-        self.critic_optimizer = torch.optim.Adam(self.critic.parameters(), lr=3e-4)
+        self.critic_optimizer = torch.optim.Adam(self.critic.parameters(), lr=lr)
 
         self.discount = discount
         self.tau = tau
@@ -31,14 +33,12 @@ class DQN(object):
         self.action_dim = action_dim
 
         self.total_it = 0
-        
-        self.action_type = ActionType.DISCRETE
 
     def select_action(self, state):
         if np.random.uniform(0, 1) < self.eps:
             return np.random.randint(0, self.action_dim)
         else:
-            return torch.argmax(self.critic(state), -1).cpu().numpy()
+            return torch.argmax(self.critic(state), -1)
 
     def train(self, *data):
         self.total_it += 1
@@ -51,15 +51,14 @@ class DQN(object):
             data = {'next_q': target_Q}
             target_Q = reward + self.discount * not_done * target_Q
             data = {'target_q': target_Q, **data}
-
+            
         # Get current Q estimates
-        policy = self.critic(state)
-        Q = policy * F.one_hot(action)
-        target_Q = torch.unsqueeze(target_Q, -1)
+        q_mask = one_hot(action, num_classes=self.action_dim)
+        Q = torch.sum(self.critic(state) * q_mask, dim=-1)
  
         # Compute critic loss
         critic_loss = F.mse_loss(Q, target_Q)
-        losses = {'critic_loss': critic_loss}
+        losses = {'loss': critic_loss}
 
         # Optimize the critic
         self.critic_optimizer.zero_grad()

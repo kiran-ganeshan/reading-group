@@ -1,0 +1,12 @@
+<class 'DQN.dqn.DQN'>
+<DQN.dqn.DQN object at 0x140475c10>
+Traceback (most recent call last):
+  File "gym_train.py", line 199, in <module>
+    args.eval_freq
+  File "gym_train.py", line 76, in train
+    replay_buffer.add(state, action, next_state, reward, done_bool, t)
+  File "/Users/kiranganeshan/reading-group/RL/util.py", line 125, in add
+    state = from_torch(state)
+  File "/Users/kiranganeshan/reading-group/RL/util.py", line 31, in from_torch
+    return tensor.cpu().detach().numpy()
+AttributeError: 'numpy.ndarray' object has no attribute 'cpu'

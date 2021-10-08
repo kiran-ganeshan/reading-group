@@ -1,0 +1,66 @@
+Traceback (most recent call last):
+  File "gym_train.py", line 198, in <module>
+    args.eval_freq
+  File "gym_train.py", line 104, in train
+    log_wandb('eval', eval(policy, env_name, seed))
+  File "gym_train.py", line 29, in eval
+    state, reward, done, _ = eval_env.step(action)
+  File "/opt/anaconda3/envs/rg/lib/python3.7/site-packages/gym/wrappers/time_limit.py", line 18, in step
+    observation, reward, done, info = self.env.step(action)
+  File "/opt/anaconda3/envs/rg/lib/python3.7/site-packages/gym/envs/box2d/lunar_lander.py", line 272, in step
+    type(action),
+AssertionError: tensor(1) (<class 'torch.Tensor'>) invalid
+Total T: 99 Episode Num: 1 Episode T: 99 Reward: -120.341
+Total T: 183 Episode Num: 2 Episode T: 84 Reward: -232.073
+Total T: 258 Episode Num: 3 Episode T: 75 Reward: -102.021
+Total T: 376 Episode Num: 4 Episode T: 118 Reward: -244.284
+Total T: 465 Episode Num: 5 Episode T: 89 Reward: -196.923
+Total T: 531 Episode Num: 6 Episode T: 66 Reward: -246.037
+Total T: 637 Episode Num: 7 Episode T: 106 Reward: -276.074
+Total T: 696 Episode Num: 8 Episode T: 59 Reward: -76.404
+Total T: 792 Episode Num: 9 Episode T: 96 Reward: -355.233
+Total T: 887 Episode Num: 10 Episode T: 95 Reward: -457.363
+Total T: 952 Episode Num: 11 Episode T: 65 Reward: -73.318
+Total T: 1076 Episode Num: 12 Episode T: 124 Reward: -225.506
+Total T: 1152 Episode Num: 13 Episode T: 76 Reward: -317.681
+Total T: 1230 Episode Num: 14 Episode T: 78 Reward: -156.478
+Total T: 1297 Episode Num: 15 Episode T: 67 Reward: -120.144
+Total T: 1365 Episode Num: 16 Episode T: 68 Reward: -67.356
+Total T: 1466 Episode Num: 17 Episode T: 101 Reward: -226.755
+Total T: 1567 Episode Num: 18 Episode T: 101 Reward: -42.290
+Total T: 1661 Episode Num: 19 Episode T: 94 Reward: -216.617
+Total T: 1770 Episode Num: 20 Episode T: 109 Reward: -245.481
+Total T: 1833 Episode Num: 21 Episode T: 63 Reward: -144.745
+Total T: 1912 Episode Num: 22 Episode T: 79 Reward: -67.483
+Total T: 1984 Episode Num: 23 Episode T: 72 Reward: -371.865
+Total T: 2097 Episode Num: 24 Episode T: 113 Reward: -229.209
+Total T: 2218 Episode Num: 25 Episode T: 121 Reward: -372.155
+Total T: 2332 Episode Num: 26 Episode T: 114 Reward: -219.794
+Total T: 2430 Episode Num: 27 Episode T: 98 Reward: -231.530
+Total T: 2526 Episode Num: 28 Episode T: 96 Reward: -110.766
+Total T: 2636 Episode Num: 29 Episode T: 110 Reward: -150.155
+Total T: 2751 Episode Num: 30 Episode T: 115 Reward: -162.009
+Total T: 2847 Episode Num: 31 Episode T: 96 Reward: -87.630
+Total T: 2923 Episode Num: 32 Episode T: 76 Reward: -192.201
+Total T: 3019 Episode Num: 33 Episode T: 96 Reward: -264.123
+Total T: 3112 Episode Num: 34 Episode T: 93 Reward: -165.141
+Total T: 3167 Episode Num: 35 Episode T: 55 Reward: -166.361
+Total T: 3260 Episode Num: 36 Episode T: 93 Reward: -229.828
+Total T: 3333 Episode Num: 37 Episode T: 73 Reward: -146.719
+Total T: 3441 Episode Num: 38 Episode T: 108 Reward: -234.915
+Total T: 3570 Episode Num: 39 Episode T: 129 Reward: -279.980
+Total T: 3646 Episode Num: 40 Episode T: 76 Reward: -248.872
+Total T: 3728 Episode Num: 41 Episode T: 82 Reward: -294.951
+Total T: 3816 Episode Num: 42 Episode T: 88 Reward: 60.789
+Total T: 3893 Episode Num: 43 Episode T: 77 Reward: -83.914
+Total T: 3955 Episode Num: 44 Episode T: 62 Reward: -61.732
+Total T: 4059 Episode Num: 45 Episode T: 104 Reward: -424.705
+Total T: 4135 Episode Num: 46 Episode T: 76 Reward: -331.399
+Total T: 4254 Episode Num: 47 Episode T: 119 Reward: -24.890
+Total T: 4336 Episode Num: 48 Episode T: 82 Reward: -228.516
+Total T: 4417 Episode Num: 49 Episode T: 81 Reward: -226.178
+Total T: 4520 Episode Num: 50 Episode T: 103 Reward: -296.275
+Total T: 4642 Episode Num: 51 Episode T: 122 Reward: -192.928
+Total T: 4725 Episode Num: 52 Episode T: 83 Reward: -208.698
+Total T: 4840 Episode Num: 53 Episode T: 115 Reward: -400.014
+Total T: 4902 Episode Num: 54 Episode T: 62 Reward: -100.897

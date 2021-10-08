@@ -1,0 +1,47 @@
+2021-10-07 18:13:29,337 INFO    MainThread:96562 [internal.py:wandb_internal():89] W&B internal server running at pid: 96562, started at: 2021-10-07 18:13:29.337351
+2021-10-07 18:13:29,340 INFO    WriterThread:96562 [datastore.py:open_for_write():77] open: /Users/kiranganeshan/reading-group/RL/wandb/run-20211007_181328-23n4jrtc/run-23n4jrtc.wandb
+2021-10-07 18:13:29,341 DEBUG   HandlerThread:96562 [handler.py:handle_request():126] handle_request: check_version
+2021-10-07 18:13:29,343 DEBUG   SenderThread:96562 [sender.py:send():185] send: header
+2021-10-07 18:13:29,343 DEBUG   SenderThread:96562 [sender.py:send_request():199] send_request: check_version
+2021-10-07 18:13:29,449 DEBUG   SenderThread:96562 [sender.py:send():185] send: run
+2021-10-07 18:13:29,614 INFO    SenderThread:96562 [dir_watcher.py:__init__():169] watching files in: /Users/kiranganeshan/reading-group/RL/wandb/run-20211007_181328-23n4jrtc/files
+2021-10-07 18:13:29,615 INFO    SenderThread:96562 [sender.py:_start_run_threads():749] run started: 23n4jrtc with start time 1633648408
+2021-10-07 18:13:29,615 DEBUG   SenderThread:96562 [sender.py:send():185] send: summary
+2021-10-07 18:13:29,616 INFO    SenderThread:96562 [sender.py:_save_file():879] saving file wandb-summary.json with policy end
+2021-10-07 18:13:29,619 DEBUG   HandlerThread:96562 [handler.py:handle_request():126] handle_request: run_start
+2021-10-07 18:13:29,622 DEBUG   HandlerThread:96562 [meta.py:__init__():40] meta init
+2021-10-07 18:13:29,623 DEBUG   HandlerThread:96562 [meta.py:__init__():54] meta init done
+2021-10-07 18:13:29,623 DEBUG   HandlerThread:96562 [meta.py:probe():211] probe
+2021-10-07 18:13:29,625 DEBUG   HandlerThread:96562 [meta.py:_setup_git():201] setup git
+2021-10-07 18:13:29,654 DEBUG   HandlerThread:96562 [meta.py:_setup_git():208] setup git done
+2021-10-07 18:13:29,655 DEBUG   HandlerThread:96562 [meta.py:_save_pip():58] save pip
+2021-10-07 18:13:29,656 DEBUG   HandlerThread:96562 [meta.py:_save_pip():72] save pip done
+2021-10-07 18:13:29,656 DEBUG   HandlerThread:96562 [meta.py:_save_conda():79] save conda
+2021-10-07 18:13:30,619 INFO    Thread-8  :96562 [dir_watcher.py:_on_file_created():217] file/dir created: /Users/kiranganeshan/reading-group/RL/wandb/run-20211007_181328-23n4jrtc/files/conda-environment.yaml
+2021-10-07 18:13:30,620 INFO    Thread-8  :96562 [dir_watcher.py:_on_file_created():217] file/dir created: /Users/kiranganeshan/reading-group/RL/wandb/run-20211007_181328-23n4jrtc/files/requirements.txt
+2021-10-07 18:13:30,620 INFO    Thread-8  :96562 [dir_watcher.py:_on_file_created():217] file/dir created: /Users/kiranganeshan/reading-group/RL/wandb/run-20211007_181328-23n4jrtc/files/wandb-summary.json
+2021-10-07 18:13:31,850 WARNING MainThread:96562 [internal.py:wandb_internal():145] Internal process interrupt: 1
+2021-10-07 18:13:31,970 DEBUG   HandlerThread:96562 [meta.py:_save_conda():87] save conda done
+2021-10-07 18:13:31,970 DEBUG   HandlerThread:96562 [meta.py:probe():249] probe done
+2021-10-07 18:13:31,975 DEBUG   SenderThread:96562 [sender.py:send():185] send: files
+2021-10-07 18:13:31,975 INFO    SenderThread:96562 [sender.py:_save_file():879] saving file wandb-metadata.json with policy now
+2021-10-07 18:13:32,369 INFO    Thread-11 :96562 [upload_job.py:push():137] Uploaded file /var/folders/61/1prdj48n15q_jg2s4lmln3j00000gn/T/tmpjcsrhe09wandb/iiio2ooa-wandb-metadata.json
+2021-10-07 18:13:32,623 INFO    Thread-8  :96562 [dir_watcher.py:_on_file_created():217] file/dir created: /Users/kiranganeshan/reading-group/RL/wandb/run-20211007_181328-23n4jrtc/files/wandb-metadata.json
+2021-10-07 18:13:35,875 WARNING MainThread:96562 [internal.py:wandb_internal():145] Internal process interrupt: 2
+2021-10-07 18:13:35,875 ERROR   MainThread:96562 [internal.py:wandb_internal():148] Internal process interrupted.
+2021-10-07 18:13:35,989 INFO    SenderThread:96562 [sender.py:finish():986] shutting down sender
+2021-10-07 18:13:35,990 INFO    WriterThread:96562 [datastore.py:close():281] close: /Users/kiranganeshan/reading-group/RL/wandb/run-20211007_181328-23n4jrtc/run-23n4jrtc.wandb
+2021-10-07 18:13:35,990 INFO    HandlerThread:96562 [handler.py:finish():683] shutting down handler
+2021-10-07 18:13:35,990 INFO    SenderThread:96562 [dir_watcher.py:finish():283] shutting down directory watcher
+2021-10-07 18:13:36,636 INFO    SenderThread:96562 [dir_watcher.py:finish():313] scan: /Users/kiranganeshan/reading-group/RL/wandb/run-20211007_181328-23n4jrtc/files
+2021-10-07 18:13:36,637 INFO    SenderThread:96562 [dir_watcher.py:finish():327] scan save: /Users/kiranganeshan/reading-group/RL/wandb/run-20211007_181328-23n4jrtc/files/requirements.txt requirements.txt
+2021-10-07 18:13:36,637 INFO    SenderThread:96562 [dir_watcher.py:finish():327] scan save: /Users/kiranganeshan/reading-group/RL/wandb/run-20211007_181328-23n4jrtc/files/config.yaml config.yaml
+2021-10-07 18:13:36,638 INFO    SenderThread:96562 [dir_watcher.py:finish():327] scan save: /Users/kiranganeshan/reading-group/RL/wandb/run-20211007_181328-23n4jrtc/files/wandb-summary.json wandb-summary.json
+2021-10-07 18:13:36,639 INFO    SenderThread:96562 [dir_watcher.py:finish():327] scan save: /Users/kiranganeshan/reading-group/RL/wandb/run-20211007_181328-23n4jrtc/files/conda-environment.yaml conda-environment.yaml
+2021-10-07 18:13:36,639 INFO    SenderThread:96562 [dir_watcher.py:finish():327] scan save: /Users/kiranganeshan/reading-group/RL/wandb/run-20211007_181328-23n4jrtc/files/wandb-metadata.json wandb-metadata.json
+2021-10-07 18:13:36,639 INFO    SenderThread:96562 [file_pusher.py:finish():177] shutting down file pusher
+2021-10-07 18:13:36,639 INFO    SenderThread:96562 [file_pusher.py:join():182] waiting for file pusher
+2021-10-07 18:13:37,039 INFO    Thread-13 :96562 [upload_job.py:push():137] Uploaded file /Users/kiranganeshan/reading-group/RL/wandb/run-20211007_181328-23n4jrtc/files/config.yaml
+2021-10-07 18:13:37,072 INFO    Thread-12 :96562 [upload_job.py:push():137] Uploaded file /Users/kiranganeshan/reading-group/RL/wandb/run-20211007_181328-23n4jrtc/files/requirements.txt
+2021-10-07 18:13:37,084 INFO    Thread-14 :96562 [upload_job.py:push():137] Uploaded file /Users/kiranganeshan/reading-group/RL/wandb/run-20211007_181328-23n4jrtc/files/wandb-summary.json
+2021-10-07 18:13:37,709 INFO    MainThread:96562 [internal.py:handle_exit():76] Internal process exited

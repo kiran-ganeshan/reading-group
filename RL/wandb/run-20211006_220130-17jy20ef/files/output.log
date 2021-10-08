@@ -1,0 +1,9 @@
+<method-wrapper '__init__' of list object at 0x13fcdb870>
+args *args
+kwargs **kwargs
+Traceback (most recent call last):
+  File "gym_train.py", line 174, in <module>
+    policy = algos[args.algo](model_args)
+  File "/Users/kiranganeshan/reading-group/RL/util.py", line 79, in transform
+    cls.__init__ = init
+AttributeError: 'list' object attribute '__init__' is read-only

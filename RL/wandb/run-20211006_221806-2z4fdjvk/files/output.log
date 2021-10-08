@@ -1,0 +1,10 @@
+<class 'DQN.dqn.DQN'>
+<DQN.dqn.DQN object at 0x14b9a1090>
+Traceback (most recent call last):
+  File "gym_train.py", line 188, in <module>
+    replay_buffer = ReplayBuffer(state_dim, action_dim, max_size=replay_size)
+  File "/Users/kiranganeshan/reading-group/RL/util.py", line 120, in __init__
+    self.reset()
+  File "/Users/kiranganeshan/reading-group/RL/util.py", line 162, in reset
+    self.state = np.zeros((self.max_size, self.state_dim), dtype=np.float32)
+TypeError: 'float' object cannot be interpreted as an integer

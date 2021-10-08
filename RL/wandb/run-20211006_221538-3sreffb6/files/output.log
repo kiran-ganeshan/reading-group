@@ -1,0 +1,8 @@
+<class 'DQN.dqn.DQN'>
+<DQN.dqn.DQN object at 0x149078a50>
+Traceback (most recent call last):
+  File "gym_train.py", line 182, in <module>
+    wandb.watch(policy.modules)
+  File "/opt/anaconda3/envs/rg/lib/python3.7/site-packages/wandb/sdk/wandb_watch.py", line 74, in watch
+    + str(type(model))
+ValueError: Expected a pytorch model (torch.nn.Module). Received <class 'generator'>

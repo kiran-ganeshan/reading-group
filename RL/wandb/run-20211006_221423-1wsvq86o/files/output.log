@@ -1,0 +1,6 @@
+<class 'DQN.dqn.DQN'>
+<DQN.dqn.DQN object at 0x145231810>
+Traceback (most recent call last):
+  File "gym_train.py", line 181, in <module>
+    assert algos[args.algo].is_learner, f"Ensure you call @learner on the {algos[args.algo]} class"
+AttributeError: type object 'DQN' has no attribute 'is_learner'

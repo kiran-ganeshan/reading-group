@@ -1,0 +1,15 @@
+Traceback (most recent call last):
+  File "gym_train.py", line 203, in <module>
+    args.eval_freq
+  File "gym_train.py", line 79, in train
+    replay_buffer.add(state, action, next_state, reward, done_bool, t)
+  File "/Users/kiranganeshan/reading-group/RL/util.py", line 128, in add
+    assert list(map(lambda x: x.dtype, inputs)) == expected_types
+  File "/Users/kiranganeshan/reading-group/RL/util.py", line 128, in <lambda>
+    assert list(map(lambda x: x.dtype, inputs)) == expected_types
+AttributeError: 'int' object has no attribute 'dtype'
+<class 'DQN.dqn.DQN'>
+<DQN.dqn.DQN object at 0x140058ad0>
+---------------------------------------
+Evaluation over 10 episodes: -1185.739
+---------------------------------------

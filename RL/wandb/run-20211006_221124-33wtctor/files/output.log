@@ -1,0 +1,8 @@
+<function learner.<locals>.transform at 0x12a2bbef0>
+['--state_dim', '8', '--action_dim', '4']
+Traceback (most recent call last):
+  File "gym_train.py", line 176, in <module>
+    policy = policy_cls(model_args)
+  File "/Users/kiranganeshan/reading-group/RL/util.py", line 76, in transform
+    cls.__init__ = init
+AttributeError: 'list' object attribute '__init__' is read-only

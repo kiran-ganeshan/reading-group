@@ -1,0 +1,10 @@
+
+<class 'DQN.dqn.DQN'>
+Traceback (most recent call last):
+  File "gym_train.py", line 176, in <module>
+    policy = policy_cls(model_args)
+  File "/Users/kiranganeshan/reading-group/RL/util.py", line 72, in init
+    assert all([self.__hasattr__(mod) for mod in modules]), misnamed_mod
+  File "/Users/kiranganeshan/reading-group/RL/util.py", line 72, in <listcomp>
+    assert all([self.__hasattr__(mod) for mod in modules]), misnamed_mod
+AttributeError: 'DQN' object has no attribute '__hasattr__'
