@@ -9,8 +9,8 @@
         "state": {
           "type": "markdown",
           "state": {
-            "file": "RL/Online/PG.md",
-            "mode": "preview"
+            "file": "RL/DQN/DQN.md",
+            "mode": "source"
           }
         },
         "group": "38d7cb457e7ff073"
@@ -21,7 +21,7 @@
         "state": {
           "type": "markdown",
           "state": {
-            "file": "RL/Online/PG.md",
+            "file": "RL/DQN/DQN.md",
             "mode": "source"
           }
         },
@@ -81,7 +81,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "RL/Online/PG.md",
+                "file": "RL/DQN/DQN.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -99,17 +99,17 @@
     "width": 300,
     "collapsed": true
   },
-  "active": "f42eb4d0fad886d5",
+  "active": "599c29ab34f73289",
   "lastOpenFiles": [
+    "RL/DQN/DQN.md",
+    "RL/Online/Actor-Critic Methods/DDPG.md",
+    "RL/Online/Actor-Critic Methods/TRPO.md",
     "RL/Online/PG.md",
+    "RL/PG/PG.md",
     "RL/Value Functions.md",
     "RL/Online/TQL.md",
     "RL/MDP.md",
     "RL/Online/DQN/DQN.md",
-    "RL/Online RL/DQN/DQN.md",
-    "RL/Online RL/Deuling DQN.md",
-    "RL/Online RL/DQN/Images/Q(s, a).png",
-    "README.md",
-    "RL/Online RL/PG.md"
+    "RL/Online RL/DQN/DQN.md"
   ]
 }
