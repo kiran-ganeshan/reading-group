@@ -1,6 +1,0 @@
-Traceback (most recent call last):
-  File "gym_train.py", line 178, in <module>
-    policy = algos[args.algo](model_args)
-  File "/Users/kiranganeshan/reading-group/RL/util.py", line 105, in init
-    assert len(wrong_args) == 0, f"Supplied incorrect args {wrong_args}"
-AssertionError: Supplied incorrect args ['lr']

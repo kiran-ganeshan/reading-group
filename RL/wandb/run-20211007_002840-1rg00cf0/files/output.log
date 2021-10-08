@@ -1,6 +1,0 @@
-<class 'PG.pg.PG'>
-<PG.pg.PG object at 0x144226b90>
-Traceback (most recent call last):
-  File "gym_train.py", line 176, in <module>
-    wrong_type = f"Using {algos[args.algo]}, which is for action spaces of type {policy.action_type}"
-AttributeError: 'PG' object has no attribute 'action_type'

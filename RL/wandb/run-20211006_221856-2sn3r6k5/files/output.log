@@ -1,6 +1,0 @@
-<class 'DQN.dqn.DQN'>
-<DQN.dqn.DQN object at 0x14a781bd0>
-Traceback (most recent call last):
-  File "gym_train.py", line 199, in <module>
-    args.ep_len,
-TypeError: train() missing 2 required positional arguments: 'train_freq' and 'eval_freq'

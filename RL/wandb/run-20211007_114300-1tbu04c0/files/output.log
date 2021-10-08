@@ -1,9 +1,0 @@
-Traceback (most recent call last):
-  File "gym_train.py", line 206, in <module>
-    args.eval_freq
-  File "gym_train.py", line 77, in train
-    replay_buffer.add(state, action, next_state, reward, done_bool)
-  File "/Users/kiranganeshan/reading-group/RL/util.py", line 159, in add
-    assert types == expected_types, f"expected types {expected_types}\n but got types {types}"
-AssertionError: expected types [dtype('float32'), <class 'int'>, dtype('float32'), <class 'numpy.float64'>, <class 'numpy.float16'>]
- but got types [dtype('float32'), <class 'int'>, dtype('float32'), <class 'numpy.float64'>, <class 'float'>]
