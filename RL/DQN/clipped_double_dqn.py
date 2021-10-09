@@ -8,7 +8,7 @@ from util import ActionType, learner, MLP, one_hot
 
 
 @learner("critic1", "critic2")
-class DeulingDQN(object):
+class DoubleDQN(object):
     def __init__(
         self,
         state_dim : int,
@@ -65,8 +65,9 @@ class DeulingDQN(object):
         with torch.no_grad(): 
             target_Q1 = self.critic1_target(next_state)
             target_Q2 = self.critic2_target(next_state)
+            target_Q1 = torch.max(target_Q1, -1)[0]
+            target_Q2 = torch.max(target_Q2, -1)[0]
             target_Q = torch.minimum(target_Q1, target_Q2)
-            target_Q = torch.max(target_Q, -1)[0]
             data = {'next_q': target_Q}
             target_Q = reward + self.discount * not_done * target_Q
             data = {'target_q': target_Q, **data}
