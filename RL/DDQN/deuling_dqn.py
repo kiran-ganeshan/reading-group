@@ -7,7 +7,7 @@ import torch.nn.functional as F
 from util import ActionType, learner, MLP, one_hot
 
 
-@learner("critic")
+@learner("critic1", "critic2")
 class DeulingDQN(object):
     def __init__(
         self,
@@ -27,8 +27,8 @@ class DeulingDQN(object):
                            hidden_sizes=(256, 256), 
                            activation=nn.ReLU(),
                            final_activation=nn.Identity())
-        self.critic1_target = copy.deepcopy(self.critic)
-        self.critic1_optimizer = torch.optim.Adam(self.critic.parameters(), 
+        self.critic1_target = copy.deepcopy(self.critic1)
+        self.critic1_optimizer = torch.optim.Adam(self.critic1.parameters(), 
                                                   lr=lr, 
                                                   betas=(beta1, beta2), 
                                                   weight_decay=weight_decay)
@@ -38,8 +38,8 @@ class DeulingDQN(object):
                            hidden_sizes=(256, 256), 
                            activation=nn.ReLU(),
                            final_activation=nn.Identity())
-        self.critic2_target = copy.deepcopy(self.critic)
-        self.critic2_optimizer = torch.optim.Adam(self.critic.parameters(), 
+        self.critic2_target = copy.deepcopy(self.critic2)
+        self.critic2_optimizer = torch.optim.Adam(self.critic2.parameters(), 
                                                   lr=lr,
                                                   betas=(beta1, beta2), 
                                                   weight_decay=weight_decay)
