@@ -13,6 +13,9 @@ class DeulingDQN(object):
         self,
         state_dim : int,
         action_dim : int,
+        beta1 : float,
+        beta2 : float,
+        weight_decay : float,
         lr : float = 1e-2,
         discount : float = 0.99,
         tau : float = 0.005,
@@ -25,7 +28,10 @@ class DeulingDQN(object):
                            activation=nn.ReLU(),
                            final_activation=nn.Identity())
         self.critic1_target = copy.deepcopy(self.critic)
-        self.critic1_optimizer = torch.optim.Adam(self.critic.parameters(), lr=lr)
+        self.critic1_optimizer = torch.optim.Adam(self.critic.parameters(), 
+                                                  lr=lr, 
+                                                  betas=(beta1, beta2), 
+                                                  weight_decay=weight_decay)
         
         self.critic2 = MLP(input_size=state_dim, 
                            output_size=action_dim, 
@@ -33,7 +39,10 @@ class DeulingDQN(object):
                            activation=nn.ReLU(),
                            final_activation=nn.Identity())
         self.critic2_target = copy.deepcopy(self.critic)
-        self.critic2_optimizer = torch.optim.Adam(self.critic.parameters(), lr=lr)
+        self.critic2_optimizer = torch.optim.Adam(self.critic.parameters(), 
+                                                  lr=lr,
+                                                  betas=(beta1, beta2), 
+                                                  weight_decay=weight_decay)
 
         self.discount = discount
         self.tau = tau
