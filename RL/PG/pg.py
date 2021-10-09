@@ -12,7 +12,7 @@ class PG(object):
         state_dim : int,
         action_dim : int,
         discount : float = 0.97,
-        lr : float = 3e-4,
+        lr : float = 1e-2,
         tau : float = 0.05,
         eps : float = 1e-8
     ):
@@ -60,14 +60,3 @@ class PG(object):
             target_param.data.copy_(self.tau * param.data + (1 - self.tau) * target_param.data)
         
         return losses
-
-
-    def save(self, filename):
-        torch.save(self.actor.state_dict(), filename + "_actor")
-        torch.save(self.actor_optimizer.state_dict(), filename + "_actor_optimizer")
-
-
-    def load(self, filename):
-        self.actor.load_state_dict(torch.load(filename + "_actor"))
-        self.actor_optimizer.load_state_dict(torch.load(filename + "_actor_optimizer"))
-        self.actor_target = copy.deepcopy(self.critic)

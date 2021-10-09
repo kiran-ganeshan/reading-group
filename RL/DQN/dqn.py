@@ -13,15 +13,15 @@ class DQN(object):
         self,
         state_dim : int,
         action_dim : int,
-        lr : float = 3e-6,
+        lr : float = 1e-2,
         discount : float = 0.99,
         tau : float = 0.005,
-        eps : float = 1e-2
+        eps : float = 1e-3
     ):
 
         self.critic = MLP(input_size=state_dim, 
                           output_size=action_dim, 
-                          hidden_sizes=(30, 30), 
+                          hidden_sizes=(256, 256), 
                           activation=nn.ReLU(),
                           final_activation=nn.Identity())
         self.critic_target = copy.deepcopy(self.critic)
@@ -70,14 +70,3 @@ class DQN(object):
             target_param.data.copy_(self.tau * param.data + (1 - self.tau) * target_param.data)
 
         return losses
-
-
-    def save(self, filename):
-        torch.save(self.critic.state_dict(), filename + "_critic")
-        torch.save(self.critic_optimizer.state_dict(), filename + "_critic_optimizer")
-
-
-    def load(self, filename):
-        self.critic.load_state_dict(torch.load(filename + "_critic"))
-        self.critic_optimizer.load_state_dict(torch.load(filename + "_critic_optimizer"))
-        self.critic_target = copy.deepcopy(self.critic)
