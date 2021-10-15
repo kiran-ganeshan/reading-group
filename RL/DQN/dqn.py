@@ -42,14 +42,20 @@ class DQN(object):
 
     def train(self, *data):
         self.total_it += 1
-        state, action, next_state, reward, not_done = data
+        if len(data) == 5:
+            state, action, next_state, reward, not_done = data
+            lookahead = 1
+        elif len(data) == 6:
+            state, action, next_state, reward, not_done, lookahead = data
+        else:
+            raise ValueError("Unable to pack data into form (s, a, s', r, not_done, [lookahead])")
         
         # Compute the target Q value
         with torch.no_grad(): 
             target_Q = self.critic_target(next_state)
             target_Q = torch.max(target_Q, -1)[0]
             data = {'next_q': target_Q}
-            target_Q = reward + self.discount * not_done * target_Q
+            target_Q = reward + pow(self.discount, lookahead) * not_done * target_Q
             data = {'target_q': target_Q, **data}
             
         # Get current Q estimates
