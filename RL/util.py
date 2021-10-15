@@ -227,23 +227,33 @@ class ReplayBuffer(object):
         self.ptr = (self.ptr + 1) % self.max_size
         self.size = min(self.size + 1, self.max_size)
 
-
-    def sample(self, batch_size):
-        ind = np.random.randint(0, self.size, size=batch_size)
-        action_type = torch.float if self.continuous else torch.long
-        qval = () if not self.get_q else (to_torch(self.qval[ind], dtype=torch.float32).to(self.device),)
-        # Looks ahead the specified amount or until the end of the episode.
-        lookahead = 0
-        while lookahead < self.lookahead and self.not_done[(ind + lookahead) % self.max_size]:
+    
+    def _nstep_lookahead(self, ind, max_lookahead):
+        lookahead = 1
+        while lookahead < max_lookahead and self.not_done[(ind + lookahead) % self.max_size]:
             lookahead += 1
-        # May need to wrap around the rewards subarray if the episode wraps around the end of the buffer.
         next_state = self.state[(ind + lookahead) % self.max_size]
         if ind + lookahead < self.max_size:
             rewards = self.reward[ind:ind+lookahead]
         else:
             rewards = self.reward[ind:self.max_size] + self.reward[0:ind+lookahead-self.max_size]
-        nstep_return = lfilter([1], [1, -self.discount], rewards[::-1], axis=0)[-1]
-        lookahead_tup = () if not self.output_lookahead else (lookahead,)
+        # try:
+        nstep_return = lfilter([1], [1, -self.discount], rewards[::-1])[-1]
+        # except IndexError:
+        #     print(max_lookahead)
+        #     print(lookahead)
+        #     print(rewards.shape)
+        #     exit()
+        return lookahead, next_state, nstep_return
+
+
+    def sample(self, batch_size):
+        ind = np.random.randint(0, self.size, size=batch_size)
+        action_type = torch.float if self.continuous else torch.long
+        qval = () if not self.get_q else (to_torch(self.qval[ind], dtype=torch.float32).to(self.device),)
+        nstep_return_tups = map(lambda x: self._nstep_lookahead(x, self.lookahead), ind)
+        lookahead, next_state, nstep_return = zip(*nstep_return_tups)
+        lookahead_tup = () if not self.output_lookahead else (to_torch(lookahead, dtype=torch.int32).to(self.device),)
         return (
             to_torch(self.state[ind], dtype=torch.float).to(self.device),
             to_torch(self.action[ind], dtype=action_type).to(self.device),
