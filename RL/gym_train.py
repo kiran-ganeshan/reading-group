@@ -198,8 +198,7 @@ if __name__ == "__main__":
                                  get_q=algos[args.algo].get_q,
                                  trajectory_q=args.trajectory_q, 
                                  discount_qval=args.discount_qval,
-                                 discount=args.discount,
-                                 lookahead_for_returns=args.lookahead_for_returns)
+                                 discount=args.discount)
     
     train(
         policy, 

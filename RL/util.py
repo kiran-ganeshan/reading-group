@@ -20,7 +20,7 @@ from enum import Enum
 from gym.spaces import Space, Box, Discrete
 
 # types
-from typing import Sequence, Callable, Any, Iterable, Dict, AnyStr, Optional
+from typing import Sequence, Callable, Any, Iterable, Dict, AnyStr
 from jax.interpreters.xla import DeviceArray
 
 
@@ -184,7 +184,7 @@ class ReplayBuffer(object):
                  trajectory_q : bool = False, 
                  discount_qval : bool = False,
                  discount : float = None,
-                 lookahead_for_returns : int = None):
+                 lookahead_for_returns : int = 1):
         self.max_size = max_size
         self.continuous = continuous
         self.state_dim = state_dim
@@ -193,8 +193,7 @@ class ReplayBuffer(object):
         self.trajectory_q = trajectory_q
         self.discount_qval = discount_qval
         self.discount = discount
-        self.lookahead = lookahead_for_returns if lookahead_for_returns else 1
-        self.output_lookahead = lookahead_for_returns is not None
+        self.lookahead = lookahead_for_returns
         if get_q:
             assert discount, "Must provide discount to replay buffer if retrieving Q-value"
 
@@ -232,26 +231,19 @@ class ReplayBuffer(object):
         ind = np.random.randint(0, self.size, size=batch_size)
         action_type = torch.float if self.continuous else torch.long
         qval = () if not self.get_q else (to_torch(self.qval[ind], dtype=torch.float32).to(self.device),)
-        # Looks ahead the specified amount or until the end of the episode.
-        lookahead = 0
-        while lookahead < self.lookahead and self.not_done[(ind + lookahead) % self.max_size]:
-            lookahead += 1
-        # May need to wrap around the rewards subarray if the episode wraps around the end of the buffer.
-        next_state = self.state[(ind + lookahead) % self.max_size]
-        if ind + lookahead < self.max_size:
-            rewards = self.reward[ind:ind+lookahead]
+        next_state = self.state[(ind + self.lookahead) % self.max_size]
+        if ind + self.lookahead < self.max_size:
+            rewards = self.reward[ind:ind+self.lookahead]
         else:
-            rewards = self.reward[ind:self.max_size] + self.reward[0:ind+lookahead-self.max_size]
+            rewards = self.reward[ind:self.max_size] + self.reward[0:ind+self.lookahead-self.max_size]
         nstep_return = lfilter([1], [1, -self.discount], rewards[::-1], axis=0)[-1]
-        lookahead_tup = () if not self.output_lookahead else (lookahead,)
         return (
             to_torch(self.state[ind], dtype=torch.float).to(self.device),
             to_torch(self.action[ind], dtype=action_type).to(self.device),
             to_torch(next_state, dtype=torch.float).to(self.device),
             to_torch(nstep_return, dtype=torch.float).to(self.device),
             *qval,
-            to_torch(self.not_done[ind], dtype=torch.float).to(self.device),
-            *lookahead_tup
+            to_torch(self.not_done[ind], dtype=torch.float).to(self.device)
         )
         
     def reset(self):
