@@ -145,10 +145,7 @@ class ReplayBuffer(object):
     
     get_q               Whether to calculate Q-values. When True, trajectory_q and discount_qval control
                         how Q-values are calculated. Their defaults are set up so that we discount and sum
-                        reward-to-go to obtain Q-values. trajectory_q and discount_qval allow a user to 
-                        choose between computing Q-values by assigning Q(s, a) to the total reward
-                        for the entire trajectory or just the reward-to-go. See below descriptions for
-                        more detail.
+                        reward-to-go to obtain Q-values. trajectory_q and discount_qval allow a user to
                         
     
     trajectory_q        If True (and get_q is True), calculate Q-values across entire trajectories:
@@ -183,8 +180,7 @@ class ReplayBuffer(object):
                  get_q : bool = False,
                  trajectory_q : bool = False, 
                  discount_qval : bool = False,
-                 discount : float = None,
-                 lookahead_for_returns : int = 1):
+                 discount : float = None):
         self.max_size = max_size
         self.continuous = continuous
         self.state_dim = state_dim
@@ -193,7 +189,6 @@ class ReplayBuffer(object):
         self.trajectory_q = trajectory_q
         self.discount_qval = discount_qval
         self.discount = discount
-        self.lookahead = lookahead_for_returns
         if get_q:
             assert discount, "Must provide discount to replay buffer if retrieving Q-value"
 
@@ -226,22 +221,15 @@ class ReplayBuffer(object):
         self.ptr = (self.ptr + 1) % self.max_size
         self.size = min(self.size + 1, self.max_size)
 
-
     def sample(self, batch_size):
         ind = np.random.randint(0, self.size, size=batch_size)
         action_type = torch.float if self.continuous else torch.long
         qval = () if not self.get_q else (to_torch(self.qval[ind], dtype=torch.float32).to(self.device),)
-        next_state = self.state[(ind + self.lookahead) % self.max_size]
-        if ind + self.lookahead < self.max_size:
-            rewards = self.reward[ind:ind+self.lookahead]
-        else:
-            rewards = self.reward[ind:self.max_size] + self.reward[0:ind+self.lookahead-self.max_size]
-        nstep_return = lfilter([1], [1, -self.discount], rewards[::-1], axis=0)[-1]
         return (
             to_torch(self.state[ind], dtype=torch.float).to(self.device),
             to_torch(self.action[ind], dtype=action_type).to(self.device),
-            to_torch(next_state, dtype=torch.float).to(self.device),
-            to_torch(nstep_return, dtype=torch.float).to(self.device),
+            to_torch(self.next_state[ind], dtype=torch.float).to(self.device),
+            to_torch(self.reward[ind], dtype=torch.float).to(self.device),
             *qval,
             to_torch(self.not_done[ind], dtype=torch.float).to(self.device)
         )

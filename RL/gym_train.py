@@ -135,7 +135,6 @@ if __name__ == "__main__":
     parser.add_argument("--buffer_size", default=int(1e5), type=int, help="Size of Replay Buffer") 
     parser.add_argument("--trajectory_q", action="store_true", help=trajectory_q_help) 
     parser.add_argument("--discount_qval", action="store_true", help=discount_qval_help) 
-    parser.add_argument("--lookahead_for_returns", default=1, type=int, help="Number of steps to lookahead in multistep return.")
     
     # I/O
     parser.add_argument("--save", action="store_true", help="Save model and optimizer parameter checkpoints in wandb")
