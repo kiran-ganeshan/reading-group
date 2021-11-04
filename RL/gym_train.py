@@ -9,11 +9,9 @@ from util import ReplayBuffer, ActionType, get_action_type
 from util import log_wandb, to_torch, from_torch
 from DQN.dqn import DQN
 from PG.pg import PG
-from DDQN.deuling_dqn import DeulingDQN
 algos = {
     "DQN": DQN,
     "PG": PG,
-    "DDQN": DeulingDQN
 }
  
  
