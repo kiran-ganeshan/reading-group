@@ -65,14 +65,8 @@ class DoubleDQN(object):
         with torch.no_grad(): 
             target_Q1 = self.critic1_target(next_state)
             target_Q2 = self.critic2_target(next_state)
-            Q1 = self.critic1(next_state)
-            Q2 = self.critic2(next_state)
-            argmax_mask1 = one_hot(torch.argmax(Q1, -1), 
-                                   num_classes=Q1.shape[-1])  
-            argmax_mask2 = one_hot(torch.argmax(Q2, -1), 
-                                   num_classes=Q2.shape[-1])
-            target_Q1 = torch.sum(target_Q1 * argmax_mask1, -1)[0]
-            target_Q2 = torch.sum(target_Q2 * argmax_mask2, -1)[0]
+            target_Q1 = torch.max(target_Q1, -1)[0]
+            target_Q2 = torch.max(target_Q2, -1)[0]
             target_Q = torch.minimum(target_Q1, target_Q2)
             data = {'next_q': target_Q}
             target_Q = reward + self.discount * not_done * target_Q

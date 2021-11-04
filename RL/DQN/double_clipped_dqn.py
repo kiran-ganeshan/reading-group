@@ -71,8 +71,8 @@ class DoubleDQN(object):
                                    num_classes=Q1.shape[-1])  
             argmax_mask2 = one_hot(torch.argmax(Q2, -1), 
                                    num_classes=Q2.shape[-1])
-            target_Q1 = torch.sum(target_Q1 * argmax_mask1, -1)[0]
-            target_Q2 = torch.sum(target_Q2 * argmax_mask2, -1)[0]
+            target_Q1 = torch.sum(target_Q1 * argmax_mask2, -1)[0]
+            target_Q2 = torch.sum(target_Q2 * argmax_mask1, -1)[0]
             target_Q = torch.minimum(target_Q1, target_Q2)
             data = {'next_q': target_Q}
             target_Q = reward + self.discount * not_done * target_Q
