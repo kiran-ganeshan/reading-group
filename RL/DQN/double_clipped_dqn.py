@@ -8,7 +8,7 @@ from util import ActionType, learner, MLP, one_hot
 
 
 @learner("critic1", "critic2")
-class DoubleDQN(object):
+class DoubleClippedDQN(object):
     def __init__(
         self,
         state_dim : int,

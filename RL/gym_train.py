@@ -8,9 +8,15 @@ import wandb
 from util import ReplayBuffer, ActionType, get_action_type
 from util import log_wandb, to_torch, from_torch
 from DQN.dqn import DQN
+from DQN.clipped_dqn import ClippedDQN
+from DQN.clipped_double_dqn import ClippedDoubleDQN
+from DQN.double_clipped_dqn import DoubleClippedDQN
 from PG.pg import PG
 algos = {
     "DQN": DQN,
+    "CDQN": ClippedDQN,
+    "CDDQN": ClippedDoubleDQN,
+    "DCDQN": DoubleClippedDQN,
     "PG": PG,
 }
  
