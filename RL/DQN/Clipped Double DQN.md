@@ -1,2 +1,3 @@
-# Deuling DQN
+# Clipped Double DQN
 Requirements: [[DQN]]
+#todo

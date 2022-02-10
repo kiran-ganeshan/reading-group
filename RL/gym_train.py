@@ -5,42 +5,45 @@ from gym.spaces import Box, Discrete
 import argparse
 import os
 import wandb
-from util import ReplayBuffer, ActionType, get_action_type
-from util import log_wandb, to_torch, from_torch
+from tqdm import tqdm
+import util
 from DQN.dqn import DQN
 from PG.pg import PG
-from DDQN.deuling_dqn import DeulingDQN
+#from DDQN.deuling_dqn import DeulingDQN
 algos = {
     "DQN": DQN,
-    "PG": PG,
-    "DDQN": DeulingDQN
+    "PG": PG  
 }
- 
+time_spent_running = 0
+time_spent_logging = 0
  
 # Runs policy for X episodes and returns average reward
 # A fixed seed is used for the eval environment
-def eval(policy, env_name, seed, eval_episodes=10):
+def eval(policy, env_name, seed, eval_episodes=10, render=False):
     eval_env = gym.make(env_name)
+    if render:
+        eval_env = util.VideoRecorder(eval_env)
     eval_env.seed(seed)
 
-    avg_reward = 0.
+    rewards = []
     for _ in range(eval_episodes):
-        state, done = eval_env.reset(), False
+        state, done, ep_reward = eval_env.reset(), False, 0.
         while not done:
-            action = from_torch(policy.select_action(to_torch(state, torch.float32)))
+            input = util.to_torch(state, torch.float32)
+            action = policy.select_action(input)
+            action = util.from_torch(action)
             state, reward, done, _ = eval_env.step(action)
-            avg_reward += reward
-
-    avg_reward /= eval_episodes
-
-    print("---------------------------------------")
-    print(f"Evaluation over {eval_episodes} episodes: {avg_reward:.3f}")
-    print("---------------------------------------")
-    return {'return': avg_reward}
+            ep_reward += reward
+        rewards.append(ep_reward)
+    
+    return {'mean_return': np.mean(rewards),
+            'std_return': np.std(rewards),
+            'max_return': np.max(rewards),
+            'min_return': np.min(rewards)}
 
 def train(policy, 
           env : gym.Env, 
-          replay_buffer : ReplayBuffer, 
+          replay_buffer : util.ReplayBuffer, 
           on_policy : bool,
           seed : int, 
           batch_size : int,
@@ -48,7 +51,8 @@ def train(policy,
           start_timesteps : int, 
           ep_len : int,
           train_freq : int,
-          eval_freq : int):
+          eval_freq : int,
+          no_tqdm : bool = False):
     """
     Trains 
     """
@@ -61,22 +65,23 @@ def train(policy,
     t = 0
     episode_num = 0
 
-    for step in range(int(max_timesteps)):
+    for step in tqdm(range(int(max_timesteps)), disable=no_tqdm):
         t += 1
 
         # Select action randomly or according to policy
         if step < args.start_timesteps:
             action = env.action_space.sample()
         else:
-            action = from_torch(policy.select_action(to_torch(state, torch.float32)))
+            input = util.to_torch(state, torch.float32)
+            action = policy.select_action(input)
+            action = util.from_torch(action)
 
         # Perform action
         next_state, reward, done, _ = env.step(action) 
-        done_bool = float(done) if t < ep_len else 0.
-        reward = np.float64(reward)
+        done = float(done) if t < ep_len else 0.
 
         # Process data and store it in replay buffer
-        replay_buffer.add(state, action, next_state, reward, done_bool)
+        replay_buffer.add(state, action, next_state, reward, done)
         episode_reward += reward
         state = next_state
 
@@ -84,13 +89,17 @@ def train(policy,
         # Only trains if start_timesteps many steps have passed and either
         # - we are training off-policy and this is a training iteration (according to train_freq), or
         # - we are training on-policy and we are finished with an episode
-        if step >= start_timesteps and ((not on_policy and (step + 1) % train_freq == 0) or done):
-            metrics = policy.train(*replay_buffer.sample(batch_size))
-            log_wandb('train', metrics, step=step + 1)
+        can_train = not on_policy and (step + 1) % train_freq == 0
+        can_train = can_train or (on_policy and done)
+        if step >= start_timesteps and can_train:
+            data = replay_buffer.sample(batch_size)
+            metrics = policy.train(*data)
+            util.log_wandb('train', metrics, step=step + 1)
 
         # Complete episode if done
         if done: 
-            print(f"Total T: {step+1} Episode Num: {episode_num+1} Episode T: {t} Reward: {episode_reward:.3f}")
+            episode_metrics = {'ep_len': t, 'ep_reward': episode_reward}
+            util.log_wandb('train', episode_metrics, step=step + 1)
             
             # Reset environment
             state, done = env.reset(), False
@@ -98,14 +107,14 @@ def train(policy,
             t = 0
             episode_num += 1 
             
-            # Reset the replay buffer if training on-policy
+            # Dump the replay buffer if training on-policy
             if on_policy:
                 replay_buffer.reset()
             
         # Evaluate episode
         if (step + 1) % eval_freq == 0:
             eval_metrics = eval(policy, env_name, seed)
-            log_wandb('eval', eval_metrics, step=step + 1)
+            util.log_wandb('eval', eval_metrics, step=step + 1)
 
 
 if __name__ == "__main__":
@@ -140,6 +149,7 @@ if __name__ == "__main__":
     parser.add_argument("--save", action="store_true", help="Save model and optimizer parameter checkpoints in wandb")
     parser.add_argument("--load", type=str, help="Load model and optimizer params from this wandb run id")
     parser.add_argument("--wandb", action="store_true", help="Save training metrics, eval metrics, and data in wandb")
+    parser.add_argument("--no_tqdm", action="store_true", help="Disable tqdm progress bar")
     
     args, model_args = parser.parse_known_args()
 
@@ -163,14 +173,19 @@ if __name__ == "__main__":
     torch.manual_seed(args.seed)
     np.random.seed(args.seed)
     
+    
     # Get environment dimensions
     state_dim = env.observation_space.shape[0]
-    action_type = get_action_type(env.action_space)
-    if action_type == ActionType.CONTINUOUS:
+    if isinstance(env.action_space, Box):
         action_dim = env.action_space.shape[0]
-    else: 
-        assert action_type == ActionType.DISCRETE
+        discrete = False
+    elif isinstance(env.action_space, Discrete): 
         action_dim = int(env.action_space.n)
+        discrete = True
+    else:
+        s = "Currently, only Box and Discrete"
+        s += " action spaces work with gym_train.py"
+        assert False, s
         
     # Add environment dimensions and discount to model args
     model_args += ["--state_dim", str(state_dim)]
@@ -178,11 +193,12 @@ if __name__ == "__main__":
     model_args += ["--discount", str(args.discount)]
 
     policy = algos[args.algo](model_args)
-    wandb.watch(policy.modules)
     
-    wrong_type = f"Using {algos[args.algo]}, which is for action spaces of type {policy.action_type}"
-    wrong_type += f", on an action space of type {action_type}"
-    assert policy.action_type == action_type, wrong_type
+    action_type = 'discrete' if discrete else 'continuous'
+    policy_action_type = 'discrete' if policy.discrete else 'continuous'
+    wrong_type = f"Using {algos[args.algo]}, which is for {policy_action_type}"
+    wrong_type += f" action spaces on a {action_type} action space"
+    assert policy.discrete == discrete, wrong_type
     assert algos[args.algo].is_learner, f"Ensure you call @learner on the {algos[args.algo]} class"
 
     if args.load:
@@ -190,14 +206,14 @@ if __name__ == "__main__":
 
     replay_size = args.ep_len if args.on_policy else args.buffer_size
     batch_size = args.ep_len if args.on_policy else args.batch_size
-    replay_buffer = ReplayBuffer(state_dim, 
-                                 action_dim,
-                                 max_size=replay_size, 
-                                 continuous=(action_type == ActionType.CONTINUOUS), 
-                                 get_q=algos[args.algo].get_q,
-                                 trajectory_q=args.trajectory_q, 
-                                 discount_qval=args.discount_qval,
-                                 discount=args.discount)
+    replay_buffer = util.ReplayBuffer(state_dim, 
+                                      action_dim,
+                                      max_size=replay_size, 
+                                      continuous=(action_type == util.ActionType.CONTINUOUS), 
+                                      get_q=algos[args.algo].get_q,
+                                      trajectory_q=args.trajectory_q, 
+                                      discount_qval=args.discount_qval,
+                                      discount=args.discount)
     
     train(
         policy, 
@@ -210,7 +226,8 @@ if __name__ == "__main__":
         args.start_timesteps,
         args.ep_len,
         args.train_freq,
-        args.eval_freq
+        args.eval_freq,
+        args.no_tqdm
     )
     
     

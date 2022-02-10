@@ -88,7 +88,7 @@ class DoubleDQN(object):
         self.critic2_optimizer.zero_grad()
         loss.backward()
         self.critic1_optimizer.step()
-        self.critic2_optimizer.zero_grad()
+        self.critic2_optimizer.step()
 
         # Update the frozen target models
         for param, target_param in zip(self.critic1.parameters(), self.critic1_target.parameters()):

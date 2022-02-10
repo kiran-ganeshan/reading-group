@@ -1,2 +1,3 @@
-# Deuling DQN
+# Double DQN
 Requirements: [[DQN]]
+#todo

@@ -1,36 +1,41 @@
 # libraries
-from abc import abstractmethod
 import inspect
 import argparse
-from itertools import islice
-from collections import OrderedDict
 import numpy as np
 import torch
 from torch import TensorType
 import torch.nn as nn
 import torch.nn.functional as F
-from torch.optim.optimizer import Optimizer
 import wandb
 from scipy.signal import lfilter
-import jax
-import flax
-from flax import linen as jnn
-from jax import numpy as jnp
 from enum import Enum
 from gym.spaces import Space, Box, Discrete
-
+import os
+import gym
 # types
-from typing import Sequence, Callable, Any, Iterable, Dict, AnyStr
-from jax.interpreters.xla import DeviceArray
+from typing import Sequence, Callable
 
 
-def to_torch(tensor, dtype):
-    return torch.tensor(tensor, dtype=dtype)  
+device = None
 
 
-def from_torch(tensor):
+def init_gpu(use_gpu=True, gpu_id=0):
+    global device
+    if torch.cuda.is_available() and use_gpu:
+        device = torch.device("cuda:" + str(gpu_id))
+        print("Using GPU id {}".format(gpu_id))
+    else:
+        device = torch.device("cpu")
+        print("GPU not detected. Defaulting to CPU.")
+
+
+def to_torch(tensor, dtype=torch.float32, *args, **kwargs):
+    return torch.from_numpy(tensor, *args, **kwargs).type(dtype).to(device)
+
+
+def from_torch(tensor, *args, **kwargs):
     if isinstance(tensor, torch.Tensor):
-        return tensor.cpu().detach().numpy()
+        return tensor.to('cpu').detach().numpy()
     else:
         return tensor
     
@@ -61,20 +66,22 @@ def get_action_type(action_space : Space):
         pass
     
     
-def test_action_type(policy : nn.Module, state_dim : int):
-    wrong_type = "select_action must return torch or numpy array"
+def test_is_discrete(policy, state_dim : int):
+    wrong_type = "select_action must return torch array"
     wrong_dtype = "select_action must return array with dtype int or float"
     assert policy.is_learner, "module must be learner to test action type"
-    action = from_torch(policy.select_action(torch.zeros(state_dim)))
-    assert isinstance(action, np.ndarray), wrong_type
+    action = policy.select_action(torch.zeros(state_dim))
+    assert isinstance(action, torch.Tensor), wrong_type
+    action = from_torch(action)
+    
     if np.issubdtype(action.dtype, np.integer):
-        return ActionType.DISCRETE
+        return True
     if np.issubdtype(action.dtype, np.floating):
-        return ActionType.CONTINUOUS
+        return False
     assert False, wrong_dtype
 
 
-def learner(*modules, get_q=False):
+def learner(get_q=False):
     def transform(cls):
         prev_init = cls.__init__
         params = inspect.signature(prev_init).parameters
@@ -109,18 +116,15 @@ def learner(*modules, get_q=False):
             
             prev_init(self, **vars(args))
             
-            misnamed_mod = "Ensure all module python instance variables are named "
-            misnamed_mod += "according to the inputs to learner."
-            assert all([hasattr(self, mod) for mod in modules]), misnamed_mod
+            self.discrete = test_is_discrete(self, args.state_dim)
             
-            self.modules = tuple([getattr(self, mod) for mod in modules])
-            self.action_type = test_action_type(self, args.state_dim)
+            
         
         cls.__init__ = init
         cls.is_learner = True    # For testing in training loops
         cls.get_q = get_q
-        assert hasattr(cls, 'select_action'), "Must write a select_action function"
-        assert hasattr(cls, 'train'), "Must write a training step"
+        assert hasattr(cls, 'select_action'), "Must write a policy in function select_action"
+        assert hasattr(cls, 'train'), "Must write a training step in function select_action"
         
         return cls
     return transform
@@ -189,22 +193,24 @@ class ReplayBuffer(object):
         self.trajectory_q = trajectory_q
         self.discount_qval = discount_qval
         self.discount = discount
+        
         if get_q:
             assert discount, "Must provide discount to replay buffer if retrieving Q-value"
 
         self.reset()
-        
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    def add(self, state, action, next_state, reward, done):
+    def add(self, 
+            state : np.ndarray, 
+            action : np.ndarray, 
+            next_state : np.ndarray, 
+            reward : np.ndarray, 
+            done : np.ndarray):
         
-        # Check types
-        action_type = np.dtype('float32') if self.continuous else int
-        inputs = [state, action, next_state, reward, done]
-        expected_types = [np.dtype('float32'), action_type, np.dtype('float32'), np.float64, float]
-        get_type = lambda x: (type(x) if not isinstance(x, np.ndarray) else x.dtype)
-        types = list(map(get_type, inputs))
-        assert types == expected_types, f"expected types {expected_types}\n but got types {types}"
+        # Change types
+        state = state.astype('float')
+        if self.continuous:
+            action = action.astype('float')
+        next_state = next_state.astype('float')
         
         # Add data
         self.state[self.ptr] = state
@@ -224,14 +230,14 @@ class ReplayBuffer(object):
     def sample(self, batch_size):
         ind = np.random.randint(0, self.size, size=batch_size)
         action_type = torch.float if self.continuous else torch.long
-        qval = () if not self.get_q else (to_torch(self.qval[ind], dtype=torch.float32).to(self.device),)
+        qval = () if not self.get_q else (to_torch(self.qval[ind], dtype=torch.float),)
         return (
-            to_torch(self.state[ind], dtype=torch.float).to(self.device),
-            to_torch(self.action[ind], dtype=action_type).to(self.device),
-            to_torch(self.next_state[ind], dtype=torch.float).to(self.device),
-            to_torch(self.reward[ind], dtype=torch.float).to(self.device),
+            to_torch(self.state[ind], dtype=torch.float),
+            to_torch(self.action[ind], dtype=action_type),
+            to_torch(self.next_state[ind], dtype=torch.float),
+            to_torch(self.reward[ind], dtype=torch.float),
             *qval,
-            to_torch(self.not_done[ind], dtype=torch.float).to(self.device)
+            to_torch(self.not_done[ind], dtype=torch.float)
         )
         
     def reset(self):
@@ -305,7 +311,7 @@ class MLP(nn.Module):
         x = self.final_activation(x)
         return x
 
-
+'''
 class Module(jnn.Module):
     
     @property 
@@ -335,3 +341,47 @@ class JMLP(Module):
         x = jnn.Dense(features=self.output_size)(x)
         x = self.activation(x)
         return x
+'''
+
+
+
+
+# Take from
+# https://github.com/denisyarats/pytorch_sac/
+class VideoRecorder(gym.Wrapper):
+    def __init__(self,
+                 env: gym.Env,
+                 height: int = 128,
+                 width: int = 128,
+                 fps: int = 30):
+        super().__init__(env)
+
+        self.current_episode = 0
+        self.height = height
+        self.width = width
+        self.fps = fps
+        self.frames = []
+
+    def step(self, action: np.ndarray):
+
+        frame = self.env.render(mode='rgb_array')
+
+        if frame is None:
+            try:
+                frame = self.sim.render(width=self.width,
+                                        height=self.height,
+                                        mode='offscreen')
+                frame = np.flipud(frame)
+            except:
+                raise NotImplementedError('Rendering is not implemented.')
+
+        self.frames.append(frame)
+
+        observation, reward, done, info = self.env.step(action)
+
+        if done:
+            wandb.log({'eval_video': wandb.Video(np.array(self.frames), fps=self.fps)}, commit=False)
+            self.frames = []
+            self.current_episode += 1
+
+        return observation, reward, done, info

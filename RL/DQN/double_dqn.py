@@ -32,7 +32,7 @@ class DoubleDQN(object):
                                                   lr=lr, 
                                                   betas=(beta1, beta2), 
                                                   weight_decay=weight_decay)
-        
+
         self.critic2 = util.MLP(input_size=state_dim, 
                                 output_size=action_dim, 
                                 hidden_sizes=(256, 256), 
@@ -60,7 +60,7 @@ class DoubleDQN(object):
     def train(self, *data):
         self.total_it += 1
         state, action, next_state, reward, not_done = data
-        
+
         # Compute the target Q value
         with torch.no_grad(): 
             target_Q1 = self.critic1_target(next_state)
@@ -71,12 +71,12 @@ class DoubleDQN(object):
             data = {'next_q': target_Q}
             target_Q = reward + self.discount * not_done * target_Q
             data = {'target_q': target_Q, **data}
-            
+
         # Get current Q estimates
         q_mask = util.one_hot(action, num_classes=self.action_dim)
         Q1 = torch.sum(self.critic1(state) * q_mask, dim=-1)
         Q2 = torch.sum(self.critic2(state) * q_mask, dim=-1)
- 
+
         # Compute critic loss
         critic1_loss = F.mse_loss(Q1, target_Q)
         critic2_loss = F.mse_loss(Q2, target_Q)
@@ -88,12 +88,12 @@ class DoubleDQN(object):
         self.critic2_optimizer.zero_grad()
         loss.backward()
         self.critic1_optimizer.step()
-        self.critic2_optimizer.zero_grad()
+        self.critic2_optimizer.step()
 
         # Update the frozen target models
         for param, target_param in zip(self.critic1.parameters(), self.critic1_target.parameters()):
             target_param.data.copy_(self.tau * param.data + (1 - self.tau) * target_param.data)
-            
+
         for param, target_param in zip(self.critic2.parameters(), self.critic2_target.parameters()):
             target_param.data.copy_(self.tau * param.data + (1 - self.tau) * target_param.data)
 

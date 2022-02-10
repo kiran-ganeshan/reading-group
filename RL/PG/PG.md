@@ -7,12 +7,102 @@ Requirements: [[Value Functions]], [[Neural Network]]
 - [Towards Data Science](https://towardsdatascience.com/policy-gradients-in-a-nutshell-8b72f9743c5d)
 
 ## Introduction
-Recall that we defined $V^{\pi}(s)$ to be the expected reward-to-go when in state $s$ acting under policy $\pi$. This is precisely what we'd like to optimize when solving an MDP. Thanks to a result known as the policy gradient theorem, we can parameterize the policy as $\pi_{\theta}$ and optimize via gradient descent with respect to $\theta$. (Note that this depends on running our policy in the environment to generate sample trajectories of length $T$, so we operate in an MDP of finite horizon $T$). This note describes how this works. We first choose the objective $J(\theta) = V^{\pi}(s_0)$ where $s_0$ is our starting state, meaning we hope to optimize expected total rewards under our policy starting in state $s_0$.
+Recall that we defined $V^{\pi}(s)$ to be the expected reward-to-go in state $s$ under policy $\pi$. This is precisely what we'd like to optimize when solving an MDP. Thanks to a result known as the policy gradient theorem, we can parameterize the policy as $\pi_{\theta}$ and optimize via gradient descent with respect to $\theta$. (Note that this depends on running our policy in the environment to generate sample trajectories of length $T$, so we operate in an MDP of finite horizon $T$). This note describes how this works. We first choose the objective $J(\theta) = V^{\pi}(s_0)$ where $s_0$ is our starting state, meaning we hope to optimize expected total rewards under our policy starting in state $s_0$.
 
-## Policy Gradient Theorem
+## Strategy
+The policy gradient theorem tells us
+$$\nabla_{\theta}J(\theta) \propto \E_{s\sim\mu^{\pi}(s\mid s_0)}\; 
+\E_{a\sim\pi(s)}\Big[Q^{\pi_\theta}(s, a)\nabla_{\theta} \ln\pi_\theta(a\mid s)\Big]$$
+where $\mu^{\pi}(s\mid s_0)$ is the distribution of state visits from state $s_0$ under policy $\pi$. We would like to generate rollouts with our policy and use this theorem to directly update its parameters based on the rollouts we see. To do this, we must figure out
+1. How to explicitly represent $\pi_\theta(a\mid s)$ using neural network outputs (which will make $\nabla_\theta \ln\pi_\theta(a\mid s)$ tractable)
+2. How to approximate $Q^{\pi_\theta}$
+3. How to approximate the expectations
+
+Approximating the expectations is simple: if our sampled trajectories begin in state $s_0$, then the states $s$ we see during our sampled trajectories are distributed according to $\mu^{\pi}(s\mid s_0)$, and the actions $a$ we take during our sampled trajectories are distributed according to $\pi(a\mid s)$. Therefore, taking state-action pairs from our sampled trajectories gives us a Monte-Carlo approximation of the expectations.
+
+Representing $\pi_\theta$ and approximating $Q^{\pi_\theta}$ involve more in-depth design choices, which we explore below.
+
+### Approximating $Q^{\pi_\theta}$
+
+To approximate $Q^{\pi_\theta}$, we note that the total reward over a trajectory is a sample from the distribution of possible total rewards. We want the expected value of this distribution, and the Weak Law of Large Numbers tells us that if we collect enough samples, the average of our samples should converge the expected value of the distribution of total reward. This means we can use the total discounted reward over a trajectory containing $(s, a)$ as a Monte-Carlo estimate of the $Q$-value. This, however, raises two questions.
+1. Should we use total-trajectory reward as our estimated $Q$-value, or should we use reward-to-go?
+2. If we use reward-to-go, should we apply the discount factor relative to the current transition, or relative to the beginning of the trajectory?  
+
+Differing answers to these questions give rise to three esimators for $Q^{\pi_\theta}$. Suppose we've gathered $N$ rollouts 
+$$\tau^{(i)} = \Big(\Big(s_0^{(i)}, a_0^{(i)}\Big), \Big(s_1^{(i)}, a_1^{(i)}\Big), \dots, \Big(s_T^{(i)}, a_T^{(i)}\Big)\Big)$$
+We would like to esimate $Q^{\pi}$ and plug this estimate into our gradient.
+- If we use total-trajectory reward:
+$$\begin{align*}\nabla_\theta J(\theta) &\approx \frac{1}{N}\sum_{i=1}^N\sum_{t=0}^T\Bigg(\sum_{t'=0}^T \gamma^{t'} r\Big(s_{t'}^{(i)}, a_{t'}^{(i)}\Big)\Bigg)\Bigg( \nabla_\theta\ln\pi_\theta\Big(a_t^{(i)}\mid s_t^{(i)}\Big)\Bigg)\\&\approx \frac{1}{N}\sum_{i=1}^N\Bigg(\sum_{t=0}^T \gamma^{t} r\Big(s_{t}^{(i)}, a_{t}^{(i)}\Big)\Bigg)\Bigg(\sum_{t=0}^T \nabla_\theta\ln\pi_\theta\Big(a_t^{(i)}\mid s_t^{(i)}\Big)\Bigg)\end{align*}$$
+- If we use reward-to-go and apply the discount factor relative to the current transition:
+$$\nabla_\theta J(\theta) \approx \frac{1}{N}\sum_{i=1}^N\sum_{t=0}^T\Bigg(\sum_{t'=t}^T \gamma^{t' - t} r\Big(s_{t'}^{(i)}, a_{t'}^{(i)}\Big)\Bigg) \nabla_\theta\ln\pi_\theta\Big(a_t^{(i)}\mid s_t^{(i)}\Big)$$
+- If we use reward-to-go and apply the discount factor relative to the beginning of the trajectory:
+$$\begin{align*}\nabla_\theta J(\theta) &\approx \frac{1}{N}\sum_{i=1}^N\sum_{t=0}^T\Bigg(\sum_{t'=t}^T \gamma^{t'} r\Big(s_{t'}^{(i)}, a_{t'}^{(i)}\Big)\Bigg)\Bigg( \nabla_\theta\ln\pi_\theta\Big(a_t^{(i)}\mid s_t^{(i)}\Big)\Bigg)\\&\approx \frac{1}{N}\sum_{i=1}^N\sum_{t=0}^T\gamma^t\Bigg(\sum_{t'=t}^T \gamma^{t' - t} r\Big(s_{t'}^{(i)}, a_{t'}^{(i)}\Big)\Bigg) \nabla_\theta\ln\pi_\theta\Big(a_t^{(i)}\mid s_t^{(i)}\Big)\end{align*}$$
+
+Notice that the third approach is just like the second approach, but with transitions at timestep $t$ downweighted by $\gamma^t$. Remember that $\gamma^t$ is the probability we reach timestep $t$ in the [[MDP#Infinite-Horizon MDPs An Alternative Formulation | death state interpretation]] of the discount factor.
+
+Therefore, the second approach is an estimator for the $Q$-value at a transition in the [[MDP#^5c76de| Cophenhagen interpretation]] of the discount factor. In this interpretation, all transitions are weighted equally. The third approach corresponds to the [[MDP#^5c76de| death state interpretation]] of the discount factor, in which later transitions are downweighted by $\gamma^t$ to account for the probability that we never reach these transitions at all, due to premature death.
+### Representing Policies
+We aim to represent $\pi_\theta(s)$ with a neural network $f_\theta: S\to \mathbb{R}^p$ with a $p$-dimensional output. This occurs in two steps:
+1. Decide on a differentiable parameterization $\xi: \mathbb{R}^p \to \mathcal{D}(A)$ to map neural network outputs to action distributions such that any neural network output $f_\theta(s)\in\mathbb{R}^p$ gives a valid distribution $\xi(a\mid f_\theta(s))$.
+2. Design a mechanism to sample from $\xi(a\mid\phi)$ for any $\phi\in\mathbb{R}^p$.
+
+Having accomplished these steps, we can set $\pi_\theta(a\mid s) = \xi(a\mid f_\theta(s))$. To select actions when gathering transitions, we can run inference to obtain the neural network output $\phi = f_\theta(s)$ and then sample form $\xi(a\mid \phi)$. To train on these transitions, we use the policy gradient, which depends on $\nabla_\theta \ln\pi_\theta(a\mid s) = \nabla_\theta \ln\xi(a\mid f_\theta(s))$, and because $\xi$ is differentiable we can evaluate this term by backpropagating through $\xi$. ^df0b0f
+
+Here are a few examples for how these steps play out in practice.
+- If our action space is discrete and finite:
+	1. We can represent distributions over the action space as finite lists of probabilites of length $\vert A\vert$, so we choose $p = \vert A\vert$. We must define our parameterization so that for any neural network output $\phi\in\mathbb{R}^{\vert A\vert}$, the probabilities $\xi(a\mid \phi)$ are positive and add to 1. The softmax function satisfies this:
+	$$\xi(a\mid \phi) = \mathop{\text{softmax}}(\phi) =\frac{\exp\Big(\frac{1}{\alpha}\phi_a\Big)}{\sum_{a'\in A}\exp\Big(\frac{1}{\alpha}\phi_{a'}\Big)}$$
+	where $\phi_a$ is the component of the neural network output $\phi$ corresponding to action $a$.
+	3. To sample from this distribution we merely sample from the categorical random variable $\pi_\theta(a\mid s)$. More concretely, we partition the interval $[0, 1]$ into $\vert A\vert$ intervals, with the subinterval corresponding to action $a$ having size $\pi(a\mid s)$. Then, we sample $u\in [0, 1]$ from the uniform distribution and take action $a$ whenever $u$ falls in the subinterval corresponding to $a$.
+	
+	This way, our neural network could be trained to output any categorical distribution over the action space.
+- If our action space is infinite, whether continuous or discrete, we cannot map the space of distributions over the action space to $\mathbb{R}^n$ for any $n$. Neural nets can only approximate functions between spaces we can encode in $\mathbb{R}^n$, so we cannot have a single neural net capable of representing any action distribution. Thus, we must design $\xi$ so that our neural net can represent a useful family of distributions. When $A$ is continuous, one common choice is the family of Gaussians:
+	1. Represent distributions over $A = \mathbb{R}^n$ using a Gaussian with mean $\mu \in \mathbb{R}^n$ and covariance matrix $\Sigma \in \mathbb{R}^{n^2}$. Thus our whole parameterization requires $p = n(n+1)$. Given a neural net output $\phi = (\mu, \Sigma)$, we have
+	$$\xi(a\mid \mu, \Sigma) = \frac{1}{\sqrt{2\pi\vert \Sigma\vert}}\exp\bigg(-\frac{1}{2} (a - \mu)^T \Sigma^{-1} (a - \mu)^T\bigg)$$
+	3. To sample from this distribution, we merely sample from the Gaussian random variable $\xi(a\mid f_\theta(s))$. More concretely, we run inference to obtain $(\mu, \Sigma) = f_\theta(s)$. Then we sample $\varepsilon \sim \mathcal{N}(\vec 0, I_n)$ and output $\mu + \Sigma\varepsilon$ as our sample, where we take a matrix-vector product between $\Sigma$ and $\varepsilon$.
+	
+	Gaussians are one choice of distribution family, but not the only.
+
+## Use Cases
+
+The policy gradient is applicable to
+- Discrete and Continuous State Spaces
+- Discrete and Continuous Action Spaces
+	- Note: in infinite action spaces, we cannot parameterize arbitrary action distributions, so we must make choices about which family of action distributions (e.g. Gaussian, Exponential) to represent.
+
+## Algorithm
+
+**PG**: Policy Gradient
+**Parameters**: 
+- Number of episodes $N$
+- Horizon $T$
+- Timesteps until training $T_0$
+- Parameterization $\xi$ (see [[PG#^df0b0f|above]])
+- $Q$-value estimator (see [[PG#^df0b0f|above]])
+
+**Algorithm**:
+> Initialize neural network $f$ with random weights $\theta$\
+> Parameterize the policy as described above: $\pi_\theta(a\mid s) = \xi(a\mid f_\theta(s))$\
+> **for** episode $\in\{1, \dots, N\}$ **do**:\
+> $\qquad$ Initialize list $\mathcal{L}$ to store transitions from trajectory\
+> $\qquad$ **for** $t\in\{1, \dots, T\}$ **do**:\
+> $\qquad\qquad$ **if** $N T + t < T_0$ (fewer than $T_0$ timesteps have passed): \
+> $\qquad\qquad\qquad$ $a_t\set$ random action\
+> $\qquad\qquad$ **else**:\
+> $\qquad\qquad\qquad$ $a_t\sim \pi(a_t\mid s_t)$\
+> $\qquad\qquad$ Execute action $a_t$, retrieve reward $r_t$ and next state $s_{t+1}$\
+> $\qquad\qquad$ Store transition $(s_t, a_t, r_t, s_{t+1})$ in list $\mathcal{L}$\
+> $\qquad$ Retrieve transitions $(s_j, a_j, r_j, s_{j+1})$ from $\mathcal{L}$\
+> $\qquad$ Calculate $Q$-value estimates $\hat Q(s_j, a_j)$ for each transition\
+> $\qquad$ Set our loss to $L = \sum_{j} \hat Q(s_j, a_j)\ln\pi_\theta(a_j\mid s_j)$\
+> $\qquad$ Perform gradient descent on $L$ to update $\theta$
+
+## Analysis
+We prove the following theorem showing the correctness of the policy gradient:
+
 **Theorem**: For a given starting state $s_0$, let $J(\theta) = V^{\pi_\theta}(s_0)$. Then
-$$\nabla_{\theta}J(\theta) \propto \mathop{\mathbb{E}}_{s\sim\mu^{\pi}(s\mid s_0)}\; 
-\mathop{\mathbb{E}}_{a\sim\pi(s)}\left[Q^{\pi_\theta}(s, a)\nabla_{\theta} \ln\pi_\theta(a\mid s)\right]$$
+$$\nabla_{\theta}J(\theta) \propto \E_{s\sim\mu^{\pi}(s\mid s_0)}\; 
+\E_{a\sim\pi(s)}\Big[Q^{\pi_\theta}(s, a)\nabla_{\theta} \ln\pi_\theta(a\mid s)\Big]$$
 where $\propto$ is a symbol meaning "proportional to" (we will derive constants of proportionality in the proof) and $\mu^{\pi}(s\mid s_0)$ is the distribution of states visited by $\pi$ starting in state $s$. This theorem is important because 
 1. We can sample $s\sim\mu^{\pi}(s\mid s_0)$ by running the policy starting with $s_0$ and sampling states from the resultant trajectories, allowing us to approximate the outer expectation. 
 2. Given a state $s$ sampled from the trajectories, the action taken at $s$ in the trajectory was sampled from $\pi(s)$, so if we choose $a$ to be this action than effectively $a\sim\pi(s)$, allowing us to approximate the inner expectation.
@@ -20,26 +110,26 @@ where $\propto$ is a symbol meaning "proportional to" (we will derive constants 
 Together, these facts show that if run the policy $\pi$ in the environment to generate trajectories, and then we sample state-action pairs from trajectories, we can approximate the two expectations, allowing us to evaluate this expression.
 
 **Proof**: Note that for any starting state $s$, by the [[Value Functions#Bellman Recurrence | Bellman Recurrence Relation]] relating $V^{\pi}(s)$ to an expectation of $V^{\pi}(s')$ over the next state $s'$, we have
-$$\nabla_{\theta}V^{\pi}(s) = \nabla_\theta \mathop{\mathbb{E}}_{a\sim \pi_\theta(a\mid s)}\left\{r(s, a) + \gamma\mathop{\mathbb{E}}_{s'\sim \mathcal{T}(s' \mid s,a)}\;V^{\pi}(s')\right\}$$
+$$\nabla_{\theta}V^{\pi}(s) = \nabla_\theta \E_{a\sim \pi_\theta(a\mid s)}\bigg\{r(s, a) + \gamma\E_{s'\sim \mathcal{T}(s' \mid s,a)}\;V^{\pi}(s')\bigg\}$$
 
 We might be tempted to try to move the gradient through the expectation, but not so fast! The expectation is over $\pi_\theta$, which depends on $\theta$! We must expand the expectation, and so the proof splits depending on whether we are in a discrete or continuous space. We will present the discrete case, and to obtain the continuous case one simply replaces sums over $S$ and $A$ with integrals over these continuous spaces.
 
 In the discrete case, the expectation becomes a sum over the action space: 
 $$\begin{align*}
 
-\nabla_{\theta}V^{\pi}(s) &= \nabla_\theta \sum_{a\in A} \pi_\theta(a\mid s)\left\{r(s, a) + \gamma\mathop{\mathbb{E}}_{s'\sim \mathcal{T}( s,a)}\;V^{\pi}(s')\right\}\\
+\nabla_{\theta}V^{\pi}(s) &= \nabla_\theta \sum_{a\in A} \pi_\theta(a\mid s)\bigg\{r(s, a) + \gamma\E_{s'\sim \mathcal{T}( s,a)}\;V^{\pi}(s')\bigg\}\\
 
-&=\sum_{a\in A} \left\{\left[r(s, a) + \gamma\mathop{\mathbb{E}}_{s'\sim\mathcal{T}( s, a)}V^{\pi}(s')\right]\nabla_\theta\pi_{\theta}(a\mid s) + \pi_\theta(a\mid s)\nabla_\theta\left[r(s, a) + \gamma\mathop{\mathbb{E}}_{s'\sim\mathcal{T}( s, a)}V^\pi (s')\right]\right\}\\
+&=\sum_{a\in A} \Bigg\{\bigg[r(s, a) + \gamma\E_{s'\sim\mathcal{T}( s, a)}V^{\pi}(s')\bigg]\nabla_\theta\pi_{\theta}(a\mid s) + \pi_\theta(a\mid s)\nabla_\theta\bigg[r(s, a) + \gamma\E_{s'\sim\mathcal{T}( s, a)}V^\pi (s')\bigg]\Bigg\}\\
 
-&=\sum_{a\in A} \left\{\left[r(s, a) + \gamma\mathop{\mathbb{E}}_{s'\sim\mathcal{T}( s, a)}V^{\pi}(s')\right]\nabla_\theta\pi_{\theta}(a\mid s) + \pi_\theta(a\mid s) \gamma\mathop{\mathbb{E}}_{s'\sim\mathcal{T}( s, a)}\nabla_\theta V^\pi (s')\right\}\\
+&=\sum_{a\in A} \Bigg\{\bigg[r(s, a) + \gamma\E_{s'\sim\mathcal{T}( s, a)}V^{\pi}(s')\bigg]\nabla_\theta\pi_{\theta}(a\mid s) + \pi_\theta(a\mid s) \gamma\E_{s'\sim\mathcal{T}( s, a)}\nabla_\theta V^\pi (s')\Bigg\}\\
 
 \end{align*}$$
 
 We now recognize the term in brackets as the [[Value Functions#^4e628e | partial recurrence]] of $Q^{\pi}$, so we can substitute $Q^{\pi}$ to obtain
-$$\begin{align*}\nabla_\theta V^{\pi}(s) &= \sum_{a\in A} \left\{Q^{\pi}(s, a)\nabla_\theta\pi_{\theta}(a\mid s) + \pi_\theta(a\mid s) \gamma\mathop{\mathbb{E}}_{s'\sim\mathcal{T}( s, a)}\nabla_\theta V^\pi (s')\right\}\\
-&= \sum_{a\in A} Q^{\pi}(s, a)\nabla_\theta\pi_{\theta}(a\mid s) + \sum_{a\in A}\pi_\theta(a\mid s) \gamma\mathop{\mathbb{E}}_{s'\sim\mathcal{T}( s, a)}\nabla_\theta V^\pi (s')\end{align*}$$
+$$\begin{align*}\nabla_\theta V^{\pi}(s) &= \sum_{a\in A} \bigg\{Q^{\pi}(s, a)\nabla_\theta\pi_{\theta}(a\mid s) + \pi_\theta(a\mid s) \gamma\E_{s'\sim\mathcal{T}( s, a)}\nabla_\theta V^\pi (s')\bigg\}\\
+&= \sum_{a\in A} Q^{\pi}(s, a)\nabla_\theta\pi_{\theta}(a\mid s) + \sum_{a\in A}\pi_\theta(a\mid s) \gamma\E_{s'\sim\mathcal{T}( s, a)}\nabla_\theta V^\pi (s')\end{align*}$$
 
-This is a recurrence relation on $\nabla_\theta V^{\pi}$. The goal of the policy grIn order to use this recurrence relation to approximate the gradient, we're going to unroll it and obtain an expression for the policy gradient based on sample trajectories. 
+This is a recurrence relation on $\nabla_\theta V^{\pi}$. The goal of the policy gradient is to to use this recurrence relation to approximate the gradient. In order to accmplish this, we're going to unroll the recurrence relation and obtain an expression for the policy gradient based on sample trajectories. 
 
 Note that to approximate this gradient, we can either run the policy to generate infinitely long training trajectories (called the **continuing case**), or we can run the policy to generate training trajectories of horizon $T$ (called the **episodic case**). 
 
@@ -55,15 +145,15 @@ $$\phi(s) =\sum_{a\in A}Q^{\pi}(s, a)\nabla_\theta\pi_\theta(a\mid s)$$
 for convenience.
 Using this, our recurrence relation now looks like
 $$\begin{align*}
-\nabla_\theta V^{\pi}(s) &= \phi(s) + \sum_{a\in A}\pi_\theta(a\mid s) \gamma\mathop{\mathbb{E}}_{s'\sim\mathcal{T}( s, a)}\nabla_\theta V^\pi (s')
+\nabla_\theta V^{\pi}(s) &= \phi(s) + \sum_{a\in A}\pi_\theta(a\mid s) \gamma\E_{s'\sim\mathcal{T}( s, a)}\nabla_\theta V^\pi (s')
 \end{align*}$$
 
 2. We will write the expectation over the transition operator in its weighted sum  form:
-$$\mathop{\mathbb{E}}_{s'\sim\mathcal{T}(s'\mid s, a)}f(s') = \sum_{s'\in S}\mathcal{T}(s'\mid s, a)f(s')$$
+$$\E_{s'\sim\mathcal{T}(s'\mid s, a)}f(s') = \sum_{s'\in S}\mathcal{T}(s'\mid s, a)f(s')$$
 The recurrence relation now becomes
 $$\begin{align*}
 \nabla_\theta V^{\pi}(s) &= \phi(s) + \sum_{a\in A}\pi_\theta(a\mid s) \gamma\sum_{s'\in S}\mathcal{T}(s'\mid s, a)\nabla_\theta V^\pi (s')\\
-&= \phi(s) + \gamma\sum_{s'\in S}\left[\sum_{a\in A}\pi_\theta(a\mid s) \mathcal{T}(s'\mid s, a)\right]\nabla_\theta V^\pi (s')\\
+&= \phi(s) + \gamma\sum_{s'\in S}\Bigg[\sum_{a\in A}\pi_\theta(a\mid s) \mathcal{T}(s'\mid s, a)\Bigg]\nabla_\theta V^\pi (s')\\
 \end{align*}$$
 where we can introduce the brackets since $\nabla_\theta V^{\pi}(s')$ does not depend on $a$. This allows us another liberty.
 3. We introduce the following notation for the total probability of transitioning from $s$ to $s'$ under $\pi$:
@@ -81,26 +171,26 @@ $$\begin{align*}
 
 \nabla_\theta V^{\pi}(s_0) &= \phi(s_0) + \gamma\sum_{s_1\in S}P_\pi(s_0\to s_1)\nabla_\theta V^\pi (s_1)\\
 
-&= \phi(s_0) + \gamma\sum_{s_1\in S}P_\pi(s_0\to s_1) \left[\phi(s_1) + \gamma\sum_{s_2\in S}P_\pi(s_1\to s_2)\nabla_\theta V^\pi (s_2)\right]\\
+&= \phi(s_0) + \gamma\sum_{s_1\in S}P_\pi(s_0\to s_1) \Bigg[\phi(s_1) + \gamma\sum_{s_2\in S}P_\pi(s_1\to s_2)\nabla_\theta V^\pi (s_2)\Bigg]\\
 
 &= \phi(s_0) + \gamma\sum_{s_1\in S}P_\pi(s_0\to s_1) \phi(s_1) + \gamma^2\sum_{s_1\in S}P_\pi(s_0\to s_1)\sum_{s_2\in S}P_\pi(s_1\to s_2)\nabla_\theta V^\pi (s_2)\\
 
-&= \phi(s_0) + \gamma\sum_{s_1\in S}P_\pi(s_0\to s_1) \phi(s_1) + \gamma^2\sum_{s_2\in S}\left[\sum_{s_1\in S}P_\pi(s_0\to s_1)P_\pi(s_1\to s_2)\right]\nabla_\theta V^\pi (s_2)\\
+&= \phi(s_0) + \gamma\sum_{s_1\in S}P_\pi(s_0\to s_1) \phi(s_1) + \gamma^2\sum_{s_2\in S}\Bigg[\sum_{s_1\in S}P_\pi(s_0\to s_1)P_\pi(s_1\to s_2)\Bigg]\nabla_\theta V^\pi (s_2)\\
 
 &= \phi(s_0) + \gamma\sum_{s_1\in S}P_\pi(s_0\to s_1) \phi(s_1) + \gamma^2\sum_{s_2\in S}P_{\pi}^2(s_0\to s_2)\nabla_\theta V^\pi (s_2)\\
 
 \end{align*}$$
 
-We can unroll it one more time to beat a dead horse, if you're into that kinda thing:
+We can unroll it one more time to make a point, this time exaggerating the pattern in the terms in our presentation:
 $$\begin{align*}
 
-\nabla_\theta V^{\pi}(s_0) &= \phi(s_0) + \gamma\sum_{s_1\in S}P_\pi(s_0\to s_1) \phi(s_1) + \gamma^2\sum_{s_2\in S}P_{\pi}^2(s_0\to s_2)\left[\phi(s_2) + \gamma\sum_{s_3\in S}P_\pi(s_2\to s_3)\nabla_\theta V^\pi (s_3)\right]\\
+\nabla_\theta V^{\pi}(s_0) =\quad & \phi(s_0) \\&+ \gamma\sum_{s_1\in S}P_\pi(s_0\to s_1) \phi(s_1) \\&+ \gamma^2\sum_{s_2\in S}P_{\pi}^2(s_0\to s_2)\Bigg[\phi(s_2) + \gamma\sum_{s_3\in S}P_\pi(s_2\to s_3)\nabla_\theta V^\pi (s_3)\Bigg]\\
 
-&= \phi(s_0) + \gamma\sum_{s_1\in S}P_\pi(s_0\to s_1) \phi(s_1) + \gamma^2\sum_{s_2\in S}P_{\pi}^2(s_0\to s_2)\phi(s_2) + \gamma^3\sum_{s_2\in S}P_{\pi}^2(s_0\to s_2)\sum_{s_3\in S}P_\pi(s_2\to s_3)\nabla_\theta V^\pi (s_3)\\
+=\quad & \phi(s_0) \\&+ \gamma\sum_{s_1\in S}P_\pi(s_0\to s_1) \phi(s_1) \\&+ \gamma^2\sum_{s_2\in S}P_{\pi}^2(s_0\to s_2)\phi(s_2) \\&+ \gamma^3\sum_{s_2\in S}P_{\pi}^2(s_0\to s_2)\sum_{s_3\in S}P_\pi(s_2\to s_3)\nabla_\theta V^\pi (s_3)\\
 
-&= \phi(s_0) + \gamma\sum_{s_1\in S}P_\pi(s_0\to s_1) \phi(s_1) + \gamma^2\sum_{s_2\in S}P_{\pi}^2(s_0\to s_2)\phi(s_2) + \gamma^3\sum_{s_3\in S}\left[\sum_{s_2\in S}P_{\pi}^2(s_0\to s_2)P_\pi(s_2\to s_3)\right]\nabla_\theta V^\pi (s_3)\\
+=\quad & \phi(s_0) \\&+ \gamma\sum_{s_1\in S}P_\pi(s_0\to s_1) \phi(s_1) \\&+ \gamma^2\sum_{s_2\in S}P_{\pi}^2(s_0\to s_2)\phi(s_2) \\&+ \gamma^3\sum_{s_3\in S}\Bigg[\sum_{s_2\in S}P_{\pi}^2(s_0\to s_2)P_\pi(s_2\to s_3)\Bigg]\nabla_\theta V^\pi (s_3)\\
 
-&= \phi(s_0) + \gamma\sum_{s_1\in S}P_\pi(s_0\to s_1) \phi(s_1) + \gamma^2\sum_{s_2\in S}P_{\pi}^2(s_0\to s_2)\phi(s_2) + \gamma^3\sum_{s_3\in S}P_{\pi}^3(s_0\to s_3)\nabla_\theta V^\pi (s_3)\\
+=\quad & \phi(s_0) \\&+ \gamma\sum_{s_1\in S}P_\pi(s_0\to s_1) \phi(s_1) \\&+ \gamma^2\sum_{s_2\in S}P_{\pi}^2(s_0\to s_2)\phi(s_2) \\&+ \gamma^3\sum_{s_3\in S}P_{\pi}^3(s_0\to s_3)\nabla_\theta V^\pi (s_3)\\
 
 \end{align*}$$
 
@@ -117,7 +207,7 @@ $$\begin{align*}
 
 &=\sum_{s\in S}P^0_{\pi}(s_0\to s)\phi(s) + \sum_{s\in S}P_\pi(s_0\to s) \phi(s)  + \dots+ \sum_{s\in S}P_{\pi}^T(s_0\to s)\phi(s)\\
 
-&=\sum_{s\in S}\left[\sum_{k=0}^T P^k_{\pi}(s_0\to s)\right]\phi(s) \\
+&=\sum_{s\in S}\Bigg[\sum_{k=0}^T P^k_{\pi}(s_0\to s)\Bigg]\phi(s) \\
 
 \end{align*}$$
 This prompts us to define
@@ -134,7 +224,7 @@ Note that $\underset{s\in S}{\sum}P^k_{\pi}(s_0\to s) = 1$ since we visit exactl
 $$\mu^{\pi}(s\mid s_0) = \frac{\eta^{\pi}(s\mid s_0)}{\overset{T}{\underset{k=0}{\sum}}1}=\frac{1}{T}\eta^{\pi}(s\mid s_0) $$
 $$\Longrightarrow \eta^{\pi}(s\mid s_0) = T\mu^{\pi}(s\mid s_0)$$
 Now that we have normalized $\eta^{\pi}$, we can plug it back into the policy gradient expression:
-$$\begin{align*}\nabla_\theta J(\theta) &= \nabla_\theta V^{\pi}(s_0) \\ &=\sum_{s\in S}\eta^{\pi}(s\mid s_0)\phi(s)\\&= T\sum_{s\in S}\mu^{\pi}(s\mid s_0)\phi(s)\\&=T\mathop{\mathbb{E}}_{s\sim \mu^{\pi}(s\mid s_0)}\phi(s)\end{align*}$$
+$$\begin{align*}\nabla_\theta J(\theta) &= \nabla_\theta V^{\pi}(s_0) \\ &=\sum_{s\in S}\eta^{\pi}(s\mid s_0)\phi(s)\\&= T\sum_{s\in S}\mu^{\pi}(s\mid s_0)\phi(s)\\&=T\E_{s\sim \mu^{\pi}(s\mid s_0)}\phi(s)\end{align*}$$
 This gives us the outer expectation over the distribution $\mu^\pi$ of state visits. (Recall this is helpful because this is precisely the distribution of states when we randomly sample from trajectories.) We still need to obtain the inner expectation over the policy, and we can use the following clever trick:
 $$\begin{align*}
 
@@ -144,15 +234,57 @@ $$\begin{align*}
 
 &= \sum_{a\in A}\pi_\theta(a\mid s)Q^{\pi}(s, a)\nabla_\theta\ln\pi_\theta(a\mid s)\\
 
-&= \mathop{\mathbb{E}}_{a\sim\pi(a\mid s)}Q^{\pi}(s, a)\nabla_\theta\ln\pi_\theta(a\mid s)\\
+&= \E_{a\sim\pi(a\mid s)}Q^{\pi}(s, a)\nabla_\theta\ln\pi_\theta(a\mid s)\\
 
 
 \end{align*}$$
 where we multiply and divide by $\pi$ to bring back the expectation. Putting this all together we have
-$$\nabla_\theta J(\theta) = T\mathop{\mathbb{E}}_{s\sim \mu^{\pi}(s\mid s_0)}\;\mathop{\mathbb{E}}_{a\sim\pi(a\mid s)}Q^{\pi}(s, a)\nabla_\theta\ln\pi_\theta(a\mid s)$$
+$$\nabla_\theta J(\theta) = T\E_{s\sim \mu^{\pi}(s\mid s_0)}\;\E_{a\sim\pi(a\mid s)}Q^{\pi}(s, a)\nabla_\theta\ln\pi_\theta(a\mid s)$$
 which is our intended result with a constant of proportionality $T$.
 ### Continuing Case
 This is left as an exercise to the reader. Step through the proof as in the episodic case, but including discounts. What is the new constant of proportionality? How can we interpret $\eta^\pi$ and $\mu^\pi$ in this case?
+##### Continuing Case Solution
+This time, we constrain $\gamma \in (0, 1)$ and we unroll to infinite depth. Note we have
+$$\phi(s_0) = \gamma^0\sum_{s\in S}P^0_{\pi}(s_0\to s)\phi(s)$$
+We'll plug this into our unrolled recurrence, and we'll rename $s_1, s_2, \dots, s_T$ to $s$ since they are now summed over in separate terms, yielding
+$$\begin{align*}
+
+\nabla_\theta V^{\pi}(s_0) &= \phi(s_0) + \gamma\sum_{s_1\in S}P_\pi(s_0\to s_1) \phi(s_1) + \gamma^2\sum_{s_2\in S}P_{\pi}^2(s_0\to s_2)\phi(s_2) + \dots\\
+
+&=\gamma^0\sum_{s\in S}P^0_{\pi}(s_0\to s)\phi(s) + \gamma^1\sum_{s\in S}P_\pi(s_0\to s) \phi(s)  + \gamma^2\sum_{s_2\in S}P_{\pi}^2(s_0\to s)\phi(s) + \dots\\
+
+&=\sum_{s\in S}\Bigg[\sum_{k=0}^\infty \gamma^kP^k_{\pi}(s_0\to s)\Bigg]\phi(s) \\
+
+\end{align*}$$
+This prompts us to define
+$$\eta^{\pi}(s\mid s_0) = \sum_{k=0}^\infty \gamma^kP^k_{\pi}(s_0\to s)$$
+so that
+$$\nabla_\theta V^{\pi}(s_0) = \sum_{s\in S}\eta^{\pi}(s\mid s_0)\phi(s)$$
+We can interpret $\eta(s\mid s_0)$ as the expected *discounted* visit count of $s$ when starting in $s_0$, where visits that occur after $k$ timesteps are discounted by a factor of $\gamma^k$. 
+
+This has a natural interpretation if we modify our MDP by introducing a *death state*, and give the agent a probability $(1 - \gamma)$ of dying and being sent to this state at any timestep. Note then that the discount applied to rewards at step $k$ is simply $\gamma^k$,  the probability we survive to $k$ steps at all. Hence expected total reward in this modified MDP is simply discounted expected total reward in our original MDP. Likewise, expected visit count in the modified MDP is simply discounted expected visit count in the original MDP. So we can reinterpret the discounted objective as expected total rewards, and we can reinterpret $\eta^{\pi}(s\mid s_0)$ as an expected visit count, both in a modified MDP. With this interpretation, we proceed as before.
+
+As before, we proceed by normalizing $\eta^{\pi}$ into a distribution $\mu^{\pi}$ so that we can turn our sum over states into an expectation:
+$$\begin{align*}\mu^{\pi}(s\mid s_0) &= \frac{\eta^{\pi}(s\mid s_0)}{\underset{s\in S}{\sum}\eta^{\pi}(s\mid s_0)}\\&=\frac{\eta^{\pi}(s\mid s_0)}{\underset{s\in S}{\sum}\overset{\infty}{\underset{k\in\mathbb{N}}{\sum}}\gamma^kP^k_{\pi}(s_0\to s)}\\&=\frac{\eta^{\pi}(s\mid s_0)}{\overset{\infty}{\underset{k\in\mathbb{N}}{\sum}}\gamma^k\underset{s\in S}{\sum}P^k_{\pi}(s_0\to s)}\end{align*}$$
+Again, note that $\underset{s\in S}{\sum}P^k_{\pi}(s_0\to s) = 1$, so
+$$\mu^{\pi}(s\mid s_0) = \frac{\eta^{\pi}(s\mid s_0)}{\overset{\infty}{\underset{k=0}{\sum}}\gamma^k}=(1 - \gamma)\eta^{\pi}(s\mid s_0) $$
+$$\Longrightarrow \eta^{\pi}(s\mid s_0) = \frac{\mu^{\pi}(s\mid s_0)}{1 - \gamma}$$
+$$\begin{align*}\nabla_\theta J(\theta) &= \nabla_\theta V^{\pi}(s_0) \\ &=\sum_{s\in S}\eta^{\pi}(s\mid s_0)\phi(s)\\&= \frac{1}{1-\gamma}\sum_{s\in S}\mu^{\pi}(s\mid s_0)\phi(s)\\&=\frac{1}{1-\gamma}\E_{s\sim \mu^{\pi}(s\mid s_0)}\phi(s)\end{align*}$$
+This time, our constant of proportionality is $\frac{1}{1 - \gamma}$. We proceed with the trick to turn the inner sum over actions into an expectation, bringing us to the final solution:
+$$\begin{align*}
+
+\phi(s) &= \sum_{a\in A}Q^{\pi}(s, a)\nabla_\theta\pi_\theta(a\mid s)\\
+
+&= \sum_{a\in A}Q^{\pi}(s, a)\pi_\theta(a\mid s)\frac{\nabla_\theta\pi_\theta(a\mid s)}{\pi_\theta(a\mid s)}\\
+
+&= \sum_{a\in A}\pi_\theta(a\mid s)Q^{\pi}(s, a)\nabla_\theta\ln\pi_\theta(a\mid s)\\
+
+&= \E_{a\sim\pi(a\mid s)}Q^{\pi}(s, a)\nabla_\theta\ln\pi_\theta(a\mid s)\\
+
+
+\end{align*}$$
+$$\nabla_\theta J(\theta) = \frac{1}{1-\gamma}\E_{s\sim \mu^{\pi}(s\mid s_0)}\;\E_{a\sim\pi(a\mid s)}Q^{\pi}(s, a)\nabla_\theta\ln\pi_\theta(a\mid s)$$
+
 
 
 
