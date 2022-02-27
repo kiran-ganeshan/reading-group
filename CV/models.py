@@ -1,6 +1,10 @@
 import torch
 import matplotlib.pyplot as plt
 import mpl_toolkits.mplot3d
+import pygame
+import numpy as np
+from moviepy.editor import VideoClip
+from moviepy.video.io.bindings import mplfig_to_npimage
 
 class MLP(torch.nn.Module):
     
@@ -93,8 +97,25 @@ class VAE(torch.nn.Module):
         x = self.decoder(x)
         return x, mu, self.std
     
+#A = torch.Tensor([[1, 0], [0, 1], [0, 0]])
 A = torch.randn((3, 2))
 x = torch.randn((100, 2))
-y = x @ A.T
-plt.scatter(y[:, 0], y[:, 1], y[:, 2])
-plt.show()
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+torch.seed()
+X = torch.randn((3, 2))
+def plot_ds_and_surface(ax, A):
+    y = x.numpy() @ A.numpy().T
+    p = np.linspace(-3, 3, 10)
+    hx, hy = np.meshgrid(p, p)
+    h = np.stack((hx, hy), axis=-1) @ A.numpy().T
+    ax.scatter(y[:, 0], y[:, 1], y[:, 2])
+    ax.plot_surface(h[..., 0], h[..., 1], h[..., 2], alpha=0.5)
+def make_frame(t):
+    ax.clear()
+    plot_ds_and_surface(ax, A)
+    plot_ds_and_surface(ax, X)
+    return mplfig_to_npimage(fig)
+pygame.display.set_caption('Hello World!')
+video = VideoClip(make_frame, duration = 10)
+video.show()
