@@ -118,4 +118,5 @@ def make_frame(t):
     return mplfig_to_npimage(fig)
 pygame.display.set_caption('Hello World!')
 video = VideoClip(make_frame, duration = 10)
-video.show()
+video.fps = 24
+video.write_videofile('./movie', codec='mpeg4')
