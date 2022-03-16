@@ -1,10 +1,8 @@
 import torch
 import matplotlib.pyplot as plt
 import mpl_toolkits.mplot3d
-import pygame
 import numpy as np
-from moviepy.editor import VideoClip
-from moviepy.video.io.bindings import mplfig_to_npimage
+from tqdm import tqdm
 
 class MLP(torch.nn.Module):
     
@@ -98,25 +96,93 @@ class VAE(torch.nn.Module):
         return x, mu, self.std
     
 #A = torch.Tensor([[1, 0], [0, 1], [0, 0]])
-A = torch.randn((3, 2))
-x = torch.randn((100, 2))
-fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')
+d = 100
+l = 6
+N = 10000
+# Us = [torch.randn(d, d) for _ in range(l)]
+# Ss = [torch.randn(d) for _ in range(l)]
+# Vs = [torch.randn(d, d) for _ in range(l)]
 torch.seed()
-X = torch.randn((3, 2))
-def plot_ds_and_surface(ax, A):
-    y = x.numpy() @ A.numpy().T
-    p = np.linspace(-3, 3, 10)
-    hx, hy = np.meshgrid(p, p)
-    h = np.stack((hx, hy), axis=-1) @ A.numpy().T
-    ax.scatter(y[:, 0], y[:, 1], y[:, 2])
-    ax.plot_surface(h[..., 0], h[..., 1], h[..., 2], alpha=0.5)
-def make_frame(t):
-    ax.clear()
-    plot_ds_and_surface(ax, A)
-    plot_ds_and_surface(ax, X)
-    return mplfig_to_npimage(fig)
-pygame.display.set_caption('Hello World!')
-video = VideoClip(make_frame, duration = 10)
-video.fps = 24
-video.write_videofile('./movie', codec='mpeg4')
+As = [torch.randn(d, d) for _ in range(l)]
+#Bs = [torch.matrix_exp(U - U.T) @ torch.diag(S) @ torch.matrix_exp(V - V.T) for U, S, V in zip(Us, Ss, Vs)]
+x = torch.randn(N, d)
+def A_apply(x):
+    for i, A in enumerate(As):
+        x = x @ A.T
+        if i != len(As) - 1:
+            x = torch.tanh(x)
+    return x
+fig = plt.figure(figsize=(20, 15))
+torch.seed()
+class NNLayer(torch.nn.Module):
+    def __init__(self, indim, outdim):
+        super(NNLayer, self).__init__()
+        self.mat = torch.nn.Parameter(torch.randn(outdim, indim))
+    def forward(self, x):
+        return x @ self.mat.T
+class NN(torch.nn.Module):
+    def __init__(self, type, indim, outdim):
+        super(NN, self).__init__()
+        lst = [type(indim, d)]
+        lst += [type(d, d) for _ in range(l-2)]
+        lst += [type(d, outdim)]
+        self.lst = torch.nn.ModuleList(lst)
+    def forward(self, x):
+        for i, layer in enumerate(self.lst):
+            x = layer(x)
+            if i != len(self.lst) - 1:
+                x = torch.tanh(x)
+        return x 
+class SVDNNLayer(torch.nn.Module):
+    def __init__(self, indim, outdim):
+        super(SVDNNLayer, self).__init__()
+        self.u = torch.nn.Parameter(torch.randn(outdim, outdim))
+        _, S, _ = torch.svd(torch.randn(indim, outdim))
+        self.s = torch.nn.Parameter(torch.log(S))
+        self.v = torch.nn.Parameter(torch.randn(indim, indim))
+        self.dim_diff = outdim - indim
+    def forward(self, x):
+        x = x @ torch.matrix_exp((self.v - self.v.T)).T
+        z = torch.zeros((*x.shape[:-1], self.dim_diff))
+        x = torch.concat([torch.exp(self.s) * x, z], dim=-1)
+        x = x @ torch.matrix_exp((self.u - self.u.T)).T
+        return x
+    
+lrs = [1, 0.3, 0.1, 0.03, 0.01]
+n_seeds = 5
+for lr in lrs:
+    nn = NN(NNLayer, d, d)
+    svdnn = NN(SVDNNLayer, d, d)
+    opt = torch.optim.Adam(nn.parameters(), lr=lr)
+    svdopt = torch.optim.Adam(svdnn.parameters(), lr=lr)
+    n = 1000
+    nn_losses = []
+    svd_nn_losses = []
+    ytarg = A_apply(x)
+    for t in tqdm(range(n)):
+        # if t % mult == 0:
+        #     ax = fig.add_subplot(n // 4 + 1, 4, t // mult + 1, projection='3d')
+        #     plot_ds_and_surface(ax, A_apply)
+        #     plot_ds_and_surface(ax, lambda x: nn(x).detach())
+        #     plot_ds_and_surface(ax, lambda x: svdnn(x).detach())
+        
+        y = nn(x)
+        
+        opt.zero_grad()
+        loss = ((y - ytarg) ** 2).mean()
+        loss.backward()
+        nn_losses.append(loss.item())
+        opt.step()
+        
+        y = svdnn(x)
+        svdopt.zero_grad()
+        loss = ((y - ytarg) ** 2).mean()
+        loss.backward()
+        svd_nn_losses.append(loss.item())
+        svdopt.step()
+    print(f'last nn loss: {nn_losses[-1]}')
+    print(f'last svd loss: {svd_nn_losses[-1]}')
+    plt.plot(list(range(len(nn_losses) - 10)), nn_losses[10:], c='tab:blue', label=f'lr={lr}')
+    plt.plot(list(range(len(svd_nn_losses) - 10)), svd_nn_losses[10:], c='tab:orange', label=f'lr={lr}')
+plt.legend()
+plt.show()
