@@ -3,6 +3,9 @@ import matplotlib.pyplot as plt
 import mpl_toolkits.mplot3d
 import numpy as np
 from tqdm import tqdm
+import scipy.linalg
+from sympy import Matrix
+import wandb
 
 class MLP(torch.nn.Module):
     
@@ -94,19 +97,20 @@ class VAE(torch.nn.Module):
         x = mu + self.std * torch.randn_like(self.std)
         x = self.decoder(x)
         return x, mu, self.std
-    
-#A = torch.Tensor([[1, 0], [0, 1], [0, 0]])
-d = 100
-l = 6
-N = 10000
-# Us = [torch.randn(d, d) for _ in range(l)]
-# Ss = [torch.randn(d) for _ in range(l)]
-# Vs = [torch.randn(d, d) for _ in range(l)]
-torch.seed()
-As = [torch.randn(d, d) for _ in range(l)]
-#Bs = [torch.matrix_exp(U - U.T) @ torch.diag(S) @ torch.matrix_exp(V - V.T) for U, S, V in zip(Us, Ss, Vs)]
-x = torch.randn(N, d)
-def A_apply(x):
+
+d = 50        # layer dims
+l = 3         # layers
+N = 10000     # training points
+n = 1000      # training steps
+n_seeds = 20  # seeds
+svdsym = True
+nnsym = True
+
+
+
+
+
+def A_apply(As, x):
     for i, A in enumerate(As):
         x = x @ A.T
         if i != len(As) - 1:
@@ -115,74 +119,102 @@ def A_apply(x):
 fig = plt.figure(figsize=(20, 15))
 torch.seed()
 class NNLayer(torch.nn.Module):
-    def __init__(self, indim, outdim):
+    def __init__(self, indim, outdim, sym):
         super(NNLayer, self).__init__()
         self.mat = torch.nn.Parameter(torch.randn(outdim, indim))
     def forward(self, x):
         return x @ self.mat.T
 class NN(torch.nn.Module):
-    def __init__(self, type, indim, outdim):
+    def __init__(self, type, indim, outdim, activation=torch.tanh, sym=True):
         super(NN, self).__init__()
-        lst = [type(indim, d)]
-        lst += [type(d, d) for _ in range(l-2)]
-        lst += [type(d, outdim)]
+        lst = [type(indim, d, sym)]
+        lst += [type(d, d, sym) for _ in range(l-2)]
+        lst += [type(d, outdim, sym)]
         self.lst = torch.nn.ModuleList(lst)
+        from torch.linalg import vector_norm as norm
+        self.activation = (lambda x: activation(norm(x)) * x / norm(x)) if sym else activation
     def forward(self, x):
         for i, layer in enumerate(self.lst):
             x = layer(x)
             if i != len(self.lst) - 1:
-                x = torch.tanh(x)
+                x = self.activation(x)
         return x 
 class SVDNNLayer(torch.nn.Module):
-    def __init__(self, indim, outdim):
+    def __init__(self, indim, outdim, sym):
         super(SVDNNLayer, self).__init__()
-        self.u = torch.nn.Parameter(torch.randn(outdim, outdim))
         _, S, _ = torch.svd(torch.randn(indim, outdim))
-        self.s = torch.nn.Parameter(torch.log(S))
-        self.v = torch.nn.Parameter(torch.randn(indim, indim))
+        self.u = torch.nn.Parameter(6.28 * torch.randn(outdim, outdim))
+        self.s = torch.nn.Parameter(S)
+        if not sym:
+            self.v = torch.nn.Parameter(6.28 * torch.randn(indim, indim))
         self.dim_diff = outdim - indim
+        self.sym = sym
     def forward(self, x):
-        x = x @ torch.matrix_exp((self.v - self.v.T)).T
+        if not self.sym:
+            x = x @ torch.matrix_exp((self.v - self.v.T) / 2)
         z = torch.zeros((*x.shape[:-1], self.dim_diff))
-        x = torch.concat([torch.exp(self.s) * x, z], dim=-1)
-        x = x @ torch.matrix_exp((self.u - self.u.T)).T
+        x = torch.concat([self.s * x, z], dim=-1)
+        x = x @ torch.matrix_exp((self.u - self.u.T) / 2)
         return x
     
-lrs = [1, 0.3, 0.1, 0.03, 0.01]
-n_seeds = 5
+lrs = [1, 0.7, 0.3, 0.2, 0.1, 0.07, 0.03, 0.02, 0.01, 0.007, 0.003, 0.002, 0.001]
+
 for lr in lrs:
-    nn = NN(NNLayer, d, d)
-    svdnn = NN(SVDNNLayer, d, d)
-    opt = torch.optim.Adam(nn.parameters(), lr=lr)
-    svdopt = torch.optim.Adam(svdnn.parameters(), lr=lr)
-    n = 1000
     nn_losses = []
-    svd_nn_losses = []
-    ytarg = A_apply(x)
-    for t in tqdm(range(n)):
-        # if t % mult == 0:
-        #     ax = fig.add_subplot(n // 4 + 1, 4, t // mult + 1, projection='3d')
-        #     plot_ds_and_surface(ax, A_apply)
-        #     plot_ds_and_surface(ax, lambda x: nn(x).detach())
-        #     plot_ds_and_surface(ax, lambda x: svdnn(x).detach())
+    svd_losses = []
+    nn_test_losses = []
+    svd_test_losses = []
+    
+    config = {'lr': lr, 'width': d, 'depth': l, 'steps': n, 'dataset_size': N, 'svdsym': svdsym, 'nnsym': nnsym}
+    run = wandb.init(project='svdnn', entity='kbganeshan', reinit=True, config=config)
+    
+    for _ in range(n_seeds):
         
-        y = nn(x)
+        torch.seed()
+        As = [torch.randn(d, d) for _ in range(l)]
+        x = torch.randn(N, d)
+        ytarg = A_apply(As, x)
+        nn = NN(NNLayer, d, d, sym=nnsym)
+        svdnn = NN(SVDNNLayer, d, d, sym=svdsym)
+        opt = torch.optim.Adam(nn.parameters(), lr=lr)
+        svdopt = torch.optim.Adam(svdnn.parameters(), lr=lr)
         
-        opt.zero_grad()
-        loss = ((y - ytarg) ** 2).mean()
-        loss.backward()
-        nn_losses.append(loss.item())
-        opt.step()
+        for t in tqdm(range(n)):
+            
+            y = nn(x)
+            opt.zero_grad()
+            nnloss = ((y - ytarg) ** 2).mean()
+            nnloss.backward()
+            opt.step()
+            
+            y = svdnn(x)
+            svdopt.zero_grad()
+            svdloss = ((y - ytarg) ** 2).mean()
+            svdloss.backward()
+            svdopt.step()
+            
+        nn_losses.append(nnloss.item())
+        svd_losses.append(svdloss.item())
         
-        y = svdnn(x)
-        svdopt.zero_grad()
-        loss = ((y - ytarg) ** 2).mean()
-        loss.backward()
-        svd_nn_losses.append(loss.item())
-        svdopt.step()
-    print(f'last nn loss: {nn_losses[-1]}')
-    print(f'last svd loss: {svd_nn_losses[-1]}')
-    plt.plot(list(range(len(nn_losses) - 10)), nn_losses[10:], c='tab:blue', label=f'lr={lr}')
-    plt.plot(list(range(len(svd_nn_losses) - 10)), svd_nn_losses[10:], c='tab:orange', label=f'lr={lr}')
+        xtest = torch.randn(N, d)
+        ytarg = A_apply(As, xtest)
+        y = nn(xtest)
+        nn_test_losses.append(((y - ytarg) ** 2).mean())
+        y = svdnn(xtest)
+        svd_test_losses.append(((y - ytarg) ** 2).mean())
+        
+    names = ['nn_train', 'svd_train', 'nn_test', 'svd_test']
+    loss_lsts = [nn_losses, svd_losses, nn_test_losses, svd_test_losses]
+    for name, loss_lst in zip(names, loss_lsts):
+        mean = sum(loss_lst) / n_seeds
+        std = sum([(loss - mean) ** 2 for loss in loss_lst]) / n_seeds
+        wandb.log({f'{name}_loss': loss_lst, 
+                   f'mean_{name}_loss': mean, 
+                   f'std_{name}_loss': std})
+        
+    run.finish()
+        
+    
+    
 plt.legend()
 plt.show()

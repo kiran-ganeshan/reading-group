@@ -1,0 +1,65 @@
+  3%|██▉                                                                                        | 32/1000 [00:01<00:31, 31.21it/s]
+Traceback (most recent call last):
+  File "/home/kg23/reading-group/CV/models.py", line 186, in <module>
+    svdopt.step()
+  File "/home/kg23/anaconda3/envs/rg/lib/python3.9/site-packages/torch/_tensor.py", line 307, in backward
+    torch.autograd.backward(self, gradient, retain_graph, create_graph, inputs=inputs)
+  File "/home/kg23/anaconda3/envs/rg/lib/python3.9/site-packages/torch/autograd/__init__.py", line 154, in backward
+    Variable._execution_engine.run_backward(
+KeyboardInterrupt
+Traceback (most recent call last):
+  File "/home/kg23/reading-group/CV/models.py", line 186, in <module>
+    svdopt.step()
+  File "/home/kg23/anaconda3/envs/rg/lib/python3.9/site-packages/torch/_tensor.py", line 307, in backward
+    torch.autograd.backward(self, gradient, retain_graph, create_graph, inputs=inputs)
+  File "/home/kg23/anaconda3/envs/rg/lib/python3.9/site-packages/torch/autograd/__init__.py", line 154, in backward
+    Variable._execution_engine.run_backward(
+KeyboardInterrupt
+Traceback (most recent call last):
+  File "/home/kg23/reading-group/CV/models.py", line 186, in <module>
+    svdopt.step()
+  File "/home/kg23/anaconda3/envs/rg/lib/python3.9/site-packages/torch/_tensor.py", line 307, in backward
+    torch.autograd.backward(self, gradient, retain_graph, create_graph, inputs=inputs)
+  File "/home/kg23/anaconda3/envs/rg/lib/python3.9/site-packages/torch/autograd/__init__.py", line 154, in backward
+    Variable._execution_engine.run_backward(
+KeyboardInterrupt
+Traceback (most recent call last):
+  File "/home/kg23/reading-group/CV/models.py", line 186, in <module>
+    svdopt.step()
+  File "/home/kg23/anaconda3/envs/rg/lib/python3.9/site-packages/torch/_tensor.py", line 307, in backward
+    torch.autograd.backward(self, gradient, retain_graph, create_graph, inputs=inputs)
+  File "/home/kg23/anaconda3/envs/rg/lib/python3.9/site-packages/torch/autograd/__init__.py", line 154, in backward
+    Variable._execution_engine.run_backward(
+KeyboardInterrupt
+Traceback (most recent call last):
+  File "/home/kg23/reading-group/CV/models.py", line 186, in <module>
+    svdopt.step()
+  File "/home/kg23/anaconda3/envs/rg/lib/python3.9/site-packages/torch/_tensor.py", line 307, in backward
+    torch.autograd.backward(self, gradient, retain_graph, create_graph, inputs=inputs)
+  File "/home/kg23/anaconda3/envs/rg/lib/python3.9/site-packages/torch/autograd/__init__.py", line 154, in backward
+    Variable._execution_engine.run_backward(
+KeyboardInterrupt
+Traceback (most recent call last):
+  File "/home/kg23/reading-group/CV/models.py", line 186, in <module>
+    svdopt.step()
+  File "/home/kg23/anaconda3/envs/rg/lib/python3.9/site-packages/torch/_tensor.py", line 307, in backward
+    torch.autograd.backward(self, gradient, retain_graph, create_graph, inputs=inputs)
+  File "/home/kg23/anaconda3/envs/rg/lib/python3.9/site-packages/torch/autograd/__init__.py", line 154, in backward
+    Variable._execution_engine.run_backward(
+KeyboardInterrupt
+Traceback (most recent call last):
+  File "/home/kg23/reading-group/CV/models.py", line 186, in <module>
+    svdopt.step()
+  File "/home/kg23/anaconda3/envs/rg/lib/python3.9/site-packages/torch/_tensor.py", line 307, in backward
+    torch.autograd.backward(self, gradient, retain_graph, create_graph, inputs=inputs)
+  File "/home/kg23/anaconda3/envs/rg/lib/python3.9/site-packages/torch/autograd/__init__.py", line 154, in backward
+    Variable._execution_engine.run_backward(
+KeyboardInterrupt
+Traceback (most recent call last):
+  File "/home/kg23/reading-group/CV/models.py", line 186, in <module>
+    svdopt.step()
+  File "/home/kg23/anaconda3/envs/rg/lib/python3.9/site-packages/torch/_tensor.py", line 307, in backward
+    torch.autograd.backward(self, gradient, retain_graph, create_graph, inputs=inputs)
+  File "/home/kg23/anaconda3/envs/rg/lib/python3.9/site-packages/torch/autograd/__init__.py", line 154, in backward
+    Variable._execution_engine.run_backward(
+KeyboardInterrupt

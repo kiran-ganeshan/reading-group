@@ -1,0 +1,584 @@
+2022-03-17 04:41:27,758 INFO    MainThread:446965 [internal.py:wandb_internal():92] W&B internal server running at pid: 446965, started at: 2022-03-17 04:41:27.758274
+2022-03-17 04:41:27,761 INFO    WriterThread:446965 [datastore.py:open_for_write():77] open: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/run-2stc6lk9.wandb
+2022-03-17 04:41:27,764 DEBUG   SenderThread:446965 [sender.py:send():235] send: header
+2022-03-17 04:41:27,764 DEBUG   SenderThread:446965 [sender.py:send():235] send: run
+2022-03-17 04:41:27,889 INFO    SenderThread:446965 [dir_watcher.py:__init__():169] watching files in: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files
+2022-03-17 04:41:27,889 INFO    SenderThread:446965 [sender.py:_start_run_threads():812] run started: 2stc6lk9 with start time 1647492087
+2022-03-17 04:41:27,889 DEBUG   SenderThread:446965 [sender.py:send():235] send: summary
+2022-03-17 04:41:27,889 INFO    SenderThread:446965 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-03-17 04:41:27,895 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: check_version
+2022-03-17 04:41:27,896 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: check_version
+2022-03-17 04:41:27,936 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: run_start
+2022-03-17 04:41:27,939 DEBUG   HandlerThread:446965 [meta.py:__init__():37] meta init
+2022-03-17 04:41:27,939 DEBUG   HandlerThread:446965 [meta.py:__init__():51] meta init done
+2022-03-17 04:41:27,939 DEBUG   HandlerThread:446965 [meta.py:probe():211] probe
+2022-03-17 04:41:27,942 DEBUG   HandlerThread:446965 [meta.py:_setup_git():201] setup git
+2022-03-17 04:41:27,960 DEBUG   HandlerThread:446965 [meta.py:_setup_git():208] setup git done
+2022-03-17 04:41:27,960 DEBUG   HandlerThread:446965 [meta.py:_save_pip():55] save pip
+2022-03-17 04:41:27,960 DEBUG   HandlerThread:446965 [meta.py:_save_pip():69] save pip done
+2022-03-17 04:41:27,960 DEBUG   HandlerThread:446965 [meta.py:_save_conda():76] save conda
+2022-03-17 04:41:28,893 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_created():217] file/dir created: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/wandb-summary.json
+2022-03-17 04:41:28,894 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_created():217] file/dir created: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/conda-environment.yaml
+2022-03-17 04:41:28,894 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_created():217] file/dir created: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/requirements.txt
+2022-03-17 04:41:29,154 DEBUG   HandlerThread:446965 [meta.py:_save_conda():86] save conda done
+2022-03-17 04:41:29,154 DEBUG   HandlerThread:446965 [meta.py:probe():249] probe done
+2022-03-17 04:41:29,160 DEBUG   SenderThread:446965 [sender.py:send():235] send: files
+2022-03-17 04:41:29,161 INFO    SenderThread:446965 [sender.py:_save_file():947] saving file wandb-metadata.json with policy now
+2022-03-17 04:41:29,171 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: stop_status
+2022-03-17 04:41:29,171 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: stop_status
+2022-03-17 04:41:29,252 DEBUG   SenderThread:446965 [sender.py:send():235] send: telemetry
+2022-03-17 04:41:29,500 INFO    Thread-11 :446965 [upload_job.py:push():137] Uploaded file /tmp/tmp22map5hewandb/110r9i31-wandb-metadata.json
+2022-03-17 04:41:29,890 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/conda-environment.yaml
+2022-03-17 04:41:29,893 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_created():217] file/dir created: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/wandb-metadata.json
+2022-03-17 04:41:29,893 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_created():217] file/dir created: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:41:31,892 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:41:33,893 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:41:35,894 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:41:37,895 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:41:39,895 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:41:41,896 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:41:43,897 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:41:44,254 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: stop_status
+2022-03-17 04:41:44,254 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: stop_status
+2022-03-17 04:41:45,898 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:41:47,899 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:41:49,900 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:41:51,901 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:41:53,902 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:41:55,903 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:41:56,021 DEBUG   SenderThread:446965 [sender.py:send():235] send: stats
+2022-03-17 04:41:57,904 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:41:58,905 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/config.yaml
+2022-03-17 04:41:59,334 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: stop_status
+2022-03-17 04:41:59,334 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: stop_status
+2022-03-17 04:41:59,906 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:42:01,907 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:42:03,907 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:42:05,908 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:42:07,909 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:42:09,910 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:42:11,912 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:42:13,913 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:42:14,415 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: stop_status
+2022-03-17 04:42:14,416 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: stop_status
+2022-03-17 04:42:15,914 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:42:17,915 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:42:19,916 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:42:21,917 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:42:23,918 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:42:25,919 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:42:26,098 DEBUG   SenderThread:446965 [sender.py:send():235] send: stats
+2022-03-17 04:42:27,920 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:42:29,494 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: stop_status
+2022-03-17 04:42:29,494 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: stop_status
+2022-03-17 04:42:29,921 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:42:31,922 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:42:33,924 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:42:35,925 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:42:37,926 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:42:39,927 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:42:41,928 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:42:43,929 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:42:44,576 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: stop_status
+2022-03-17 04:42:44,576 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: stop_status
+2022-03-17 04:42:45,930 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:42:47,931 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:42:49,932 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:42:51,933 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:42:53,935 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:42:55,936 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:42:56,174 DEBUG   SenderThread:446965 [sender.py:send():235] send: stats
+2022-03-17 04:42:57,937 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:42:59,652 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: stop_status
+2022-03-17 04:42:59,653 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: stop_status
+2022-03-17 04:42:59,938 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:43:01,939 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:43:03,940 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:43:05,941 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:43:07,943 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:43:09,944 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:43:11,945 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:43:13,946 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:43:14,731 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: stop_status
+2022-03-17 04:43:14,731 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: stop_status
+2022-03-17 04:43:15,947 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:43:17,948 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:43:19,949 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:43:21,950 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:43:23,951 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:43:25,952 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:43:26,256 DEBUG   SenderThread:446965 [sender.py:send():235] send: stats
+2022-03-17 04:43:27,953 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:43:29,810 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: stop_status
+2022-03-17 04:43:29,810 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: stop_status
+2022-03-17 04:43:29,954 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:43:31,955 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:43:33,956 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:43:35,957 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:43:37,958 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:43:39,960 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:43:41,960 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:43:43,962 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:43:44,891 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: stop_status
+2022-03-17 04:43:44,891 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: stop_status
+2022-03-17 04:43:45,962 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:43:47,963 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:43:49,964 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:43:51,965 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:43:53,967 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:43:55,967 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:43:56,334 DEBUG   SenderThread:446965 [sender.py:send():235] send: stats
+2022-03-17 04:43:57,968 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:43:59,966 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: stop_status
+2022-03-17 04:43:59,967 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: stop_status
+2022-03-17 04:43:59,972 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:44:01,974 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:44:03,974 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:44:05,975 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:44:07,977 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:44:09,978 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:44:11,979 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:44:13,980 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:44:15,047 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: stop_status
+2022-03-17 04:44:15,048 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: stop_status
+2022-03-17 04:44:15,981 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:44:17,982 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:44:19,983 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:44:21,984 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:44:23,985 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:44:25,986 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:44:26,411 DEBUG   SenderThread:446965 [sender.py:send():235] send: stats
+2022-03-17 04:44:27,987 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:44:29,988 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:44:30,171 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: stop_status
+2022-03-17 04:44:30,171 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: stop_status
+2022-03-17 04:44:31,989 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:44:33,990 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:44:35,991 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:44:37,992 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:44:39,993 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:44:41,994 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:44:43,995 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:44:45,256 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: stop_status
+2022-03-17 04:44:45,256 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: stop_status
+2022-03-17 04:44:45,996 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:44:47,997 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:44:49,998 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:44:51,999 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:44:54,000 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:44:56,001 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:44:56,483 DEBUG   SenderThread:446965 [sender.py:send():235] send: stats
+2022-03-17 04:44:58,002 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:45:00,003 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:45:00,340 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: stop_status
+2022-03-17 04:45:00,340 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: stop_status
+2022-03-17 04:45:02,004 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:45:04,005 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:45:06,006 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:45:08,007 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:45:10,008 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:45:12,009 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:45:14,010 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:45:15,423 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: stop_status
+2022-03-17 04:45:15,423 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: stop_status
+2022-03-17 04:45:16,011 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:45:18,011 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:45:20,012 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:45:22,013 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:45:24,014 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:45:26,015 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:45:26,550 DEBUG   SenderThread:446965 [sender.py:send():235] send: stats
+2022-03-17 04:45:28,016 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:45:30,017 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:45:30,506 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: stop_status
+2022-03-17 04:45:30,506 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: stop_status
+2022-03-17 04:45:32,018 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:45:34,019 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:45:36,020 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:45:38,021 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:45:40,023 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:45:42,024 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:45:44,025 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:45:45,586 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: stop_status
+2022-03-17 04:45:45,586 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: stop_status
+2022-03-17 04:45:46,027 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:45:48,028 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:45:50,029 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:45:52,030 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:45:54,031 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:45:56,032 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:45:56,629 DEBUG   SenderThread:446965 [sender.py:send():235] send: stats
+2022-03-17 04:45:58,033 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:46:00,035 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:46:00,672 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: stop_status
+2022-03-17 04:46:00,673 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: stop_status
+2022-03-17 04:46:02,035 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:46:04,036 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:46:06,037 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:46:08,038 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:46:10,039 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:46:12,040 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:46:14,041 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:46:15,759 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: stop_status
+2022-03-17 04:46:15,759 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: stop_status
+2022-03-17 04:46:16,043 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:46:18,044 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:46:20,044 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:46:22,046 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:46:24,046 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:46:26,047 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:46:26,694 DEBUG   SenderThread:446965 [sender.py:send():235] send: stats
+2022-03-17 04:46:28,048 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:46:30,049 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:46:30,843 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: stop_status
+2022-03-17 04:46:30,843 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: stop_status
+2022-03-17 04:46:32,050 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:46:34,051 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:46:36,053 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:46:38,054 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:46:40,055 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:46:42,056 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:46:44,057 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:46:45,928 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: stop_status
+2022-03-17 04:46:45,929 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: stop_status
+2022-03-17 04:46:46,058 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:46:48,059 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:46:50,060 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:46:52,061 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:46:54,062 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:46:56,063 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:46:56,763 DEBUG   SenderThread:446965 [sender.py:send():235] send: stats
+2022-03-17 04:46:58,064 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:47:00,065 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:47:01,007 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: stop_status
+2022-03-17 04:47:01,008 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: stop_status
+2022-03-17 04:47:02,065 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:47:04,066 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:47:06,067 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:47:08,068 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:47:10,069 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:47:12,070 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:47:14,071 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:47:16,072 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:47:16,091 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: stop_status
+2022-03-17 04:47:16,091 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: stop_status
+2022-03-17 04:47:18,073 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:47:20,074 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:47:22,074 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:47:24,075 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:47:26,076 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:47:26,830 DEBUG   SenderThread:446965 [sender.py:send():235] send: stats
+2022-03-17 04:47:28,077 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:47:30,078 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:47:31,176 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: stop_status
+2022-03-17 04:47:31,176 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: stop_status
+2022-03-17 04:47:32,079 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:47:34,080 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:47:36,081 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:47:38,082 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:47:40,083 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:47:42,084 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:47:44,085 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:47:46,085 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:47:46,265 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: stop_status
+2022-03-17 04:47:46,265 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: stop_status
+2022-03-17 04:47:48,086 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:47:50,087 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:47:52,088 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:47:54,089 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:47:56,090 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:47:56,894 DEBUG   SenderThread:446965 [sender.py:send():235] send: stats
+2022-03-17 04:47:58,090 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:48:00,091 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:48:01,343 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: stop_status
+2022-03-17 04:48:01,343 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: stop_status
+2022-03-17 04:48:02,092 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:48:04,093 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:48:06,094 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:48:08,095 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:48:10,096 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:48:12,096 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:48:14,097 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:48:16,098 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:48:16,428 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: stop_status
+2022-03-17 04:48:16,428 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: stop_status
+2022-03-17 04:48:18,099 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:48:20,100 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:48:22,101 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:48:24,102 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:48:26,103 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:48:26,955 DEBUG   SenderThread:446965 [sender.py:send():235] send: stats
+2022-03-17 04:48:28,104 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:48:30,105 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:48:31,508 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: stop_status
+2022-03-17 04:48:31,509 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: stop_status
+2022-03-17 04:48:32,106 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:48:34,107 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:48:36,108 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:48:38,109 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:48:40,110 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:48:42,111 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:48:44,112 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:48:46,112 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:48:46,590 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: stop_status
+2022-03-17 04:48:46,591 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: stop_status
+2022-03-17 04:48:48,113 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:48:50,114 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:48:52,115 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:48:54,116 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:48:56,116 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:48:57,018 DEBUG   SenderThread:446965 [sender.py:send():235] send: stats
+2022-03-17 04:48:58,117 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:49:00,118 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:49:01,672 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: stop_status
+2022-03-17 04:49:01,672 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: stop_status
+2022-03-17 04:49:02,119 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:49:04,120 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:49:06,121 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:49:08,122 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:49:10,123 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:49:12,124 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:49:14,125 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:49:16,126 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:49:16,758 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: stop_status
+2022-03-17 04:49:16,759 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: stop_status
+2022-03-17 04:49:18,127 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:49:20,128 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:49:22,129 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:49:24,130 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:49:26,131 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:49:27,082 DEBUG   SenderThread:446965 [sender.py:send():235] send: stats
+2022-03-17 04:49:28,132 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:49:30,133 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:49:31,842 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: stop_status
+2022-03-17 04:49:31,843 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: stop_status
+2022-03-17 04:49:32,134 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:49:34,135 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:49:36,135 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:49:38,136 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:49:40,137 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:49:42,138 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:49:44,139 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:49:46,140 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:49:46,927 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: stop_status
+2022-03-17 04:49:46,927 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: stop_status
+2022-03-17 04:49:48,141 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:49:50,142 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:49:52,143 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:49:54,144 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:49:56,144 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:49:57,142 DEBUG   SenderThread:446965 [sender.py:send():235] send: stats
+2022-03-17 04:49:58,145 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:50:00,146 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:50:02,010 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: stop_status
+2022-03-17 04:50:02,010 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: stop_status
+2022-03-17 04:50:02,147 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:50:04,148 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:50:06,149 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:50:08,150 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:50:10,151 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:50:12,152 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:50:14,153 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:50:16,153 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:50:17,089 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: stop_status
+2022-03-17 04:50:17,090 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: stop_status
+2022-03-17 04:50:18,154 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:50:20,155 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:50:22,156 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:50:24,157 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:50:26,158 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:50:27,204 DEBUG   SenderThread:446965 [sender.py:send():235] send: stats
+2022-03-17 04:50:28,159 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:50:30,160 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:50:32,161 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:50:32,174 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: stop_status
+2022-03-17 04:50:32,174 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: stop_status
+2022-03-17 04:50:34,162 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:50:36,163 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:50:38,164 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:50:40,164 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:50:42,165 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:50:44,166 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:50:46,167 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:50:47,262 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: stop_status
+2022-03-17 04:50:47,262 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: stop_status
+2022-03-17 04:50:48,168 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:50:50,169 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:50:52,169 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:50:54,170 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:50:56,171 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:50:57,267 DEBUG   SenderThread:446965 [sender.py:send():235] send: stats
+2022-03-17 04:50:58,172 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:51:00,172 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:51:02,173 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:51:02,346 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: stop_status
+2022-03-17 04:51:02,346 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: stop_status
+2022-03-17 04:51:04,174 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:51:06,175 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:51:08,176 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:51:10,177 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:51:12,178 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:51:14,178 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:51:16,179 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:51:17,439 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: stop_status
+2022-03-17 04:51:17,440 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: stop_status
+2022-03-17 04:51:18,180 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:51:20,181 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:51:22,182 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:51:24,184 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:51:26,185 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:51:27,329 DEBUG   SenderThread:446965 [sender.py:send():235] send: stats
+2022-03-17 04:51:28,185 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:51:30,186 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:51:32,187 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:51:32,526 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: stop_status
+2022-03-17 04:51:32,526 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: stop_status
+2022-03-17 04:51:34,188 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:51:36,189 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:51:38,189 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:51:40,190 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:51:42,191 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:51:44,192 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:51:46,193 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:51:47,612 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: stop_status
+2022-03-17 04:51:47,612 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: stop_status
+2022-03-17 04:51:47,908 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: partial_history
+2022-03-17 04:51:47,910 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: partial_history
+2022-03-17 04:51:47,911 DEBUG   SenderThread:446965 [sender.py:send():235] send: history
+2022-03-17 04:51:47,912 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: partial_history
+2022-03-17 04:51:47,912 DEBUG   SenderThread:446965 [sender.py:send():235] send: summary
+2022-03-17 04:51:47,913 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: partial_history
+2022-03-17 04:51:47,915 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: partial_history
+2022-03-17 04:51:47,915 INFO    SenderThread:446965 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-03-17 04:51:47,916 DEBUG   SenderThread:446965 [sender.py:send():235] send: history
+2022-03-17 04:51:47,916 DEBUG   SenderThread:446965 [sender.py:send():235] send: summary
+2022-03-17 04:51:47,917 INFO    SenderThread:446965 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-03-17 04:51:47,917 DEBUG   SenderThread:446965 [sender.py:send():235] send: history
+2022-03-17 04:51:47,918 DEBUG   SenderThread:446965 [sender.py:send():235] send: summary
+2022-03-17 04:51:47,918 INFO    SenderThread:446965 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-03-17 04:51:47,919 DEBUG   SenderThread:446965 [sender.py:send():235] send: history
+2022-03-17 04:51:47,919 DEBUG   SenderThread:446965 [sender.py:send():235] send: summary
+2022-03-17 04:51:47,919 INFO    SenderThread:446965 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-03-17 04:51:47,920 DEBUG   SenderThread:446965 [sender.py:send():235] send: telemetry
+2022-03-17 04:51:47,920 DEBUG   SenderThread:446965 [sender.py:send():235] send: telemetry
+2022-03-17 04:51:48,193 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/wandb-summary.json
+2022-03-17 04:51:49,194 INFO    Thread-7  :446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:51:50,240 DEBUG   SenderThread:446965 [sender.py:send():235] send: exit
+2022-03-17 04:51:50,241 INFO    SenderThread:446965 [sender.py:send_exit():371] handling exit code: 0
+2022-03-17 04:51:50,241 INFO    SenderThread:446965 [sender.py:send_exit():373] handling runtime: 622
+2022-03-17 04:51:50,242 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: poll_exit
+2022-03-17 04:51:50,243 INFO    SenderThread:446965 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-03-17 04:51:50,243 INFO    SenderThread:446965 [sender.py:send_exit():379] send defer
+2022-03-17 04:51:50,243 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: poll_exit
+2022-03-17 04:51:50,244 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: defer
+2022-03-17 04:51:50,245 INFO    HandlerThread:446965 [handler.py:handle_request_defer():164] handle defer: 0
+2022-03-17 04:51:50,245 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: defer
+2022-03-17 04:51:50,245 INFO    SenderThread:446965 [sender.py:send_request_defer():388] handle sender defer: 0
+2022-03-17 04:51:50,245 INFO    SenderThread:446965 [sender.py:transition_state():392] send defer: 1
+2022-03-17 04:51:50,246 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: defer
+2022-03-17 04:51:50,246 INFO    HandlerThread:446965 [handler.py:handle_request_defer():164] handle defer: 1
+2022-03-17 04:51:50,279 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: defer
+2022-03-17 04:51:50,280 INFO    SenderThread:446965 [sender.py:send_request_defer():388] handle sender defer: 1
+2022-03-17 04:51:50,280 INFO    SenderThread:446965 [sender.py:transition_state():392] send defer: 2
+2022-03-17 04:51:50,280 DEBUG   SenderThread:446965 [sender.py:send():235] send: stats
+2022-03-17 04:51:50,281 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: defer
+2022-03-17 04:51:50,281 INFO    HandlerThread:446965 [handler.py:handle_request_defer():164] handle defer: 2
+2022-03-17 04:51:50,281 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: defer
+2022-03-17 04:51:50,282 INFO    SenderThread:446965 [sender.py:send_request_defer():388] handle sender defer: 2
+2022-03-17 04:51:50,282 INFO    SenderThread:446965 [sender.py:transition_state():392] send defer: 3
+2022-03-17 04:51:50,282 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: defer
+2022-03-17 04:51:50,283 INFO    HandlerThread:446965 [handler.py:handle_request_defer():164] handle defer: 3
+2022-03-17 04:51:50,283 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: defer
+2022-03-17 04:51:50,283 INFO    SenderThread:446965 [sender.py:send_request_defer():388] handle sender defer: 3
+2022-03-17 04:51:50,283 INFO    SenderThread:446965 [sender.py:transition_state():392] send defer: 4
+2022-03-17 04:51:50,284 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: defer
+2022-03-17 04:51:50,284 INFO    HandlerThread:446965 [handler.py:handle_request_defer():164] handle defer: 4
+2022-03-17 04:51:50,285 DEBUG   SenderThread:446965 [sender.py:send():235] send: summary
+2022-03-17 04:51:50,286 INFO    SenderThread:446965 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-03-17 04:51:50,286 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: defer
+2022-03-17 04:51:50,286 INFO    SenderThread:446965 [sender.py:send_request_defer():388] handle sender defer: 4
+2022-03-17 04:51:50,286 INFO    SenderThread:446965 [sender.py:transition_state():392] send defer: 5
+2022-03-17 04:51:50,287 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: defer
+2022-03-17 04:51:50,287 INFO    HandlerThread:446965 [handler.py:handle_request_defer():164] handle defer: 5
+2022-03-17 04:51:50,288 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: defer
+2022-03-17 04:51:50,288 INFO    SenderThread:446965 [sender.py:send_request_defer():388] handle sender defer: 5
+2022-03-17 04:51:50,346 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: poll_exit
+2022-03-17 04:51:50,397 INFO    SenderThread:446965 [sender.py:transition_state():392] send defer: 6
+2022-03-17 04:51:50,397 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: poll_exit
+2022-03-17 04:51:50,398 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: defer
+2022-03-17 04:51:50,399 INFO    HandlerThread:446965 [handler.py:handle_request_defer():164] handle defer: 6
+2022-03-17 04:51:50,399 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: defer
+2022-03-17 04:51:50,399 INFO    SenderThread:446965 [sender.py:send_request_defer():388] handle sender defer: 6
+2022-03-17 04:51:50,399 INFO    SenderThread:446965 [dir_watcher.py:finish():283] shutting down directory watcher
+2022-03-17 04:51:50,500 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: poll_exit
+2022-03-17 04:51:51,196 INFO    SenderThread:446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:51:51,196 INFO    SenderThread:446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/wandb-summary.json
+2022-03-17 04:51:51,196 INFO    SenderThread:446965 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/config.yaml
+2022-03-17 04:51:51,197 INFO    SenderThread:446965 [dir_watcher.py:finish():313] scan: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files
+2022-03-17 04:51:51,197 INFO    SenderThread:446965 [dir_watcher.py:finish():327] scan save: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/config.yaml config.yaml
+2022-03-17 04:51:51,197 INFO    SenderThread:446965 [dir_watcher.py:finish():327] scan save: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/requirements.txt requirements.txt
+2022-03-17 04:51:51,198 INFO    SenderThread:446965 [dir_watcher.py:finish():327] scan save: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log output.log
+2022-03-17 04:51:51,198 INFO    SenderThread:446965 [dir_watcher.py:finish():327] scan save: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/conda-environment.yaml conda-environment.yaml
+2022-03-17 04:51:51,209 INFO    SenderThread:446965 [dir_watcher.py:finish():327] scan save: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/wandb-metadata.json wandb-metadata.json
+2022-03-17 04:51:51,212 INFO    SenderThread:446965 [dir_watcher.py:finish():327] scan save: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/wandb-summary.json wandb-summary.json
+2022-03-17 04:51:51,212 INFO    SenderThread:446965 [sender.py:transition_state():392] send defer: 7
+2022-03-17 04:51:51,213 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: poll_exit
+2022-03-17 04:51:51,214 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: defer
+2022-03-17 04:51:51,214 INFO    HandlerThread:446965 [handler.py:handle_request_defer():164] handle defer: 7
+2022-03-17 04:51:51,218 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: defer
+2022-03-17 04:51:51,218 INFO    SenderThread:446965 [sender.py:send_request_defer():388] handle sender defer: 7
+2022-03-17 04:51:51,218 INFO    SenderThread:446965 [file_pusher.py:finish():145] shutting down file pusher
+2022-03-17 04:51:51,319 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: poll_exit
+2022-03-17 04:51:51,324 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: poll_exit
+2022-03-17 04:51:51,426 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: poll_exit
+2022-03-17 04:51:51,427 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: poll_exit
+2022-03-17 04:51:51,529 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: poll_exit
+2022-03-17 04:51:51,529 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: poll_exit
+2022-03-17 04:51:51,586 INFO    Thread-16 :446965 [upload_job.py:push():137] Uploaded file /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/wandb-summary.json
+2022-03-17 04:51:51,598 INFO    Thread-12 :446965 [upload_job.py:push():137] Uploaded file /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/config.yaml
+2022-03-17 04:51:51,600 INFO    Thread-13 :446965 [upload_job.py:push():137] Uploaded file /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/requirements.txt
+2022-03-17 04:51:51,632 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: poll_exit
+2022-03-17 04:51:51,632 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: poll_exit
+2022-03-17 04:51:51,685 INFO    Thread-14 :446965 [upload_job.py:push():137] Uploaded file /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/output.log
+2022-03-17 04:51:51,735 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: poll_exit
+2022-03-17 04:51:51,735 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: poll_exit
+2022-03-17 04:51:51,837 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: poll_exit
+2022-03-17 04:51:51,838 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: poll_exit
+2022-03-17 04:51:51,940 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: poll_exit
+2022-03-17 04:51:51,940 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: poll_exit
+2022-03-17 04:51:52,043 INFO    Thread-15 :446965 [upload_job.py:push():137] Uploaded file /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/files/conda-environment.yaml
+2022-03-17 04:51:52,044 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: poll_exit
+2022-03-17 04:51:52,044 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: poll_exit
+2022-03-17 04:51:52,147 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: poll_exit
+2022-03-17 04:51:52,147 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: poll_exit
+2022-03-17 04:51:52,244 INFO    Thread-6  :446965 [sender.py:transition_state():392] send defer: 8
+2022-03-17 04:51:52,245 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: defer
+2022-03-17 04:51:52,245 INFO    HandlerThread:446965 [handler.py:handle_request_defer():164] handle defer: 8
+2022-03-17 04:51:52,245 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: defer
+2022-03-17 04:51:52,245 INFO    SenderThread:446965 [sender.py:send_request_defer():388] handle sender defer: 8
+2022-03-17 04:51:52,249 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: poll_exit
+2022-03-17 04:51:52,592 INFO    SenderThread:446965 [sender.py:transition_state():392] send defer: 9
+2022-03-17 04:51:52,592 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: poll_exit
+2022-03-17 04:51:52,593 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: defer
+2022-03-17 04:51:52,594 INFO    HandlerThread:446965 [handler.py:handle_request_defer():164] handle defer: 9
+2022-03-17 04:51:52,594 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: defer
+2022-03-17 04:51:52,594 INFO    SenderThread:446965 [sender.py:send_request_defer():388] handle sender defer: 9
+2022-03-17 04:51:52,595 INFO    SenderThread:446965 [sender.py:transition_state():392] send defer: 10
+2022-03-17 04:51:52,596 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: defer
+2022-03-17 04:51:52,596 DEBUG   SenderThread:446965 [sender.py:send():235] send: final
+2022-03-17 04:51:52,596 INFO    HandlerThread:446965 [handler.py:handle_request_defer():164] handle defer: 10
+2022-03-17 04:51:52,597 DEBUG   SenderThread:446965 [sender.py:send():235] send: footer
+2022-03-17 04:51:52,597 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: defer
+2022-03-17 04:51:52,597 INFO    SenderThread:446965 [sender.py:send_request_defer():388] handle sender defer: 10
+2022-03-17 04:51:52,695 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: poll_exit
+2022-03-17 04:51:52,696 DEBUG   SenderThread:446965 [sender.py:send_request():249] send_request: poll_exit
+2022-03-17 04:51:52,696 INFO    SenderThread:446965 [file_pusher.py:join():150] waiting for file pusher
+2022-03-17 04:51:52,960 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: sampled_history
+2022-03-17 04:51:52,963 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: get_summary
+2022-03-17 04:51:52,965 DEBUG   HandlerThread:446965 [handler.py:handle_request():141] handle_request: shutdown
+2022-03-17 04:51:52,965 INFO    HandlerThread:446965 [handler.py:finish():778] shutting down handler
+2022-03-17 04:51:53,596 INFO    WriterThread:446965 [datastore.py:close():281] close: /home/kg23/reading-group/CV/wandb/run-20220317_044127-2stc6lk9/run-2stc6lk9.wandb
+2022-03-17 04:51:53,858 INFO    SenderThread:446965 [sender.py:finish():1078] shutting down sender
+2022-03-17 04:51:53,858 INFO    SenderThread:446965 [file_pusher.py:finish():145] shutting down file pusher
+2022-03-17 04:51:53,859 INFO    SenderThread:446965 [file_pusher.py:join():150] waiting for file pusher
+2022-03-17 04:51:53,863 INFO    MainThread:446965 [internal.py:handle_exit():82] Internal process exited

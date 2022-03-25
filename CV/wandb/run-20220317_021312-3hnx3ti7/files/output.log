@@ -1,0 +1,40 @@
+  0%|                                                                                                    | 0/1000 [00:00<?, ?it/s]/home/kg23/anaconda3/envs/rg/lib/python3.9/site-packages/torch/autograd/__init__.py:154: UserWarning: CUDA initialization: The NVIDIA driver on your system is too old (found version 6050). Please update your GPU driver by downloading and installing a new version from the URL: http://www.nvidia.com/Download/index.aspx Alternatively, go to: https://pytorch.org to install a PyTorch version that has been compiled with your version of the CUDA driver. (Triggered internally at  ../c10/cuda/CUDAFunctions.cpp:112.)
+  Variable._execution_engine.run_backward(
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+100%|█████████████████████████████████████████████████████████████████████████████████████████| 1000/1000 [00:34<00:00, 28.90it/s]
+
+
+
+
+
+
+
+
+
+
+
+
+ 71%|███████████████████████████████████████████████████████████████▌                          | 706/1000 [00:26<00:11, 26.46it/s]
+Traceback (most recent call last):
+  File "/home/kg23/reading-group/CV/models.py", line 186, in <module>
+    svdloss.backward()
+  File "/home/kg23/anaconda3/envs/rg/lib/python3.9/site-packages/torch/_tensor.py", line 307, in backward
+    torch.autograd.backward(self, gradient, retain_graph, create_graph, inputs=inputs)
+  File "/home/kg23/anaconda3/envs/rg/lib/python3.9/site-packages/torch/autograd/__init__.py", line 154, in backward
+    Variable._execution_engine.run_backward(
+KeyboardInterrupt

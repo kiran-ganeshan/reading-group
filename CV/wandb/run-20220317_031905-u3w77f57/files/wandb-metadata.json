@@ -1,0 +1,22 @@
+{
+    "os": "Linux-5.4.0-91-generic-x86_64-with-glibc2.31",
+    "python": "3.9.7",
+    "heartbeatAt": "2022-03-17T03:19:06.589712",
+    "startedAt": "2022-03-17T03:19:05.891059",
+    "docker": null,
+    "cpu_count": 64,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "/home/kg23/reading-group/CV/models.py",
+    "codePath": "CV/models.py",
+    "git": {
+        "remote": "https://github.com/kiran-ganeshan/reading-group",
+        "commit": "3950fbd44da33979b062951db19a0a80a188cc29"
+    },
+    "email": "kg23@berkeley.edu",
+    "root": "/home/kg23/reading-group",
+    "host": "honeydew",
+    "username": "kg23",
+    "executable": "/home/kg23/anaconda3/envs/rg/bin/python"
+}

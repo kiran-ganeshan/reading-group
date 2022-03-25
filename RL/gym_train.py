@@ -7,19 +7,25 @@ import os
 import wandb
 from tqdm import tqdm
 import util
-from DQN.dqn import DQN
-from PG.pg import PG
-#from DDQN.deuling_dqn import DeulingDQN
+from algos.dqn.dqn import DQN
+from algos.pg.pg import PG
+import collections
+fields = ['state', 'action', 'reward', 'done', 'next_state']
+Transition = collections.namedtuple('Transition', fields)
+
 algos = {
     "DQN": DQN,
     "PG": PG  
 }
-time_spent_running = 0
-time_spent_logging = 0
+
+envs = [
+    
+]
  
 # Runs policy for X episodes and returns average reward
 # A fixed seed is used for the eval environment
 def eval(policy, env_name, seed, eval_episodes=10, render=False):
+    assert env_name in envs
     eval_env = gym.make(env_name)
     if render:
         eval_env = util.VideoRecorder(eval_env)
@@ -52,7 +58,8 @@ def train(policy,
           ep_len : int,
           train_freq : int,
           eval_freq : int,
-          no_tqdm : bool = False):
+          no_tqdm : bool = False, 
+          save_data : bool = False):
     """
     Trains 
     """
@@ -115,6 +122,10 @@ def train(policy,
         if (step + 1) % eval_freq == 0:
             eval_metrics = eval(policy, env_name, seed)
             util.log_wandb('eval', eval_metrics, step=step + 1)
+            
+        # Save transition to offline dataset
+        if save_data:
+            
 
 
 if __name__ == "__main__":
