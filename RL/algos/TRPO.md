@@ -1,2 +1,2 @@
-Requirements: [[Importance Weighting]]
+Requirements: [[Off-Policy PG]]
 #todo

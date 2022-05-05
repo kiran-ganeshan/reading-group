@@ -54,6 +54,9 @@ $$\begin{align*}\mathop{\mathbb{E}}_{\tau\sim\mathcal{T}^{\pi}(\tau\mid s, a)} &
 We will use these to derive recurrence relations which relate $V$ to $Q$ and $Q$ to $V$. Putting these partial recurrence relations together, we can derive full recurrence relations which relate $V$ to $V$ and $Q$ to $Q$.
 
 ## Bellman Recurrence
+
+^5e3551
+
 Using the expectation recurrence relations we derived above (the last of which is only valid when we are applying it to the RL objective, as we are in $Q$ and $V$), we can derive the following partial recurrence relations:
 
 |  | Partial Recurrence Relation |
@@ -73,6 +76,4 @@ We can plug these partial recurrence relations into one another to obtain the fo
 | $Q^{\pi}$ | $$\begin{align*}Q^{\pi}(s, a) &=r(s, a) + \gamma\mathop{\mathbb{E}}_{s'\sim \mathcal{T}(s' \mid s,a)}\;V^{\pi}(s')\\&=r(s, a) + \gamma\mathop{\mathbb{E}}_{s'\sim \mathcal{T}(s' \mid s,a)}\;\mathop{\mathbb{E}}_{a\sim \pi(a\mid s)}\;Q^{\pi}(s, a)\end{align*} $$ |
 | $V^*$ | $$\begin{align*}V^*(s) &=\max_{a\in A}Q^*(s, a)\\&= \max_{a\in A} \bigg\{r(s, a) + \gamma\mathop{\mathbb{E}}_{s'\sim \mathcal{T(s' \mid s,a)}} V^*(s')\bigg\}\end{align*}$$ |
 | $V^{\pi}$ | $$\begin{align*}V^{\pi}(s) &=\mathop{\mathbb{E}}_{a\sim \pi(a\mid s)}\;Q^{\pi}(s, a)\\&=\mathop{\mathbb{E}}_{a\sim \pi(a\mid s)}\bigg\{r(s, a) + \gamma\mathop{\mathbb{E}}_{s'\sim \mathcal{T}(s' \mid s,a)}\;V^{\pi}(s')\bigg\}\end{align*}$$ |
-
-
 

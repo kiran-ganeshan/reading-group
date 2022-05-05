@@ -21,7 +21,7 @@ $$a^*(s) = \mathop{\text{argmax}}_{a \in A(s)}\; \hat{Q}(s, a)$$
 
 In order to update the $\hat Q$ table as we see new transitions, suppose we experience a transition $(s, a, s')$ $$n(s, a) \leftarrow n(s, a) + 1$$
 $$\hat{Q}(s, a) \leftarrow \frac{1}{n(s, a)}\bigg((n(s, a) - 1)\hat{Q}(s, a) + r(s, a) + \gamma\max_{a'\in A(s')}\hat{Q}(s', a')\bigg)$$
-These updates may be described as ***continual averaging***: they are designed such that $\hat{Q}(s, a)$ is the average (over $s'$) of the target value $r(s, a) + \gamma\max_{a'\in A(s')} \hat{Q}(s', a')$. Storing the count $n(s, a)$ allows us to simply store but we don't have to keep track of every target $Q$ value for each $s'$ in order to calculate this average (we can do this by storing the average itself as well as the number of samples, hence why we introduce $n(s, a)$). The more we take an action $a$ in a state $s$, the more samples $s'$ we are averaging over, and the lower the variance of our estimate of $Q(s, a)$. 
+These updates may be described as ***continual averaging***: they are designed such that $\hat{Q}(s, a)$ is the average (over $s'$) of the target value $r(s, a) + \gamma\max_{a'\in A(s')} \hat{Q}(s', a')$. The more we take an action $a$ in a state $s$, the more samples $s'$ we are averaging over, and the lower the variance of our estimate of $Q(s, a)$. 
 
 ## Use Cases
 TQL can be used to solve MDPs with 

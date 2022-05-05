@@ -69,21 +69,20 @@ DQN can be used to solve MDPs with
 
 **DQN**: Deep Q-Learning with Experience Replay
 **Parameters**: 
-- Number of episodes $M$
-- Horizon $T$
+- Number of total steps $T$
 - Replay Buffer capacity $N$
 - Exploration parameter $\ep$
 
 **Algorithm**:
 > Initialize replay buffer $\mathcal{D}$ with capacity $N$\
 > Initialize $Q$-function neural network with random weights $\theta$\
-> **for** episode $\in\{1, \dots, M\}$ **do**:\
-> $\qquad$ **for** $t\in\{1, \dots, T\}$ **do**:\
-> $\qquad\qquad$ With probability $\ep$: \
-> $\qquad\qquad\qquad$ Select a random action $a_t$\
-> $\qquad\qquad$ Otherwise: \
-> $\qquad\qquad\qquad$ Select $a_t = \max_{a\in A}Q_\theta(s_t, a)$\
-> $\qquad\qquad$ Execute action $a_t$, retrieve reward $r_t$ and next state $s_{t+1}$\
+> Initialize environment
+> **for** step $\in\{1, \dots, T\}$ **do**:\
+> $\qquad$ With probability $\ep$: \
+> $\qquad\qquad$ Select a random action $a$\
+> $\qquad$ Otherwise: \
+> $\qquad\qquad$ Select $a = \max_{a\in A}Q_\theta(s_t, a)$\
+> $\qquad$ Execute action $a$, retrieve reward $r$ and next state $s'$\
 > $\qquad\qquad$ Store transition $(s_t, a_t, r_t, s_{t+1})$ in $\mathcal{D}$\
 > $\qquad\qquad$ Sample random batch of transitions $(s_j, a_j, r_j, s_{j+1})$ from $\mathcal{D}$\
 > $\qquad\qquad$ Set $y_j = \begin{cases} r_j & \text{if }s_{j+1}\text{ is terminal} \\ r_j + \gamma \max_{a'\in A}Q_\theta(s_{j+1}, a') & \text{if }s_{j+1}\text{ is not terminal}\end{cases}$\
