@@ -51,34 +51,25 @@ def log_wandb(str, metrics, step=None):
     wandb.log(log_items, step=step)
     
     
-class ActionType(Enum):
-    DISCRETE = 0
-    CONTINUOUS = 1
-    BOTH = 2
+def space_is_discrete(action_space : Space):
+    return isinstance(action_space, Discrete)
     
     
-def get_action_type(action_space : Space):
-    if isinstance(action_space, Box):
-        return ActionType.CONTINUOUS
-    elif isinstance(action_space, Discrete):
-        return ActionType.DISCRETE
-    else:
-        pass
-    
-    
-def test_is_discrete(policy, state_dim : int):
+def policy_is_discrete(policy, state_dim : int):
     wrong_type = "select_action must return torch array"
-    wrong_dtype = "select_action must return array with dtype int or float"
     assert policy.is_learner, "module must be learner to test action type"
     action = policy.select_action(torch.zeros(state_dim))
     assert isinstance(action, torch.Tensor), wrong_type
-    action = from_torch(action)
-    
-    if np.issubdtype(action.dtype, np.integer):
-        return True
-    if np.issubdtype(action.dtype, np.floating):
-        return False
-    assert False, wrong_dtype
+    return not torch.is_floating_point(action)
+
+
+def get_env_dims(env: gym.Env):
+    state_dim = env.observation_space.shape[0]
+    if isinstance(env.action_space, Box):
+        action_dim = env.action_space.shape[0]
+    elif isinstance(env.action_space, Discrete): 
+        action_dim = int(env.action_space.n)
+    return state_dim, action_dim
 
 
 def learner(get_q=False):
@@ -115,8 +106,6 @@ def learner(get_q=False):
             assert len(wrong_args) == 0, f"Supplied incorrect args {wrong_args}"
             
             prev_init(self, **vars(args))
-            
-            self.discrete = test_is_discrete(self, args.state_dim)
             
             
         
@@ -180,13 +169,13 @@ class ReplayBuffer(object):
                  state_dim : int, 
                  action_dim : int, 
                  max_size : int = int(1e6), 
-                 continuous : bool = False, 
+                 discrete : bool = True, 
                  get_q : bool = False,
                  trajectory_q : bool = False, 
                  discount_qval : bool = False,
                  discount : float = None):
         self.max_size = max_size
-        self.continuous = continuous
+        self.discrete = discrete
         self.state_dim = state_dim
         self.action_dim = action_dim
         self.get_q = get_q
@@ -208,7 +197,7 @@ class ReplayBuffer(object):
         
         # Change types
         state = state.astype('float')
-        if self.continuous:
+        if not self.discrete:
             action = action.astype('float')
         next_state = next_state.astype('float')
         
@@ -244,8 +233,8 @@ class ReplayBuffer(object):
         self.ptr = 0
         self.size = 0
         
-        action_type = np.float32 if self.continuous else np.int32
-        action_size = (self.max_size,) + ((self.action_dim,) if self.continuous else ())
+        action_type = np.int32 if self.discrete else np.float32
+        action_size = (self.max_size,) + (() if self.discrete else (self.action_dim,))
         
         self.state = np.zeros((self.max_size, self.state_dim), dtype=np.float32)
         self.action = np.zeros(action_size, dtype=action_type)

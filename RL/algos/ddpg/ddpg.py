@@ -5,7 +5,7 @@ from torch.functional import F
 import util
     
 
-@util.learner
+@util.learner()
 class DDPG(object):
     def __init__(
         self,

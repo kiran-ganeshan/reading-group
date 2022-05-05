@@ -9,17 +9,19 @@ from tqdm import tqdm
 import util
 from algos.dqn.dqn import DQN
 from algos.pg.pg import PG
+from algos.ddpg.ddpg import DDPG
 import collections
 fields = ['state', 'action', 'reward', 'done', 'next_state']
 Transition = collections.namedtuple('Transition', fields)
 
 algos = {
     "DQN": DQN,
-    "PG": PG  
+    "PG": PG,
+    "DDPG": DDPG
 }
 
 envs = [
-    
+    'LunarLanderContinuous-v2'
 ]
  
 # Runs policy for X episodes and returns average reward
@@ -124,7 +126,7 @@ def train(policy,
             util.log_wandb('eval', eval_metrics, step=step + 1)
             
         # Save transition to offline dataset
-        if save_data:
+        #if save_data:
             
 
 
@@ -169,12 +171,6 @@ if __name__ == "__main__":
     print(f"Policy: {args.algo}, Env: {args.env}, Seed: {args.seed}")
     print("---------------------------------------")
 
-    if not os.path.exists("./results"):
-        os.makedirs("./results")
-
-    if args.save and not os.path.exists("./models"):
-        os.makedirs("./models")
-
     wandb.init(project='general_benchmarks', entity='mlab-rl-benchmarking')
     env = gym.make(args.env)
 
@@ -186,31 +182,24 @@ if __name__ == "__main__":
     
     
     # Get environment dimensions
-    state_dim = env.observation_space.shape[0]
-    if isinstance(env.action_space, Box):
-        action_dim = env.action_space.shape[0]
-        discrete = False
-    elif isinstance(env.action_space, Discrete): 
-        action_dim = int(env.action_space.n)
-        discrete = True
-    else:
-        s = "Currently, only Box and Discrete"
-        s += " action spaces work with gym_train.py"
-        assert False, s
-        
+    state_dim, action_dim = util.get_env_dims(env)
+
     # Add environment dimensions and discount to model args
     model_args += ["--state_dim", str(state_dim)]
     model_args += ["--action_dim", str(action_dim)]
     model_args += ["--discount", str(args.discount)]
 
+    assert algos[args.algo].is_learner, f"Ensure you call @learner on the {algos[args.algo]} class"
     policy = algos[args.algo](model_args)
     
-    action_type = 'discrete' if discrete else 'continuous'
-    policy_action_type = 'discrete' if policy.discrete else 'continuous'
-    wrong_type = f"Using {algos[args.algo]}, which is for {policy_action_type}"
-    wrong_type += f" action spaces on a {action_type} action space"
-    assert policy.discrete == discrete, wrong_type
-    assert algos[args.algo].is_learner, f"Ensure you call @learner on the {algos[args.algo]} class"
+    
+    discrete_policy = util.policy_is_discrete(policy, state_dim)
+    discrete_space = util.space_is_discrete(env.action_space)
+    wrong_type = f"Policy is {'discrete' if discrete_policy else 'continuous'}\n"
+    wrong_type += f"Space is {'discrete' if discrete_space else 'continuous'}"
+    assert discrete_policy == discrete_space, wrong_type
+    discrete = discrete_policy
+    
 
     if args.load:
         policy.load(f"./models/{file_name}")
@@ -220,7 +209,7 @@ if __name__ == "__main__":
     replay_buffer = util.ReplayBuffer(state_dim, 
                                       action_dim,
                                       max_size=replay_size, 
-                                      continuous=(action_type == util.ActionType.CONTINUOUS), 
+                                      discrete=discrete, 
                                       get_q=algos[args.algo].get_q,
                                       trajectory_q=args.trajectory_q, 
                                       discount_qval=args.discount_qval,
