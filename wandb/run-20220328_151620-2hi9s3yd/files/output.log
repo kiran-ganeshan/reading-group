@@ -1,8 +1,0 @@
-Traceback (most recent call last):
-  File "test_mujoco.py", line 26, in <module>
-    env = suite.load('swimmer', 'benchmarking')
-  File "/opt/anaconda3/envs/rg/lib/python3.7/site-packages/dm_control/suite/__init__.py", line 114, in load
-    environment_kwargs, visualize_reward)
-  File "/opt/anaconda3/envs/rg/lib/python3.7/site-packages/dm_control/suite/__init__.py", line 143, in build_environment
-    task_name, domain_name))
-ValueError: Level 'benchmarking' does not exist in domain 'swimmer'.

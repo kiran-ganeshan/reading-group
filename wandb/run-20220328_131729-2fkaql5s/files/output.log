@@ -1,4 +1,0 @@
-Traceback (most recent call last):
-  File "test_mujoco.py", line 30, in <module>
-    env.step()
-TypeError: step() missing 1 required positional argument: 'action'

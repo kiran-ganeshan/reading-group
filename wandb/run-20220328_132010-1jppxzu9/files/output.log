@@ -1,6 +1,0 @@
-
-<bound method Environment.action_spec of <dm_control.rl.control.Environment object at 0x129682890>>
-Traceback (most recent call last):
-  File "test_mujoco.py", line 33, in <module>
-    while len(frames) < env.data.time * framerate:
-AttributeError: 'Environment' object has no attribute 'data'
