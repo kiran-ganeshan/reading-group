@@ -4,24 +4,28 @@
     "type": "split",
     "children": [
       {
-        "id": "599c29ab34f73289",
-        "type": "leaf",
-        "dimension": 41.49659863945579,
-        "state": {
-          "type": "empty",
-          "state": {}
-        },
-        "group": "49824ac6710b2105"
-      },
-      {
         "id": "472c9723546523be",
         "type": "leaf",
-        "dimension": 58.50340136054421,
         "state": {
-          "type": "empty",
-          "state": {}
+          "type": "markdown",
+          "state": {
+            "file": "RL/algos/trpo/TRPO.md",
+            "mode": "source"
+          }
         },
-        "group": "49824ac6710b2105"
+        "group": "2ae11695f06e8703"
+      },
+      {
+        "id": "0bab0f0f2d6174ee",
+        "type": "leaf",
+        "state": {
+          "type": "markdown",
+          "state": {
+            "file": "RL/algos/trpo/TRPO.md",
+            "mode": "preview"
+          }
+        },
+        "group": "2ae11695f06e8703"
       }
     ],
     "direction": "vertical"
@@ -77,6 +81,7 @@
             "state": {
               "type": "backlink",
               "state": {
+                "file": "RL/algos/trpo/TRPO.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -96,15 +101,15 @@
   },
   "active": "472c9723546523be",
   "lastOpenFiles": [
-    "RL/algos/DDPG.md",
-    "RL/algos/pg/Off-Policy PG.md",
-    "RL/algos/pg/PG.md",
+    "RL/algos/trpo/TRPO.md",
     "RL/algos/iml/Imitation Learning.md",
-    "RL/algos/irl/IRL.md",
-    "RL/algos/irl/Feature Matching.md",
-    "RL/algos/PPO.md",
-    "RL/algos/SAC.md",
-    "RL/Value Functions.md",
-    "RL/MDP.md"
+    "RL/algos/sac/SAC.md",
+    "RL/algos/dqn/DQN.md",
+    "RL/algos/TRPO.md",
+    "Basics/KL Divergence.md",
+    "Basics/Pinsker's Inequality.md",
+    "RL/algos/pg/Natural PG.md",
+    "RL/algos/pg/PG.md",
+    "RL/algos/PPO.md"
   ]
 }

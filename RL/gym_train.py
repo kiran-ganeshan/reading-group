@@ -61,7 +61,7 @@ def train(policy,
           train_freq : int,
           eval_freq : int,
           no_tqdm : bool = False, 
-          save_data : bool = False):
+          save_logprob : bool = False):
     """
     Trains 
     """
@@ -82,7 +82,12 @@ def train(policy,
             action = env.action_space.sample()
         else:
             input = util.to_torch(state, torch.float32)
-            action = policy.select_action(input)
+            result = policy.select_action(input, get_logprob=save_logprob)
+            if save_logprob:
+                action, logprob = result
+                logprob = util.from_torch(logprob)
+            else:
+                action = result
             action = util.from_torch(action)
 
         # Perform action
@@ -90,7 +95,10 @@ def train(policy,
         done = float(done) if t < ep_len else 0.
 
         # Process data and store it in replay buffer
-        replay_buffer.add(state, action, next_state, reward, done)
+        transition = (state, action, next_state, reward, done)
+        if save_logprob:
+            transition = (*transition, logprob)
+        replay_buffer.add(*transition)
         episode_reward += reward
         state = next_state
 
@@ -211,6 +219,7 @@ if __name__ == "__main__":
                                       max_size=replay_size, 
                                       discrete=discrete, 
                                       get_q=algos[args.algo].get_q,
+                                      get_logprob = algos[args.algo].get_logprob,
                                       trajectory_q=args.trajectory_q, 
                                       discount_qval=args.discount_qval,
                                       discount=args.discount)

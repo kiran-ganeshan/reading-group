@@ -13,8 +13,8 @@ class DDPG(object):
         action_dim : int,
         discount : float = 0.97,
         lr : float = 1e-3,
-        tau : float = 0.05,
-        eps : float = 1e-2
+        actor_ema : float = 0.05,
+        critic_ema : float = 0.05
     ):
         self.critic = util.MLP(input_size=state_dim, 
                                output_size=action_dim, 
@@ -33,8 +33,8 @@ class DDPG(object):
         self.actor_optimizer = torch.optim.Adam(self.actor.parameters(), lr=lr)
 
         self.discount = discount
-        self.tau = tau
-        self.eps = eps
+        self.actor_ema = actor_ema
+        self.critic_ema = critic_ema
         self.action_dim = action_dim
 
     def select_action(self, state, deterministic=True):
@@ -48,42 +48,30 @@ class DDPG(object):
         
         # Compute the target Q value
         with torch.no_grad(): 
-            target_Q = self.critic_target(next_state)
-            target_Q = torch.max(target_Q, -1)[0]
+            next_action = self.actor_target(next_state)
+            target_Q = self.critic_target(next_state, next_action)
             data = {'next_q': target_Q}
             target_Q = reward + self.discount * not_done * target_Q
             data = {'target_q': target_Q, **data}
-            
-        # Get current Q estimates
-        q_mask = util.one_hot(action, num_classes=self.action_dim)
-        Q = torch.sum(self.critic(state) * q_mask, dim=-1)
  
-        # Compute critic loss
+        # Compute critic loss and optimize critic
+        Q = self.critic(state, action)
         critic_loss = F.mse_loss(Q, target_Q)
-
-        # Optimize the critic
         self.critic_optimizer.zero_grad()
         critic_loss.backward()
         self.critic_optimizer.step()
-
-        # Get current policy
-        policy = self.actor(state)
  
-        # Compute actor surrogate objective
-        mask = util.one_hot(action, num_classes=self.action_dim)
-        logprob = torch.sum(policy * mask, dim=-1)
-        actor_loss = -torch.mean(Q * logprob, dim=0)
-        
-        losses = {'actor_loss': actor_loss, 'critic_loss': critic_loss}
-        
-        # Optimize the actor
+        # Compute actor surrogate objective and optimize actor
+        actor_loss = -torch.mean(self.critic(state, self.actor(state)), dim=0)
         self.actor_optimizer.zero_grad()
         actor_loss.backward()
         self.actor_optimizer.step()
+        
+        losses = {'actor_loss': actor_loss, 'critic_loss': critic_loss}
 
         # Update the frozen target models
-        for param, target_param in zip(self.critic.parameters(), self.critic_target.parameters()):
-            target_param.data.copy_(self.tau * param.data + (1 - self.tau) * target_param.data)
-        for param, target_param in zip(self.actor.parameters(), self.actor_target.parameters()):
-            target_param.data.copy_(self.tau * param.data + (1 - self.tau) * target_param.data)
+        for nn, target, ema in [(self.critic, self.critic_target, self.actor_ema), 
+                                (self.actor, self.actor_target, self.critic_ema)]:
+            for param, target_param in zip(nn.parameters(), target.parameters()):
+                target_param.data.copy_(ema * param.data + (1 - ema) * target_param.data)
         return losses

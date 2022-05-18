@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "gym_train.py", line 208, in <module>
+    policy = algos[args.algo](model_args)
+  File "/Users/kiranganeshan/reading-group/RL/util.py", line 120, in init
+    self.discrete = test_is_discrete(self, args.state_dim)
+  File "/Users/kiranganeshan/reading-group/RL/util.py", line 74, in test_is_discrete
+    print(action, action.dtype, np.issubdtype(action.dtype, np.integer), np.issubdtype(action.dtype, np.floating))
+  File "/opt/anaconda3/envs/rg/lib/python3.7/site-packages/numpy/core/numerictypes.py", line 418, in issubdtype
+    arg1 = dtype(arg1).type
+TypeError: Cannot interpret 'torch.float32' as a data type

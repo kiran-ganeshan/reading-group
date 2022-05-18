@@ -72,8 +72,18 @@ We can plug these partial recurrence relations into one another to obtain the fo
 
 |  | Full Recurrence Relation |
 | --- | --- | 
-|$Q^*$| $$\begin{align*}Q^*(s, a) &= r(s, a) + \gamma\mathop{\mathbb{E}}_{s'\sim \mathcal{T(s' \mid s,a)}} V^*(s')\\&=r(s, a) + \gamma\mathop{\mathbb{E}}_{s'\sim \mathcal{T(s' \mid s,a)}}\max_{a\in A}Q^*(s, a)\end{align*}$$ |
-| $Q^{\pi}$ | $$\begin{align*}Q^{\pi}(s, a) &=r(s, a) + \gamma\mathop{\mathbb{E}}_{s'\sim \mathcal{T}(s' \mid s,a)}\;V^{\pi}(s')\\&=r(s, a) + \gamma\mathop{\mathbb{E}}_{s'\sim \mathcal{T}(s' \mid s,a)}\;\mathop{\mathbb{E}}_{a\sim \pi(a\mid s)}\;Q^{\pi}(s, a)\end{align*} $$ |
+|$Q^*$| $$\begin{align*}Q^*(s, a) &= r(s, a) + \gamma\mathop{\mathbb{E}}_{s'\sim \mathcal{T(s' \mid s,a)}} V^*(s')\\&=r(s, a) + \gamma\mathop{\mathbb{E}}_{s'\sim \mathcal{T(s' \mid s,a)}}\max_{a'\in A}Q^*(s', a')\end{align*}$$ |
+| $Q^{\pi}$ | $$\begin{align*}Q^{\pi}(s, a) &=r(s, a) + \gamma\mathop{\mathbb{E}}_{s'\sim \mathcal{T}(s' \mid s,a)}\;V^{\pi}(s')\\&=r(s, a) + \gamma\mathop{\mathbb{E}}_{s'\sim \mathcal{T}(s' \mid s,a)}\;\mathop{\mathbb{E}}_{a'\sim \pi(a'\mid s')}\;Q^{\pi}(s', a')\end{align*} $$ |
 | $V^*$ | $$\begin{align*}V^*(s) &=\max_{a\in A}Q^*(s, a)\\&= \max_{a\in A} \bigg\{r(s, a) + \gamma\mathop{\mathbb{E}}_{s'\sim \mathcal{T(s' \mid s,a)}} V^*(s')\bigg\}\end{align*}$$ |
 | $V^{\pi}$ | $$\begin{align*}V^{\pi}(s) &=\mathop{\mathbb{E}}_{a\sim \pi(a\mid s)}\;Q^{\pi}(s, a)\\&=\mathop{\mathbb{E}}_{a\sim \pi(a\mid s)}\bigg\{r(s, a) + \gamma\mathop{\mathbb{E}}_{s'\sim \mathcal{T}(s' \mid s,a)}\;V^{\pi}(s')\bigg\}\end{align*}$$ |
 
+These recurrence relations can be combined over multiple timesteps to produce the $n$-step Bellman recurrences:
+
+|  | $n$-step Recurrence Relation |
+| --- | --- | 
+|$Q^*$| $$Q^*(s_t, a_t) =\mathop{\mathbb{E}}_{s_{t+1}\sim \mathcal{T}(s_t,a_t)}\max_{a_{t+1}\in A}\dots\max_{a_{t+n}\in A}\left[\sum_{t'=t}^{t+n-1}r(s_{t'}, a_{t'}) + \gamma^n Q^*(s_{t+n}, a_{t+n})\right]$$ |
+| $Q^{\pi}$ | $$Q^\pi(s_t, a_t) =\mathop{\mathbb{E}}_{\substack{s_{t+1}\sim \mathcal{T}(s_t,a_t)\\ a_{t+1}\sim\pi(s_{t+1})}}\dots\mathop{\mathbb{E}}_{\substack{s_{t+n}\sim \mathcal{T}(s_{t+n-1},a_{t+n-1})\\ a_{t+n}\sim\pi(s_{t+n})}}\left[\sum_{t'=t}^{t+n-1}r(s_{t'}, a_{t'}) + \gamma Q^\pi(s_{t+n}, a_{t+n})\right]$$ |
+| $V^*$ | $$V^*(s_t) = \max_{a_t\in A}\mathop{\mathbb{E}}_{s_{t+1}\sim \mathcal{T}(s_t,a_t)}\dots\mathop{\mathbb{E}}_{s_{t+n}\sim \mathcal{T}(s_{t+n-1},a_{t+n-1})} \left[\sum_{t'=t}^{t+n-1} r(s_{t'}, a_{t'}) + \gamma^n V^*(s_{t+n})\right]$$ |
+| $V^{\pi}$ | $$V^\pi(s_t) = \mathop{\mathbb{E}}_{\substack{a_t\sim\pi(s_t)\\ s_{t+1}\sim \mathcal{T}(s_t,a_t)}}\dots\mathop{\mathbb{E}}_{\substack{a_{t+n-1}\sim\pi(s_{t+n-1})\\ s_{t+n}\sim \mathcal{T}(s_{t+n-1},a_{t+n-1})}} \left[\sum_{t'=t}^{t+n-1} r(s_{t'}, a_{t'}) + \gamma^n V^\pi(s_{t+n})\right]$$ |
+
+^24958b

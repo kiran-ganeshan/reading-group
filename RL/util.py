@@ -72,7 +72,7 @@ def get_env_dims(env: gym.Env):
     return state_dim, action_dim
 
 
-def learner(get_q=False):
+def learner(get_q=False, get_logprob=False):
     def transform(cls):
         prev_init = cls.__init__
         params = inspect.signature(prev_init).parameters
@@ -112,6 +112,7 @@ def learner(get_q=False):
         cls.__init__ = init
         cls.is_learner = True    # For testing in training loops
         cls.get_q = get_q
+        cls.get_logprob = get_logprob
         assert hasattr(cls, 'select_action'), "Must write a policy in function select_action"
         assert hasattr(cls, 'train'), "Must write a training step in function select_action"
         
@@ -136,10 +137,12 @@ class ReplayBuffer(object):
     
     continuous          Whether the action space is continuous.
     
-    get_q               Whether to calculate Q-values. When True, trajectory_q and discount_qval control
-                        how Q-values are calculated. Their defaults are set up so that we discount and sum
-                        reward-to-go to obtain Q-values. trajectory_q and discount_qval allow a user to
+    get_q               Whether to calculate Monte-Carlo estimates of Q-values. When True, trajectory_q and 
+                        discount_qval control how Q-value estimates are calculated. Their defaults are set up 
+                        so that we discount and sum reward-to-go to obtain Q-values.
                         
+    get_logprob         Whether to save the log-probability of the action under the current policy when saving 
+                        a transition.
     
     trajectory_q        If True (and get_q is True), calculate Q-values across entire trajectories:
                         for all transitions (s, a) in the trajectory, Q(s, a) is the discounted total
@@ -171,6 +174,7 @@ class ReplayBuffer(object):
                  max_size : int = int(1e6), 
                  discrete : bool = True, 
                  get_q : bool = False,
+                 get_logprob : bool = False,
                  trajectory_q : bool = False, 
                  discount_qval : bool = False,
                  discount : float = None):
@@ -179,6 +183,7 @@ class ReplayBuffer(object):
         self.state_dim = state_dim
         self.action_dim = action_dim
         self.get_q = get_q
+        self.get_logprob = get_logprob
         self.trajectory_q = trajectory_q
         self.discount_qval = discount_qval
         self.discount = discount
@@ -193,7 +198,12 @@ class ReplayBuffer(object):
             action : np.ndarray, 
             next_state : np.ndarray, 
             reward : np.ndarray, 
-            done : np.ndarray):
+            done : np.ndarray,
+            logprob : np.ndarray = None):
+        
+        # Ensure we have logprob if necessary
+        if self.get_logprob:
+            assert logprob
         
         # Change types
         state = state.astype('float')
@@ -207,6 +217,8 @@ class ReplayBuffer(object):
         self.next_state[self.ptr] = next_state
         self.reward[self.ptr] = reward
         self.not_done[self.ptr] = 1. - done
+        if self.get_logprob:
+            self.logprob[self.ptr] = logprob
         
         # Get Q-values
         if self.get_q and done:
@@ -220,13 +232,15 @@ class ReplayBuffer(object):
         ind = np.random.randint(0, self.size, size=batch_size)
         action_type = torch.float if self.continuous else torch.long
         qval = () if not self.get_q else (to_torch(self.qval[ind], dtype=torch.float),)
+        logprob = () if not self.get_logprob else (to_torch(self.logprob[ind], dtype=torch.float32),)
         return (
             to_torch(self.state[ind], dtype=torch.float),
             to_torch(self.action[ind], dtype=action_type),
             to_torch(self.next_state[ind], dtype=torch.float),
             to_torch(self.reward[ind], dtype=torch.float),
             *qval,
-            to_torch(self.not_done[ind], dtype=torch.float)
+            to_torch(self.not_done[ind], dtype=torch.float),
+            *logprob
         )
         
     def reset(self):
@@ -243,9 +257,12 @@ class ReplayBuffer(object):
         if self.get_q:
             self.qval = np.zeros((self.max_size,), dtype=np.float32)
         self.not_done = np.zeros((self.max_size,), dtype=float)
+        if self.get_logprob:
+            self.logprob = np.zeros((self.max_size,), dtype=np.float32)
         
     def get_qval(self):
         # Calculate trajectory indices and retrieve corresponding rewards
+        assert self.get_q
         traj_begin = self.ptr
         while self.not_done[(traj_begin - 1) % self.max_size]:
             traj_begin = (traj_begin - 1) % self.max_size
@@ -299,6 +316,44 @@ class MLP(nn.Module):
                 x = self.activation(x)
         x = self.final_activation(x)
         return x
+    
+class GaussianPolicy(MLP):
+    
+    def __init__(self, 
+                 state_dim : int, 
+                 hidden_sizes : Sequence[int], 
+                 action_dim: int, 
+                 activation : Callable[[TensorType], TensorType] = None,
+                 final_activation : Callable[[TensorType], TensorType] = None,
+                 predict_std : bool = False):
+        output_size = (2 if predict_std else 1) * action_dim
+        super(GaussianPolicy, self).__init__(state_dim, hidden_sizes, output_size, activation, final_activation)
+        if not predict_std:
+            self.log_std = nn.Parameter(torch.zeros((action_dim,)))
+        self.predict_std = predict_std
+        
+    def _get_dist_params(self, state):
+        out = super(GaussianPolicy, self).forward(state)
+        if self.predict_std:
+            mu, log_sigma = torch.split(out, 2)
+        else:
+            mu = out
+            log_sigma = self.log_std
+        return mu, log_sigma
+        
+    def forward(self, state, deterministic=False):
+        mu, log_sigma = self._get_dist_params(state)
+        delta = torch.rand_like(log_sigma) if not deterministic else 0.
+        return mu + delta * torch.exp(log_sigma)
+    
+    def log_prob(self, state, action):
+        mu, log_sigma = self._get_dist_params(state)
+        log_prob = -torch.sum(log_sigma, -1) 
+        log_prob -= 1/2 * torch.norm((action - mu) / torch.exp(log_sigma)) ** 2
+        log_prob -= mu.shape[-1] * torch.log(2 * torch.pi) / 2
+        return log_prob
+        
+        
 
 '''
 class Module(jnn.Module):

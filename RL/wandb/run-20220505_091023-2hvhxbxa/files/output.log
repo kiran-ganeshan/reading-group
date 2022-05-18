@@ -1,0 +1,11 @@
+
+<class 'numpy.float32'> (100000, 2)
+  0%|▌                                                                                                       | 4999/1000000 [00:01<05:19, 3112.96it/s]
+Traceback (most recent call last):
+  File "gym_train.py", line 230, in <module>
+    args.no_tqdm
+  File "gym_train.py", line 125, in train
+    eval_metrics = eval(policy, env_name, seed)
+  File "gym_train.py", line 30, in eval
+    assert env_name in envs
+AssertionError

@@ -14,9 +14,7 @@ class ImitationLearner(object):
         state_dim : int,
         action_dim : int,
         lr : float = 1e-2,
-        discount : float = 0.99,
-        tau : float = 0.005,
-        eps : float = 1e-3
+        discount : float = 0.99
     ):
 
         self.actor = util.MLP(input_size=state_dim, 
@@ -27,42 +25,20 @@ class ImitationLearner(object):
         self.actor_optimizer = torch.optim.Adam(self.actor.parameters(), lr=lr)
 
         self.discount = discount
-        self.tau = tau
-        self.eps = eps
-        self.action_dim = action_dim
 
     def select_action(self, state):
-        if np.random.uniform(0, 1) < self.eps:
-            return np.random.randint(0, self.action_dim)
-        else:
-            return torch.argmax(self.critic(state), -1)
+        return self.actor(state)
 
     def train(self, *data):
         state, action, next_state, reward, not_done = data
-        
-        # Compute the target Q value
-        with torch.no_grad(): 
-            target_Q = self.critic_target(next_state)
-            target_Q = torch.max(target_Q, -1)[0]
-            data = {'next_q': target_Q}
-            target_Q = reward + self.discount * not_done * target_Q
-            data = {'target_q': target_Q, **data}
-            
-        # Get current Q estimates
-        q_mask = util.one_hot(action, num_classes=self.action_dim)
-        Q = torch.sum(self.critic(state) * q_mask, dim=-1)
  
-        # Compute critic loss
-        critic_loss = F.mse_loss(Q, target_Q)
-        losses = {'loss': critic_loss}
+        # Compute actor loss
+        loss = F.mse_loss(self.actor(state), action)
+        losses = {'loss': loss}
 
-        # Optimize the critic
-        self.critic_optimizer.zero_grad()
-        critic_loss.backward()
-        self.critic_optimizer.step()
-
-        # Update the frozen target models
-        for param, target_param in zip(self.critic.parameters(), self.critic_target.parameters()):
-            target_param.data.copy_(self.tau * param.data + (1 - self.tau) * target_param.data)
+        # Optimize the actor
+        self.actor_optimizer.zero_grad()
+        loss.backward()
+        self.actor_optimizer.step()
 
         return losses

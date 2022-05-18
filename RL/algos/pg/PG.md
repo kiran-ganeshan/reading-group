@@ -1,5 +1,3 @@
-
-
 # Policy Gradient
 Requirements: [[Value Functions]], [[Neural Network]]
 
@@ -13,13 +11,13 @@ Recall that $V^{\pi}(s)$ is the expected reward-to-go in state $s$ under policy 
 
 Thanks to a result known as the policy gradient theorem, we can directly parameterize the policy as $\pi_{\theta}$ and optimize via gradient descent with respect to $\theta$. 
 
-This note describes how this works. We first choose the objective $J(\theta) = V^{\pi}(s_0)$ where $s_0$ is our starting state, meaning we hope to optimize expected total rewards under our policy starting in state $s_0$.
+This note describes how this works. We first choose the objective $J(\theta) = V^{\pi_\theta}(s_0)$ where $s_0$ is our starting state, meaning we hope to optimize expected total rewards under our policy starting in state $s_0$.
 
 ## Strategy
 The policy gradient theorem tells us
-$$\nabla_{\theta}J(\theta) \propto \E_{s\sim\mu^{\pi}(s\mid s_0)}\; 
-\E_{a\sim\pi(s)}\Big[Q^{\pi_\theta}(s, a)\nabla_{\theta} \ln\pi_\theta(a\mid s)\Big]$$
-where $\mu^{\pi}(s\mid s_0)$ is the distribution of state visits from state $s_0$ under policy $\pi$. We would like to generate rollouts with our policy and use this theorem to directly update its parameters based on the rollouts we see. To do this, we must figure out
+$$\nabla_{\theta}J(\theta) \propto \mathop{\mathbb{E}}_{s\sim\mu^{\pi}(s\mid s_0)}\; 
+\mathop{\mathbb{E}}_{a\sim\pi(s)}\Big[Q^{\pi_\theta}(s, a)\nabla_{\theta} \ln\pi_\theta(a\mid s)\Big]$$
+where $\mu^{\pi}(s\mid s_0)$ is the distribution of state visits from state $s_0$ under policy $\pi$. We would like to generate rollouts with our policy and use this theorem to directly update its parameters based on the rollouts we see. To do this, we must
 1. [[Distribution Modeling with NNs|Parameterize]] $\pi_\theta(a\mid s)$ 
 2. Approximate $Q^{\pi_\theta}$
 3. Approximate the expectations
@@ -55,15 +53,15 @@ The policy gradient is applicable to
 
 **Algorithm**:
 > Initialize neural network $f$ with random weights $\theta$\
-> Parameterize the policy as described above: $\pi_\theta(a\mid s) = \xi(a\mid f_\theta(s))$\
+> Parameterize the policy as: $\pi_\theta(a\mid s) = \xi(a\mid f_\theta(s))$\
 > **for** episode $\in\{1, \dots, N\}$ **do**:\
 > $\qquad$ **for** $t\in\{1, \dots, T\}$ **do**:\
-> $\qquad\qquad$ **if** $N T + t < T_0$ (fewer than $T_0$ timesteps have passed): \
-> $\qquad\qquad\qquad$ $a_t\set$ random action\
+> $\qquad\qquad$ **if** $N T + t < T_0$: \
+> $\qquad\qquad\qquad$ $a_t\leftarrow$ random action\
 > $\qquad\qquad$ **else**:\
 > $\qquad\qquad\qquad$ $a_t\sim \pi(a_t\mid s_t)$\
-> $\qquad\qquad$ Execute action $a_t$, retrieve reward $r_t$ and next state $s_{t+1}$\
-> $\qquad$ Calculate $Q$-value estimates $\hat Q(s_j, a_j)$ for each transition\
+> $\qquad\qquad$ Take action $a_t$, get reward $r_t$ and state $s_{t+1}$\
+> $\qquad$ Calculate $Q$-value estimates $\hat Q(s_j, a_j)$ for each $j$\
 > $\qquad$ Set our loss to $L = \sum_{j} \hat Q(s_j, a_j)\ln\pi_\theta(a_j\mid s_j)$\
 > $\qquad$ Perform gradient descent on $L$ to update $\theta$
 
@@ -71,8 +69,8 @@ The policy gradient is applicable to
 We prove the following theorem showing the correctness of the policy gradient:
 
 **Theorem**: For a given starting state $s_0$, let $J(\theta) = V^{\pi_\theta}(s_0)$. Then
-$$\nabla_{\theta}J(\theta) \propto \E_{s\sim\mu^{\pi}(s\mid s_0)}\; 
-\E_{a\sim\pi(s)}\Big[Q^{\pi_\theta}(s, a)\nabla_{\theta} \ln\pi_\theta(a\mid s)\Big]$$
+$$\nabla_{\theta}J(\theta) \propto \mathop{\mathbb{E}}_{s\sim\mu^{\pi}(s\mid s_0)}\; 
+\mathop{\mathbb{E}}_{a\sim\pi(s)}\Big[Q^{\pi_\theta}(s, a)\nabla_{\theta} \ln\pi_\theta(a\mid s)\Big]$$
 where $\propto$ is a symbol meaning "proportional to" (we will derive constants of proportionality in the proof) and $\mu^{\pi}(s\mid s_0)$ is the distribution of states visited by $\pi$ starting in state $s_0$. This theorem is important because 
 1. We can sample $s\sim\mu^{\pi}(s\mid s_0)$ by running the policy starting with $s_0$ and sampling states from the resultant trajectories, allowing us to approximate the outer expectation. 
 2. Given a state $s$ sampled from the trajectories, the action taken at $s$ in the trajectory was sampled from $\pi(s)$, so if we choose $a$ to be this action than effectively $a\sim\pi(s)$, allowing us to approximate the inner expectation.
@@ -80,24 +78,24 @@ where $\propto$ is a symbol meaning "proportional to" (we will derive constants 
 Together, these facts show that if run the policy $\pi$ in the environment to generate trajectories, and then we sample state-action pairs from trajectories, we can approximate the two expectations, allowing us to evaluate this expression.
 
 **Proof**: Note that for any starting state $s$, by the [[Value Functions#Bellman Recurrence | Bellman Recurrence Relation]] relating $V^{\pi}(s)$ to an expectation of $V^{\pi}(s')$ over the next state $s'$, we have
-$$\nabla_{\theta}V^{\pi}(s) = \nabla_\theta \E_{a\sim \pi_\theta(a\mid s)}\bigg\{r(s, a) + \gamma\E_{s'\sim \mathcal{T}(s' \mid s,a)}\;V^{\pi}(s')\bigg\}$$
+$$\nabla_{\theta}V^{\pi}(s) = \nabla_\theta \mathop{\mathbb{E}}_{a\sim \pi_\theta(a\mid s)}\bigg\{r(s, a) + \gamma\mathop{\mathbb{E}}_{s'\sim \mathcal{T}(s' \mid s,a)}\;V^{\pi}(s')\bigg\}$$
 
 We might be tempted to try to move the gradient through the expectation, but not so fast! The expectation is over $\pi_\theta$, which depends on $\theta$! We must expand the expectation, and so the proof splits depending on whether we are in a discrete or continuous space. We will present the discrete case, and to obtain the continuous case one simply replaces sums over $S$ and $A$ with integrals over these continuous spaces.
 
 In the discrete case, the expectation becomes a sum over the action space: 
 $$\begin{align*}
 
-\nabla_{\theta}V^{\pi}(s) &= \nabla_\theta \sum_{a\in A} \pi_\theta(a\mid s)\bigg\{r(s, a) + \gamma\E_{s'\sim \mathcal{T}( s,a)}\;V^{\pi}(s')\bigg\}\\
+\nabla_{\theta}V^{\pi}(s) &= \nabla_\theta \sum_{a\in A} \pi_\theta(a\mid s)\bigg\{r(s, a) + \gamma\mathop{\mathbb{E}}_{s'\sim \mathcal{T}( s,a)}\;V^{\pi}(s')\bigg\}\\
 
-&=\sum_{a\in A} \Bigg\{\bigg[r(s, a) + \gamma\E_{s'\sim\mathcal{T}( s, a)}V^{\pi}(s')\bigg]\nabla_\theta\pi_{\theta}(a\mid s) + \pi_\theta(a\mid s)\nabla_\theta\bigg[r(s, a) + \gamma\E_{s'\sim\mathcal{T}( s, a)}V^\pi (s')\bigg]\Bigg\}\\
+&=\sum_{a\in A} \Bigg\{\bigg[r(s, a) + \gamma\mathop{\mathbb{E}}_{s'\sim\mathcal{T}( s, a)}V^{\pi}(s')\bigg]\nabla_\theta\pi_{\theta}(a\mid s) + \pi_\theta(a\mid s)\nabla_\theta\bigg[r(s, a) + \gamma\mathop{\mathbb{E}}_{s'\sim\mathcal{T}( s, a)}V^\pi (s')\bigg]\Bigg\}\\
 
-&=\sum_{a\in A} \Bigg\{\bigg[r(s, a) + \gamma\E_{s'\sim\mathcal{T}( s, a)}V^{\pi}(s')\bigg]\nabla_\theta\pi_{\theta}(a\mid s) + \pi_\theta(a\mid s) \gamma\E_{s'\sim\mathcal{T}( s, a)}\nabla_\theta V^\pi (s')\Bigg\}\\
+&=\sum_{a\in A} \Bigg\{\bigg[r(s, a) + \gamma\mathop{\mathbb{E}}_{s'\sim\mathcal{T}( s, a)}V^{\pi}(s')\bigg]\nabla_\theta\pi_{\theta}(a\mid s) + \pi_\theta(a\mid s) \gamma\mathop{\mathbb{E}}_{s'\sim\mathcal{T}( s, a)}\nabla_\theta V^\pi (s')\Bigg\}\\
 
 \end{align*}$$
 
 We now recognize the term in brackets as the [[Value Functions#^4e628e | partial recurrence]] of $Q^{\pi}$, so we can substitute $Q^{\pi}$ to obtain
-$$\begin{align*}\nabla_\theta V^{\pi}(s) &= \sum_{a\in A} \bigg\{Q^{\pi}(s, a)\nabla_\theta\pi_{\theta}(a\mid s) + \pi_\theta(a\mid s) \gamma\E_{s'\sim\mathcal{T}( s, a)}\nabla_\theta V^\pi (s')\bigg\}\\
-&= \sum_{a\in A} Q^{\pi}(s, a)\nabla_\theta\pi_{\theta}(a\mid s) + \sum_{a\in A}\pi_\theta(a\mid s) \gamma\E_{s'\sim\mathcal{T}( s, a)}\nabla_\theta V^\pi (s')\end{align*}$$
+$$\begin{align*}\nabla_\theta V^{\pi}(s) &= \sum_{a\in A} \bigg\{Q^{\pi}(s, a)\nabla_\theta\pi_{\theta}(a\mid s) + \pi_\theta(a\mid s) \gamma\mathop{\mathbb{E}}_{s'\sim\mathcal{T}( s, a)}\nabla_\theta V^\pi (s')\bigg\}\\
+&= \sum_{a\in A} Q^{\pi}(s, a)\nabla_\theta\pi_{\theta}(a\mid s) + \sum_{a\in A}\pi_\theta(a\mid s) \gamma\mathop{\mathbb{E}}_{s'\sim\mathcal{T}( s, a)}\nabla_\theta V^\pi (s')\end{align*}$$
 
 This is a recurrence relation on $\nabla_\theta V^{\pi}$. The goal of the policy gradient is to to use this recurrence relation to approximate the gradient. In order to accmplish this, we're going to unroll the recurrence relation and obtain an expression for the policy gradient based on sample trajectories. 
 
@@ -115,11 +113,11 @@ $$\phi(s) =\sum_{a\in A}Q^{\pi}(s, a)\nabla_\theta\pi_\theta(a\mid s)$$
 for convenience.
 Using this, our recurrence relation now looks like
 $$\begin{align*}
-\nabla_\theta V^{\pi}(s) &= \phi(s) + \sum_{a\in A}\pi_\theta(a\mid s) \gamma\E_{s'\sim\mathcal{T}( s, a)}\nabla_\theta V^\pi (s')
+\nabla_\theta V^{\pi}(s) &= \phi(s) + \sum_{a\in A}\pi_\theta(a\mid s) \gamma\mathop{\mathbb{E}}_{s'\sim\mathcal{T}( s, a)}\nabla_\theta V^\pi (s')
 \end{align*}$$
 
 2. We will write the expectation over the transition operator in its weighted sum  form:
-$$\E_{s'\sim\mathcal{T}(s'\mid s, a)}f(s') = \sum_{s'\in S}\mathcal{T}(s'\mid s, a)f(s')$$
+$$\mathop{\mathbb{E}}_{s'\sim\mathcal{T}(s'\mid s, a)}f(s') = \sum_{s'\in S}\mathcal{T}(s'\mid s, a)f(s')$$
 The recurrence relation now becomes
 $$\begin{align*}
 \nabla_\theta V^{\pi}(s) &= \phi(s) + \sum_{a\in A}\pi_\theta(a\mid s) \gamma\sum_{s'\in S}\mathcal{T}(s'\mid s, a)\nabla_\theta V^\pi (s')\\
@@ -194,7 +192,7 @@ Note that $\underset{s\in S}{\sum}P^k_{\pi}(s_0\to s) = 1$ since we visit exactl
 $$\mu^{\pi}(s\mid s_0) = \frac{\eta^{\pi}(s\mid s_0)}{\overset{T}{\underset{k=0}{\sum}}1}=\frac{1}{T}\eta^{\pi}(s\mid s_0) $$
 $$\Longrightarrow \eta^{\pi}(s\mid s_0) = T\mu^{\pi}(s\mid s_0)$$
 Now that we have normalized $\eta^{\pi}$, we can plug it back into the policy gradient expression:
-$$\begin{align*}\nabla_\theta J(\theta) &= \nabla_\theta V^{\pi}(s_0) \\ &=\sum_{s\in S}\eta^{\pi}(s\mid s_0)\phi(s)\\&= T\sum_{s\in S}\mu^{\pi}(s\mid s_0)\phi(s)\\&=T\E_{s\sim \mu^{\pi}(s\mid s_0)}\phi(s)\end{align*}$$
+$$\begin{align*}\nabla_\theta J(\theta) &= \nabla_\theta V^{\pi}(s_0) \\ &=\sum_{s\in S}\eta^{\pi}(s\mid s_0)\phi(s)\\&= T\sum_{s\in S}\mu^{\pi}(s\mid s_0)\phi(s)\\&=T\mathop{\mathbb{E}}_{s\sim \mu^{\pi}(s\mid s_0)}\phi(s)\end{align*}$$
 This gives us the outer expectation over the distribution $\mu^\pi$ of state visits. (Recall this is helpful because this is precisely the distribution of states when we randomly sample from trajectories.) We still need to obtain the inner expectation over the policy, and we can use the following clever trick:
 $$\begin{align*}
 
@@ -204,12 +202,12 @@ $$\begin{align*}
 
 &= \sum_{a\in A}\pi_\theta(a\mid s)Q^{\pi}(s, a)\nabla_\theta\ln\pi_\theta(a\mid s)\\
 
-&= \E_{a\sim\pi(a\mid s)}Q^{\pi}(s, a)\nabla_\theta\ln\pi_\theta(a\mid s)\\
+&= \mathop{\mathbb{E}}_{a\sim\pi(a\mid s)}Q^{\pi}(s, a)\nabla_\theta\ln\pi_\theta(a\mid s)\\
 
 
 \end{align*}$$
 where we multiply and divide by $\pi$ to bring back the expectation. Putting this all together we have
-$$\nabla_\theta J(\theta) = T\E_{s\sim \mu^{\pi}(s\mid s_0)}\;\E_{a\sim\pi(a\mid s)}Q^{\pi}(s, a)\nabla_\theta\ln\pi_\theta(a\mid s)$$
+$$\nabla_\theta J(\theta) = T\mathop{\mathbb{E}}_{s\sim \mu^{\pi}(s\mid s_0)}\;\mathop{\mathbb{E}}_{a\sim\pi(a\mid s)}Q^{\pi}(s, a)\nabla_\theta\ln\pi_\theta(a\mid s)$$
 which is our intended result with a constant of proportionality $T$.
 ### Continuing Case
 This is left as an exercise to the reader. Step through the proof as in the episodic case, but including discounts. What is the new constant of proportionality? How can we interpret $\eta^\pi$ and $\mu^\pi$ in this case?
@@ -239,7 +237,7 @@ $$\begin{align*}\mu^{\pi}(s\mid s_0) &= \frac{\eta^{\pi}(s\mid s_0)}{\underset{s
 Again, note that $\underset{s\in S}{\sum}P^k_{\pi}(s_0\to s) = 1$, so
 $$\mu^{\pi}(s\mid s_0) = \frac{\eta^{\pi}(s\mid s_0)}{\overset{\infty}{\underset{k=0}{\sum}}\gamma^k}=(1 - \gamma)\eta^{\pi}(s\mid s_0) $$
 $$\Longrightarrow \eta^{\pi}(s\mid s_0) = \frac{\mu^{\pi}(s\mid s_0)}{1 - \gamma}$$
-$$\begin{align*}\nabla_\theta J(\theta) &= \nabla_\theta V^{\pi}(s_0) \\ &=\sum_{s\in S}\eta^{\pi}(s\mid s_0)\phi(s)\\&= \frac{1}{1-\gamma}\sum_{s\in S}\mu^{\pi}(s\mid s_0)\phi(s)\\&=\frac{1}{1-\gamma}\E_{s\sim \mu^{\pi}(s\mid s_0)}\phi(s)\end{align*}$$
+$$\begin{align*}\nabla_\theta J(\theta) &= \nabla_\theta V^{\pi}(s_0) \\ &=\sum_{s\in S}\eta^{\pi}(s\mid s_0)\phi(s)\\&= \frac{1}{1-\gamma}\sum_{s\in S}\mu^{\pi}(s\mid s_0)\phi(s)\\&=\frac{1}{1-\gamma}\mathop{\mathbb{E}}_{s\sim \mu^{\pi}(s\mid s_0)}\phi(s)\end{align*}$$
 This time, our constant of proportionality is $\frac{1}{1 - \gamma}$. We proceed with the trick to turn the inner sum over actions into an expectation, bringing us to the final solution:
 $$\begin{align*}
 
@@ -249,11 +247,11 @@ $$\begin{align*}
 
 &= \sum_{a\in A}\pi_\theta(a\mid s)Q^{\pi}(s, a)\nabla_\theta\ln\pi_\theta(a\mid s)\\
 
-&= \E_{a\sim\pi(a\mid s)}Q^{\pi}(s, a)\nabla_\theta\ln\pi_\theta(a\mid s)\\
+&= \mathop{\mathbb{E}}_{a\sim\pi(a\mid s)}Q^{\pi}(s, a)\nabla_\theta\ln\pi_\theta(a\mid s)\\
 
 
 \end{align*}$$
-$$\nabla_\theta J(\theta) = \frac{1}{1-\gamma}\E_{s\sim \mu^{\pi}(s\mid s_0)}\;\E_{a\sim\pi(a\mid s)}Q^{\pi}(s, a)\nabla_\theta\ln\pi_\theta(a\mid s)$$
+$$\nabla_\theta J(\theta) = \frac{1}{1-\gamma}\mathop{\mathbb{E}}_{s\sim \mu^{\pi}(s\mid s_0)}\;\mathop{\mathbb{E}}_{a\sim\pi(a\mid s)}Q^{\pi}(s, a)\nabla_\theta\ln\pi_\theta(a\mid s)$$
 
 ## Details: Approximating $Q^{\pi_\theta}$
 
@@ -265,7 +263,7 @@ Differing answers to these questions give rise to three esimators for $Q^{\pi_\t
 $$\tau^{(i)} = \Big(\Big(s_0^{(i)}, a_0^{(i)}\Big), \Big(s_1^{(i)}, a_1^{(i)}\Big), \dots, \Big(s_T^{(i)}, a_T^{(i)}\Big)\Big)$$
 We would like to esimate $Q^{\pi}$ and plug this estimate into our gradient.
 - If we use total-trajectory reward:
-$$\begin{align*}\nabla_\theta J(\theta) &\approx \frac{1}{N}\sum_{i=1}^N\sum_{t=0}^T\Bigg(\sum_{t'=0}^T \gamma^{t'} r\Big(s_{t'}^{(i)}, a_{t'}^{(i)}\Big)\Bigg)\Bigg( \nabla_\theta\ln\pi_\theta\Big(a_t^{(i)}\mid s_t^{(i)}\Big)\Bigg)\\&\approx \frac{1}{N}\sum_{i=1}^N\Bigg(\sum_{t=0}^T \gamma^{t} r\Big(s_{t}^{(i)}, a_{t}^{(i)}\Big)\Bigg)\Bigg(\sum_{t=0}^T \nabla_\theta\ln\pi_\theta\Big(a_t^{(i)}\mid s_t^{(i)}\Big)\Bigg)\end{align*}$$
+$$\begin{align*}\nabla_\theta J(\theta) &\approx \frac{1}{N}\sum_{i=1}^N\sum_{t=0}^T\Bigg(\sum_{t'=0}^T \gamma^{t'} r\Big(s_{t'}^{(i)}, a_{t'}^{(i)}\Big)\Bigg)\Bigg( \nabla_\theta\ln\pi_\theta\Big(a_t^{(i)}\mid s_t^{(i)}\Big)\Bigg)\\&\approx \frac{1}{N}\sum_{i=1}^N\Bigg(\sum_{t=0}^T \gamma^{t} r\Big(s_{t}^{(i)}, a_{t}^{(i)}\Big)\Bigg)\Bigg(\sum_{t=0}^T \nabla_\theta\ln\pi_\theta\Big(a_t^{(i)}\mid s_t^{(i)}\Big)\Bigg)\end{align*}$$ ^921342
 - If we use reward-to-go and apply the discount factor relative to the current transition:
 $$\nabla_\theta J(\theta) \approx \frac{1}{N}\sum_{i=1}^N\sum_{t=0}^T\Bigg(\sum_{t'=t}^T \gamma^{t' - t} r\Big(s_{t'}^{(i)}, a_{t'}^{(i)}\Big)\Bigg) \nabla_\theta\ln\pi_\theta\Big(a_t^{(i)}\mid s_t^{(i)}\Big)$$
 - If we use reward-to-go and apply the discount factor relative to the beginning of the trajectory:

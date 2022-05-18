@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "gym_train.py", line 214, in <module>
+    assert policy.discrete == discrete, wrong_type
+AssertionError: Using <class 'algos.ddpg.ddpg.DDPG'>, which is for discrete action spaces on a continuous action space

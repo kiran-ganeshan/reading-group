@@ -13,8 +13,7 @@ class PG(object):
         action_dim : int,
         discount : float = 0.97,
         lr : float = 1e-2,
-        tau : float = 0.05,
-        #eps : float = 1e-8
+        tau : float = 0.05
     ):
         self.actor = util.MLP(input_size=state_dim, 
                               output_size=action_dim, 
@@ -25,7 +24,6 @@ class PG(object):
 
         self.discount = discount
         self.tau = tau
-        self.eps = eps
         self.action_dim = action_dim
 
     def select_action(self, state, deterministic=True):

@@ -45,9 +45,7 @@ class DQN(object):
         with torch.no_grad(): 
             target_Q = self.critic_target(next_state)
             target_Q = torch.max(target_Q, -1)[0]
-            data = {'next_q': target_Q}
             target_Q = reward + self.discount * not_done * target_Q
-            data = {'target_q': target_Q, **data}
             
         # Get current Q estimates
         q_mask = util.one_hot(action, num_classes=self.action_dim)

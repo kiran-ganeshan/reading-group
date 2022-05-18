@@ -1,0 +1,25 @@
+{
+    "os": "Darwin-18.7.0-x86_64-i386-64bit",
+    "python": "3.7.11",
+    "heartbeatAt": "2022-05-05T15:44:55.647494",
+    "startedAt": "2022-05-05T15:44:54.831832",
+    "docker": null,
+    "cpu_count": 8,
+    "cuda": null,
+    "args": [
+        "--algo",
+        "DDPG"
+    ],
+    "state": "running",
+    "program": "gym_train.py",
+    "codePath": "RL/gym_train.py",
+    "git": {
+        "remote": "https://github.com/kiran-ganeshan/reading-group",
+        "commit": "6ce6163ef1fa53167b15780d5de0ee7fc6a8b0ca"
+    },
+    "email": "kg23@berkeley.edu",
+    "root": "/Users/kiranganeshan/reading-group",
+    "host": "MacBook-Pro-8.local",
+    "username": "kiranganeshan",
+    "executable": "/opt/anaconda3/envs/rg/bin/python"
+}

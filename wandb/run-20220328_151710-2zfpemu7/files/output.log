@@ -1,0 +1,12 @@
+
+<bound method Environment.action_spec of <dm_control.rl.control.Environment object at 0x11579f5d0>>
+Traceback (most recent call last):
+  File "test_mujoco.py", line 34, in <module>
+    pixels = env.physics.render(camera_id='y')
+  File "/opt/anaconda3/envs/rg/lib/python3.7/site-packages/dm_control/mujoco/engine.py", line 207, in render
+    physics=self, height=height, width=width, camera_id=camera_id)
+  File "/opt/anaconda3/envs/rg/lib/python3.7/site-packages/dm_control/mujoco/engine.py", line 640, in __init__
+    camera_id = physics.model.name2id(camera_id, 'camera')
+  File "/opt/anaconda3/envs/rg/lib/python3.7/site-packages/dm_control/mujoco/wrapper/core.py", line 367, in name2id
+    _type2str(object_type), name))
+dm_control.mujoco.wrapper.core.Error: Object of type 'camera' with name 'y' does not exist.

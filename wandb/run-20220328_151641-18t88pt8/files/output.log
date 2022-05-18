@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "test_mujoco.py", line 26, in <module>
+    env = suite.load('benchmarking', 'swimmer')
+  File "/opt/anaconda3/envs/rg/lib/python3.7/site-packages/dm_control/suite/__init__.py", line 114, in load
+    environment_kwargs, visualize_reward)
+  File "/opt/anaconda3/envs/rg/lib/python3.7/site-packages/dm_control/suite/__init__.py", line 137, in build_environment
+    raise ValueError('Domain {!r} does not exist.'.format(domain_name))
+ValueError: Domain 'benchmarking' does not exist.
