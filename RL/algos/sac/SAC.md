@@ -54,14 +54,15 @@ Like other actor-critic algorithms, SAC is applicable to
 > **for** step $\in\{1, \dots, T\}$ **do**:\
 > $\qquad$ Retrieve $a= \mu_\phi(s) + \Sigma_\phi(s)\delta$, where $\delta\sim\mathcal{N}(0, I)$\
 > $\qquad$ Execute action $a$, retrieve reward $r$ and next state $s'$\
-> $\qquad$ Sample transitions and approximate next action:
+> $\qquad$ Add transition $(s, a, r, s', d)$ with done flag $d$ to $\mathcal{D}$ \
+> $\qquad$ Sample transitions and approximate next action: \
 > $\qquad\qquad$ Sample transitions $(s_j, a_j, r_j, s_{j+1}, d_j)$ from $\mathcal{D}$\
 > $\qquad\qquad$ Sample $\delta_j\sim\mathcal{N}(0, I)$\
 > $\qquad\qquad$ Set $a_\phi(s_j) = \mu_\phi(s_j) + \Sigma_\phi(s_j)\delta_j$\
-> $\qquad$ Update $\phi$:
-> $\qquad\qquad$ Set $L(\phi) = -\sum_j\left[Q_{\theta}(s_j, a_\phi(s_j)) - \alpha\log\pi_\phi(a_\phi(s_j)\mid s_j)\right]$
-> $\qquad\qquad$ Perofrm GD on $L$ to update $\phi$
-> $\qquad$ Update $\theta$:
+> $\qquad$ Update $\phi$: \
+> $\qquad\qquad$ Set $L(\phi) = -\sum_j\left[Q_{\theta}(s_j, a_\phi(s_j)) - \alpha\log\pi_\phi(a_\phi(s_j)\mid s_j)\right]$\
+> $\qquad\qquad$ Perform GD on $L$ to update $\phi$ \
+> $\qquad$ Update $\theta$: \
 > $\qquad\qquad$ Set $q_j = Q_{\theta'}(s_j, a_{\phi}(s_j))-\alpha\log\pi_\phi(a_\phi(s_j)\mid s_j)$\
 > $\qquad\qquad$ Set $y_j = r_j +\gamma (1 - d_j)q_{j+1}$\
 > $\qquad\qquad$ Set $L(\theta) = \sum_{j} \left(y_j - Q_\theta(s_j,a_j )\right)^2$\

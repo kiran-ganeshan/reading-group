@@ -13,7 +13,8 @@ class PG(object):
         action_dim : int,
         discount : float = 0.97,
         lr : float = 1e-2,
-        tau : float = 0.05
+        tau : float = 0.05,
+        use_advantage : bool = False
     ):
         self.actor = util.MLP(input_size=state_dim, 
                               output_size=action_dim, 
