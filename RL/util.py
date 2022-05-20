@@ -53,6 +53,13 @@ def log_wandb(str, metrics, step=None):
     
 def space_is_discrete(action_space : Space):
     return isinstance(action_space, Discrete)
+
+def get_uniform_logprob(action_space : Space):
+    if space_is_discrete(action_space):
+        return -np.log(action_space.n)
+    else:
+        high, low = action_space.high, action_space.low
+        return sum([-np.log(h - l) for h, l in zip(high, low)])
     
     
 def policy_is_discrete(policy, state_dim : int):
@@ -127,45 +134,21 @@ class ReplayBuffer(object):
     Monte-Carlo Q-Value estimates (in two ways, standard Q-value calculation and discounted rewards to go).
     
     Arguments:
-    
-    state_dim           The number of dimensions in a continuous state space.
-    
-    action_dim          The number of dimensions in a continuous action space, or the maximum action in
-                        a discrete action space. (Assumes action space is Discrete or Box)
-                        
-    max_size            The maximum size of the replay buffer.
-    
-    continuous          Whether the action space is continuous.
-    
-    get_q               Whether to calculate Monte-Carlo estimates of Q-values. When True, trajectory_q and 
-                        discount_qval control how Q-value estimates are calculated. Their defaults are set up 
-                        so that we discount and sum reward-to-go to obtain Q-values.
-                        
-    get_logprob         Whether to save the log-probability of the action under the current policy when saving 
-                        a transition.
-    
-    trajectory_q        If True (and get_q is True), calculate Q-values across entire trajectories:
-                        for all transitions (s, a) in the trajectory, Q(s, a) is the discounted total
-                        reward across the entire trajectory. 
-                        
-                        Only affects anything if get_q is True (we are getting the Q-value).
-                        
-    discount_qval       If False (and get_q is True, and trajectory_q is False), calculate Q-values
-                        by discounting and summing reward-to-go: for a transition (s_t, a_t) in the
-                        trajectory, 
-                        Q(s_t, a_t) <- sum[gamma^(t' - t) Q(s_t', a_t') from t'=t to t'=T]
-    
-                        If True (and get_q is True, and trajectory_q is False), calculate Q-values
-                        using the remaining discounted reward in the trajectory: for a transition 
-                        (s_t, a_t) in the trajectory, 
-                        Q(s_t, a_t) <- sum[gamma^t' Q(s_t', a_t')) from t'=t to t'=T]
-                        Q(s_t, a_t) <- gamma^t sum[gamma^(t' - t) Q(s_t', a_t') from t'=t to t'=T]
-                        Notice this is gamma^t times the result for discount_qval=False, so this
-                        argument controls whether we discount Q-values that appear later in trajectories.
-                        
-                        Only affects anything if get_q is True (we are getting the Q-value) and 
-                        trajectory_q is False (we are not using whole-trajectory Q-values).
-                        
+        state_dim (int): The number of dimensions in a continuous state space.
+        action_dim (int): The number of dimensions in a continuous action space, or the maximum action in
+                          a discrete action space. (Assumes action space is Discrete or Box)    
+        max_size (int): The maximum size of the replay buffer.
+        discrete (bool): Whether the action space is discrete.
+        get_q (bool): Whether to calculate Monte-Carlo estimates of Q-values.
+        get_logprob (bool): Whether to save the log-probability of the action under the current policy when 
+                            saving a transition.
+        trajectory_q (bool): Only active when get_q is True. If True, use whole-trajectory Q-value as the
+                             Monte-Carlo estimate for Q(s_t, a_t) at every time t. 
+        discount_qval (bool): Only active when get_q is True and trajectory_q is False.
+                              If False, calculate Q-values by discounting and summing reward-to-go: 
+                              Q(s_t, a_t) <- sum[gamma^(t' - t) Q(s_t', a_t') from t'=t to t'=T]
+                              If True, calculate Q-values using the remaining discounted reward: 
+                              Q(s_t, a_t) <- sum[gamma^t' Q(s_t', a_t') from t'=t to t'=T]
     """
     
     def __init__(self, 
@@ -200,6 +183,17 @@ class ReplayBuffer(object):
             reward : np.ndarray, 
             done : np.ndarray,
             logprob : np.ndarray = None):
+        """
+        A method for adding a transition to the replay buffer.
+
+        Arguments:
+            state (np.ndarray): State we were in.
+            action (np.ndarray): Action we took.
+            next_state (np.ndarray) : State we wound up in.
+            reward (np.ndarray): Reward we received.
+            done (np.ndarray): Flag with data type float32 indicating whether the trajectory ended.
+            logprob (np.ndarray): The log of the probability (or PDF) of given action in given state.
+        """
         
         # Ensure we have logprob if necessary
         if self.get_logprob:
@@ -228,9 +222,26 @@ class ReplayBuffer(object):
         self.ptr = (self.ptr + 1) % self.max_size
         self.size = min(self.size + 1, self.max_size)
 
-    def sample(self, batch_size):
+    def sample(self, batch_size : int):
+        """
+        A method for sampling transitions from the replay buffer.
+
+        Arguments:
+            batch_size (int): Number of transitions to sample.
+        Returns:
+            When get_q and get_logprob are false, a tuple (
+                state (torch.Tensor),
+                action (torch.Tensor),
+                next_state (torch.Tensor),
+                reward (torch.Tensor),
+                not_done (torch.Tensor)
+            )
+            If get_q is True, also returns qval (torch.Tensor) in between
+            reward and not_done. If get_logprob is True, also returns
+            logprob (torch.Tensor) after not_done.
+        """
         ind = np.random.randint(0, self.size, size=batch_size)
-        action_type = torch.float if self.continuous else torch.long
+        action_type = torch.long if self.discrete else torch.float
         qval = () if not self.get_q else (to_torch(self.qval[ind], dtype=torch.float),)
         logprob = () if not self.get_logprob else (to_torch(self.logprob[ind], dtype=torch.float32),)
         return (
@@ -244,6 +255,9 @@ class ReplayBuffer(object):
         )
         
     def reset(self):
+        """
+        Resets the replay buffer, clearing all transitions.
+        """
         self.ptr = 0
         self.size = 0
         
@@ -261,6 +275,10 @@ class ReplayBuffer(object):
             self.logprob = np.zeros((self.max_size,), dtype=np.float32)
         
     def get_qval(self):
+        """
+        Calculates Q-Values for the last trajectory in the replay buffer.
+        Puts these Q-Values in an array self.qval stored as an attribute.
+        """
         # Calculate trajectory indices and retrieve corresponding rewards
         assert self.get_q
         traj_begin = self.ptr
@@ -306,18 +324,34 @@ class MLP(nn.Module):
             layer = nn.Linear(s1, s2)
             self.layers.append(layer)
             self.add_module(f'layer{i}', layer)
-        self.activation = activation if activation else nn.Identity()
-        self.final_activation = final_activation if final_activation else activation
+        self.act = activation if activation else nn.Identity()
+        self.final_act = final_activation if final_activation else nn.Identity()
     
-    def forward(self, x):
+    def forward(self, *x):
+        x = torch.cat(x, dim=-1)
         for i, layer in enumerate(self.layers):
             x = layer(x)
             if i != len(self.layers) - 1:
-                x = self.activation(x)
-        x = self.final_activation(x)
+                x = self.act(x)
+        x = self.final_act(x)
+        x = torch.squeeze(x, dim=-1)
         return x
     
-class GaussianPolicy(MLP):
+class GaussianPolicy(nn.Module):
+    
+    """
+    A Gaussian policy parameterized by outputs of an MLP, whose outputs are 
+    differentiable w.r.t. inputs and MLP params via the reparameterization trick.
+    
+    Arguments:
+        state_dim (int): State size, or the MLP input size
+        hidden_sizes (Sequence): The MLP hidden layer sizes
+        action_dim (int): Action size, or the MLP output size
+        activation (Callable): The MLP activation used on hidden layers
+        final_activation (Callable): The MLP activation used on output
+        predict_std (bool): Whether to use the MLP to predict the dimension-wise
+                            variance (via the log-std) of the Gaussian.
+    """
     
     def __init__(self, 
                  state_dim : int, 
@@ -326,14 +360,25 @@ class GaussianPolicy(MLP):
                  activation : Callable[[TensorType], TensorType] = None,
                  final_activation : Callable[[TensorType], TensorType] = None,
                  predict_std : bool = False):
+        super(GaussianPolicy, self).__init__()
         output_size = (2 if predict_std else 1) * action_dim
-        super(GaussianPolicy, self).__init__(state_dim, hidden_sizes, output_size, activation, final_activation)
+        self.mlp = MLP(state_dim, hidden_sizes, output_size, activation, final_activation)
         if not predict_std:
             self.log_std = nn.Parameter(torch.zeros((action_dim,)))
         self.predict_std = predict_std
         
     def _get_dist_params(self, state):
-        out = super(GaussianPolicy, self).forward(state)
+        """
+        A method for running inference to obtain distribution parameters.
+        
+        Arguments:
+            state (torch.Tensor): state input
+        Returns:
+            mu (torch.Tensor): mean of output action distribution
+            log_sigma (torch.Tensor): logarithm of dimension-wise std of 
+                                      output action distribution
+        """
+        out = self.mlp(state)
         if self.predict_std:
             mu, log_sigma = torch.split(out, 2)
         else:
@@ -342,50 +387,39 @@ class GaussianPolicy(MLP):
         return mu, log_sigma
         
     def forward(self, state, deterministic=False):
+        """
+        Returns an action sampled from the policy's action distribution,
+        differentiable w.r.t. the state and MLP params via the reparameterization trick.
+        
+        Arguments:
+            state (torch.Tensor): state input
+            deterministic (bool): option to remove all variance for test time
+        Returns:
+            action (torch.Tensor): a sample from the policy distribution at the input state
+        """
         mu, log_sigma = self._get_dist_params(state)
-        delta = torch.rand_like(log_sigma) if not deterministic else 0.
+        if deterministic:
+            delta = torch.rand_like(log_sigma)
+        else:
+            delta = torch.zeros_like(log_sigma)
         return mu + delta * torch.exp(log_sigma)
     
     def log_prob(self, state, action):
+        """
+        Returns the logarithm of the PDF of the given action condition on the given state.
+        
+        Arguments:
+            state (torch.Tensor): state input
+            action (torch.Tensor): action input
+        Returns:
+            log_prob (torch.Tensor): logPDF of the action
+        """
         mu, log_sigma = self._get_dist_params(state)
         log_prob = -torch.sum(log_sigma, -1) 
         log_prob -= 1/2 * torch.norm((action - mu) / torch.exp(log_sigma)) ** 2
-        log_prob -= mu.shape[-1] * torch.log(2 * torch.pi) / 2
+        log_prob -= mu.shape[-1] * np.log(2 * torch.pi) / 2
         return log_prob
         
-        
-
-'''
-class Module(jnn.Module):
-    
-    @property 
-    def input_shape(self):
-        pass
-
-    
-class JMLP(Module):
-
-    input_size : int
-    output_size : int
-    hidden_sizes : Sequence[int]
-    activation : Callable[[DeviceArray], DeviceArray] = lambda x: x
-    
-    @property
-    def input_shape(self):
-        return (self.input_size,)
-
-    @jnn.compact
-    def __call__(self, x):
-        x = x.reshape((-1, self.input_size))
-        return self.mlp(x)
-
-    def mlp(self, x):
-        for size in self.hidden_sizes:
-            x = jnn.relu(jnn.Dense(features=size)(x))
-        x = jnn.Dense(features=self.output_size)(x)
-        x = self.activation(x)
-        return x
-'''
 
 
 

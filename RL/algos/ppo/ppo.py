@@ -79,8 +79,7 @@ class PPO(object):
  
         # Compute critic loss (and TD-error for surrogate objective)
         td_error = target_V - V
-        critic_loss = F.mse_loss(td_error, 0)
-        losses = {'critic_loss': critic_loss.detach().item()}
+        critic_loss = F.mse_loss(td_error, torch.zeros_like(td_error))
  
         # Compute surrogate objective
         adv = self.estimate_adv(td_error.detach(), not_done)
@@ -88,8 +87,6 @@ class PPO(object):
         imw = torch.exp(logprob - old_logprob)     # importance weight
         clipped_imw = torch.clip(imw, 1. - self.epsilon, 1. + self.epsilon)
         actor_loss = -torch.mean(torch.min(imw * adv, clipped_imw * adv), dim=0)
-
-        losses = {'actor_loss': actor_loss.detach().item(), **losses}
 
         # Optimize the actor
         self.actor_optimizer.zero_grad()
@@ -105,4 +102,5 @@ class PPO(object):
         for param, target_param in zip(self.critic.parameters(), self.critic_target.parameters()):
             target_param.data.copy_(self.tau * param.data + (1 - self.tau) * target_param.data)
         
-        return losses
+        return {'actor_loss': actor_loss, 
+                'critic_loss': critic_loss}

@@ -13,8 +13,7 @@ class PG(object):
         action_dim : int,
         discount : float = 0.97,
         lr : float = 1e-2,
-        tau : float = 0.05,
-        use_advantage : bool = False
+        tau : float = 0.05
     ):
         self.actor = util.MLP(input_size=state_dim, 
                               output_size=action_dim, 
@@ -43,11 +42,10 @@ class PG(object):
         mask = util.one_hot(action, num_classes=self.action_dim)
         logprob = torch.sum(policy * mask, dim=-1)
         loss = -torch.mean(qval * logprob, dim=0)
-        losses = {'loss': loss}
 
         # Optimize the actor
         self.actor_optimizer.zero_grad()
         loss.backward()
         self.actor_optimizer.step()
         
-        return losses
+        return {'loss': loss}

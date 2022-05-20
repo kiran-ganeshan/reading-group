@@ -22,11 +22,12 @@ class ConjugateGradientOptimizer(Optimizer):
         self.bt_decay = bt_decay
         self.bt_iters = bt_iters
         
+        # Create helper functions for flattening/unflatting params and grads
         params, _ = self._get_params_and_grads()
         shapes = [p.shape or torch.Size([1]) for p in params]
         sizes = [np.prod(sh) for sh in shapes]
         idxs = np.cumsum(sizes)[:-1]
-        self.unflat = lambda v: [np.reshape(p, sh) for p, sh in zip(np.split(v, idxs), shapes)]
+        self.unflat = lambda v: [p.reshape(sh) for p, sh in zip(np.split(v, idxs), shapes)]
         self.flat = lambda v: torch.cat([h.reshape(-1) for h in v])
         
     def _get_params_and_grads(self):
@@ -35,18 +36,18 @@ class ConjugateGradientOptimizer(Optimizer):
         for group in self.param_groups:
             for p in group['params']:
                 params.append(p)
-                g = p.grad 
+                g = p.grad
                 if g is None:
-                    g = torch.zeros_like(p)
+                    g = torch.zeros_like(p) # set all None grads to 0
                 grads.append(g.reshape(-1))
         return params, grads
     
     def _backtrack(self, params, step, f_loss, f_constraint):
         prev_loss = f_loss()
         alpha = self.lr
-        flat_params = self.flat(params)
+        old_params = self.flat(params)
         for _ in range(self.bt_iters):
-            new_params = self.unflat(flat_params - alpha * step)
+            new_params = self.unflat(old_params - alpha * step)
             for param, new_param in zip(params, new_params):
                 param.data.copy_(new_param.data)
             if f_loss() < prev_loss and f_constraint() < self.max_constraint:
@@ -58,7 +59,7 @@ class ConjugateGradientOptimizer(Optimizer):
         assert len(const_grad) == len(params)
         def H(v):
             unflat_v = self.unflat(v)
-            gvp = torch.sum(torch.stack([g * x for g, x in zip(const_grad, unflat_v)]))
+            gvp = torch.sum(torch.stack([torch.sum(g * x) for g, x in zip(const_grad, unflat_v)]))
             hvp = list(torch.autograd.grad(gvp, params, retain_graph=True))
             for i, (hx, p) in enumerate(zip(hvp, params)):
                 if hx is None:
@@ -67,15 +68,12 @@ class ConjugateGradientOptimizer(Optimizer):
             return flat_hvp + self.reg_coeff * v
         return H
             
-    def _conjugate_grad(self, H, params, grads):
-        
-            
+    def _conjugate_grad(self, grads, H):
         grads = self.flat(grads)
         p = grads.clone()
         res = grads.clone()
         x = torch.zeros_like(grads)
         error = torch.dot(res, res)
-        
         for _ in range(self.cg_iters):
             z = H(p)
             u = error / torch.dot(p, z)
@@ -89,11 +87,11 @@ class ConjugateGradientOptimizer(Optimizer):
         x += self.reg_coeff * grads
         return np.sqrt(2.0 * self.max_constraint / grads @ x) * x
         
-    @torch.no_grad()
+    #@torch.no_grad()
     def step(self, f_loss, f_constraint):
         params, grads = self._get_params_and_grads()
         H = self._create_hessian_func(params, f_constraint)
-        step = self._conjugate_grad(H, params, grads)
+        step = self._conjugate_grad(grads, H)
         self._backtrack(params, step, f_loss, f_constraint)
     
 
@@ -165,7 +163,7 @@ class TRPO(object):
 
     def train(self, *data):
         state, action, next_state, reward, not_done, old_logprob = data
-
+        
         # Compute the target V value
         with torch.no_grad(): 
             target_V = self.critic_target(next_state)
@@ -176,20 +174,21 @@ class TRPO(object):
  
         # Compute critic loss (and TD-error for surrogate objective)
         td_error = target_V - V
-        critic_loss = F.mse_loss(td_error, 0)
-        losses = {'critic_loss': critic_loss.detach().item()}
+        critic_loss = F.mse_loss(td_error, torch.zeros_like(td_error))
  
-        # Compute surrogate objective
+        # Define surrogate objective and constraint
         adv = self.estimate_adv(td_error.detach(), not_done)
         def actor_loss():
             self.actor_optimizer.zero_grad()
             logprob = self.actor.log_prob(state, action)
             imw = torch.exp(logprob - old_logprob)     # importance weight
             return -torch.mean(imw * adv, dim=0)
-        losses = {'actor_loss': actor_loss().detach().item(), **losses}
+        def kl_constraint():
+            logprob = self.actor.log_prob(state, action)
+            return torch.mean(old_logprob - logprob)
 
-        # Optimize the actor]
-        self.actor_optimizer.step(actor_loss)
+        # Optimize the actor
+        self.actor_optimizer.step(actor_loss, kl_constraint)
         
         # Optimize the critic
         self.critic_optimizer.zero_grad()
@@ -200,4 +199,5 @@ class TRPO(object):
         for param, target_param in zip(self.critic.parameters(), self.critic_target.parameters()):
             target_param.data.copy_(self.tau * param.data + (1 - self.tau) * target_param.data)
         
-        return losses
+        return {'critic_loss': critic_loss,
+                'actor_loss': actor_loss()}

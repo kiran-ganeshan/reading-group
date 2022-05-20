@@ -7,7 +7,7 @@ import torch.nn.functional as F
 import util
 
 
-@util.learner
+@util.learner()
 class ImitationLearner(object):
     def __init__(
         self,
@@ -34,11 +34,10 @@ class ImitationLearner(object):
  
         # Compute actor loss
         loss = F.mse_loss(self.actor(state), action)
-        losses = {'loss': loss}
 
         # Optimize the actor
         self.actor_optimizer.zero_grad()
         loss.backward()
         self.actor_optimizer.step()
 
-        return losses
+        return {'loss': loss}

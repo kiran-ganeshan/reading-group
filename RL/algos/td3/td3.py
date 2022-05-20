@@ -3,6 +3,7 @@ import torch
 import torch.nn as nn
 from torch.functional import F
 import util
+import itertools
     
 
 @util.learner()
@@ -19,13 +20,13 @@ class TD3(object):
         target_noise_std : float = 0.5,
         target_noise_limit : float = 1.
     ):
-        self.critics = [util.MLP(input_size=state_dim, 
-                                 output_size=action_dim, 
+        self.critics = [util.MLP(input_size=state_dim + action_dim, 
+                                 output_size=1, 
                                  hidden_sizes=(256, 256), 
                                  activation=nn.ReLU(),
                                  final_activation=nn.Identity()) for _ in range(2)]
-        self.critic_target = [copy.deepcopy(critic) for critic in self.critics]
-        params = [mod.parameters() for mod in self.critics]
+        self.critic_targets = [copy.deepcopy(critic) for critic in self.critics]
+        params = itertools.chain(*[mod.parameters() for mod in self.critics])
         self.critic_optimizer = torch.optim.Adam(params, lr=lr)
         
         self.actor = util.MLP(input_size=state_dim, 
@@ -59,10 +60,8 @@ class TD3(object):
             action_noise = torch.clip(action_noise, -self.noise_clip, self.noise_clip)
             next_action = self.actor_target(next_state) + action_noise
             target_Qs = [ct(next_state, next_action) for ct in self.critic_targets]
-            target_Q = torch.minimum(target_Qs)
-            data = {'next_q': target_Q}
+            target_Q = torch.minimum(*target_Qs)
             target_Q = reward + self.discount * not_done * target_Q
-            data = {'target_q': target_Q, **data}
  
         # Compute critic loss and optimize critic
         critic_loss = sum([F.mse_loss(c(state, action), target_Q) for c in self.critics])
@@ -71,17 +70,17 @@ class TD3(object):
         self.critic_optimizer.step()
  
         # Compute actor surrogate objective and optimize actor
-        actor_loss = -torch.mean(self.critic1(state, self.actor(state)), dim=0)
+        actor_loss = -torch.mean(self.critics[0](state, self.actor(state)), dim=0)
         self.actor_optimizer.zero_grad()
         actor_loss.backward()
         self.actor_optimizer.step()
-        
-        losses = {'actor_loss': actor_loss, 'critic_loss': critic_loss}
 
         # Update the frozen target models
-        for nn, target, ema in zip([self.critic1, self.critic2, self.actor], 
-                                   [self.critic1_target, self.critic2_target, self.actor_target], 
+        for nn, target, ema in zip(self.critics + [self.actor], 
+                                   self.critic_targets + [self.actor_target], 
                                    2 * [self.critic_ema] + [self.actor_ema]):
             for param, target_param in zip(nn.parameters(), target.parameters()):
                 target_param.data.copy_(ema * param.data + (1 - ema) * target_param.data)
-        return losses
+                
+        return {'actor_loss': actor_loss, 
+                'critic_loss': critic_loss}
