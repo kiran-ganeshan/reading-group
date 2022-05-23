@@ -65,11 +65,13 @@ DQN can be used to solve MDPs with
 **Parameters**: 
 - Number of total steps $T$
 - Replay Buffer capacity $N$
+- Target update rate $\tau$
 - Exploration parameter $\ep$
 
 **Algorithm**:
 > Initialize replay buffer $\mathcal{D}$ with capacity $N$\
 > Initialize $Q$-function neural network with random weights $\theta$\
+> Initialize target network with random weights $\theta'=\theta$\
 > Initialize environment
 > **for** step $\in\{1, \dots, T\}$ **do**:\
 > $\qquad$ With probability $\ep$: \
@@ -79,9 +81,10 @@ DQN can be used to solve MDPs with
 > $\qquad$ Execute action $a$, retrieve reward $r$ and next state $s'$\
 > $\qquad$ Store transition $(s_t, a_t, r_t, s_{t+1}, d_j)$ in $\mathcal{D}$\
 > $\qquad$ Sample transitions $(s_j, a_j, r_j, s_{j+1}, d_j)$ from $\mathcal{D}$\
-> $\qquad$ Set $y_j = r_j + \gamma (1-d_j) \max_{a'\in A}Q_\theta(s_{j+1}, a')$\
+> $\qquad$ Set $y_j = r_j + \gamma (1-d_j) \max_{a'\in A}Q_{\theta'}(s_{j+1}, a')$\
 > $\qquad$ Set our loss to $L = \sum_{j} \left(y_j - Q_\theta(s_j,a_j )\right)^2$\
-> $\qquad$ Perform gradient descent on $L$ to update $\theta$
+> $\qquad$ Perform gradient descent on $L$ to update $\theta$ \
+> $\qquad$ Update target network: $\theta' \leftarrow (1-\tau)\theta' + \tau\theta$
 
 
 
