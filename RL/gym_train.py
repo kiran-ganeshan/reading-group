@@ -18,7 +18,7 @@ algos = {
     "DDPG": DDPG,
     "SAC": SAC,
     "TRPO": TRPO,
-    "IML": ImitationLearner,
+    "IML": BC,
     "PPO": PPO,
     "TD3": TD3
 }

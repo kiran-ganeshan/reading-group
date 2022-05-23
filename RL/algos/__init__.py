@@ -4,5 +4,5 @@ from .ppo import PPO
 from .sac import SAC
 from .td3 import TD3
 from .dqn import DQN
-from .iml import ImitationLearner
+from .bc import BC
 from .trpo import TRPO

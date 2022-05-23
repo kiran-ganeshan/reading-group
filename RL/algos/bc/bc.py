@@ -8,7 +8,7 @@ import util
 
 
 @util.learner()
-class ImitationLearner(object):
+class BC(object):
     def __init__(
         self,
         state_dim : int,

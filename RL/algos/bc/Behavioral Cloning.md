@@ -1,21 +1,20 @@
-# Imitation Learning
+# Behavioral Cloning
 ## Introduction
-If we'd like to use a neural network to solve a complex control task, one of the simplest ideas is to train a neural network to imitate an expert performing the task. This is called **Imitation Learning**. 
+If we'd like to use a neural network to solve a complex control task, one of the simplest ideas is to train a neural network to imitate an expert performing the task. This is called **Imitation Learning** or **Behavioral Cloning**. 
 ## Strategy
-Imitation learning requires gathering state-action pairs from expert demonstration $$\left\{\left(s_t^{(i)}, a_t^{(i)}\right)_{t=1}^T\right\}_{i=1}^N$$
+Behavioral cloning requires gathering state-action pairs from expert demonstration $$\left\{\left(s_t^{(i)}, a_t^{(i)}\right)_{t=1}^T\right\}_{i=1}^N$$
 where 
 - $s_t^{(i)}$ is the state in step $t$ of the $i$th trajectory, 
 - $a_t^{(i)}$ is the action in step $t$ of the $i$th trajectory, 
 - $T$ is the max number of timesteps per demonstration, and 
 - $N$ is the number of demonstration.
 ## Use Cases
-Imitation learning works in
+Behavioral cloning works in
 - discrete and continuous state spaces
 - discrete and continuous action spaces
 
 ## Algorithm
-
-Imitation Learning
+**BC**: Behavioral cloning
 **Parameters**: 
 - Number of total steps $T$
 - Replay Buffer capacity $N$

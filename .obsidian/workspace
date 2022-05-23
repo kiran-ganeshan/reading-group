@@ -9,7 +9,7 @@
         "state": {
           "type": "markdown",
           "state": {
-            "file": "RL/algos/trpo/TRPO.md",
+            "file": "RL/algos/bc/Behavioral Cloning.md",
             "mode": "source"
           }
         },
@@ -21,7 +21,7 @@
         "state": {
           "type": "markdown",
           "state": {
-            "file": "RL/algos/trpo/TRPO.md",
+            "file": "RL/algos/bc/Behavioral Cloning.md",
             "mode": "preview"
           }
         },
@@ -81,7 +81,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "RL/algos/trpo/TRPO.md",
+                "file": "RL/algos/bc/Behavioral Cloning.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -101,15 +101,15 @@
   },
   "active": "472c9723546523be",
   "lastOpenFiles": [
+    "RL/algos/bc/Behavioral Cloning.md",
     "RL/algos/trpo/TRPO.md",
-    "RL/algos/iml/Imitation Learning.md",
+    "RL/algos/pg/Advantage Function.md",
+    "RL/algos/pg/Natural PG.md",
+    "RL/algos/pg/PG.md",
+    "RL/MDP.md",
     "RL/algos/sac/SAC.md",
     "RL/algos/dqn/DQN.md",
     "RL/algos/TRPO.md",
-    "Basics/KL Divergence.md",
-    "Basics/Pinsker's Inequality.md",
-    "RL/algos/pg/Natural PG.md",
-    "RL/algos/pg/PG.md",
-    "RL/algos/PPO.md"
+    "Basics/KL Divergence.md"
   ]
 }
